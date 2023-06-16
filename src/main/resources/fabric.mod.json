@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "helpfulcommands",
+  "version": "${version}",
+
+  "name": "Helpful Commands",
+  "description": "Adds a bunch of really helpful commands, including shortcuts for existing ones. For example, /gm c, /dimension, or /day",
+  "authors": [
+    "ThatsNotM3"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "MIT License",
+  "icon": "assets/helpfulcommands/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.thatsnotm3.helpfulcommands.HelpfulCommands"
+    ],
+    "client":[
+      "net.thatsnotm3.helpfulcommands.HelpfulCommandsClient"
+    ]
+  },
+  "mixins": [
+    "helpfulcommands.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.19",
+    "fabric-api": "*",
+    "minecraft": "~1.19.2",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
