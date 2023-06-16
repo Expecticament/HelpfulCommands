@@ -4,6 +4,7 @@
   "package": "net.thatsnotm3.helpfulcommands.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ModEntityDataSaver"
   ],
   "client": [
     "ExampleMixin"
