@@ -4,13 +4,14 @@
   "version": "${version}",
 
   "name": "Helpful Commands",
-  "description": "Adds a bunch of really helpful commands, including shortcuts for existing ones. For example, /gm c, /dimension, or /day",
+  "description": "Adds a bunch of helpful commands and shortcuts for existing ones. You can also find some new command-related features that are not possible in the base game. Can be easily configured, and each individual command is toggleable.",
   "authors": [
     "ThatsNotM3"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/ThatsNotM3/HelpfulCommands",
+    "sources": "https://github.com/ThatsNotM3/HelpfulCommands",
+    "issues": "https://github.com/ThatsNotM3/HelpfulCommands/issues"
   },
 
   "license": "MIT License",

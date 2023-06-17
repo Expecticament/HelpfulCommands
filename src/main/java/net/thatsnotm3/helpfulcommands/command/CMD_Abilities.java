@@ -10,6 +10,8 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 
 public class CMD_Abilities{
@@ -18,16 +20,13 @@ public class CMD_Abilities{
             .then(CommandManager.literal("get").executes(CMD_Abilities::getAbilities))
             .then(CommandManager.literal("set")
                 .then(CommandManager.literal("allowFlying")
-                    .then(CommandManager.literal("true").executes(ctx->toggleAbility(ctx,0,true)))
-                    .then(CommandManager.literal("false").executes(ctx->toggleAbility(ctx,0,false)))
+                    .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleAbility(ctx, 0, BoolArgumentType.getBool(ctx, "value"))))
                 )
                 /*.then(CommandManager.literal("allowModifyWorld")
-                    .then(CommandManager.literal("true").executes(ctx->toggleAbility(ctx,1,true)))
-                    .then(CommandManager.literal("false").executes(ctx->toggleAbility(ctx,1,false)))
+                    .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleAbility(ctx, 0, BoolArgumentType.getBool(ctx, "value"))))
                 )*/
                 .then(CommandManager.literal("invulnerable")
-                    .then(CommandManager.literal("true").executes(ctx->toggleAbility(ctx,2,true)))
-                    .then(CommandManager.literal("false").executes(ctx->toggleAbility(ctx,2,false)))
+                    .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleAbility(ctx, 0, BoolArgumentType.getBool(ctx, "value"))))
                 )
                 .then(CommandManager.literal("flySpeed")
                     .then(CommandManager.argument("value", FloatArgumentType.floatArg()).executes(ctx -> setAbilityValue(ctx, 0, FloatArgumentType.getFloat(ctx, "value"))))
@@ -53,7 +52,7 @@ public class CMD_Abilities{
             case 0:
                 abilities.allowFlying=state;
                 if(!state) abilities.flying=false;
-                abilityName="allowFlight";
+                abilityName="allowFlying";
                 break;
             case 1:
                 abilities.allowModifyWorld=state;
