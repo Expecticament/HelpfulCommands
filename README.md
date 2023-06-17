@@ -1,5 +1,5 @@
 # 📝║ Helpful Commands Mod
-Minecraft Fabric Mod that adds a bunch of helpful commands and shortcuts to already existing ones. This makes your experience more optimized as you don't need to type long phrases anymore. You can also find some new command-related features that are not possible in the base game.
+Minecraft Fabric Mod that adds a bunch of helpful commands and shortcuts for existing ones. This makes your experience more optimized as you don't need to type long phrases anymore. You can also find some new command-related features that are not possible in the base game. Can be easily configured, and each individual command is toggleable.
 
 • [Download]() • [Command List]() • [See on CurseForge]() •
 
