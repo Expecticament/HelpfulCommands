@@ -8,8 +8,15 @@ All the commands with their descriptions and arguments can be found on our Wiki 
 
 ## «🎮» Minecraft Versions
 *Click on game version to get to the latest mod version for it*
+<details>
+<summary>1.19</summary>
+  
 * [1.19.4](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.1)
 * [1.19.2](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.1)
 
+</details>
+
 ## «👥» Contribute
+*Switch to the latest Minecraft version (in Branches) to propose changes and updates to the mod.*
+
 The project is open-source, so you can always just download the code, edit it in any way, and submit your changes to the main repo. Even if you don't want to code, feel free to give us your ideas or report bugs and other issues with the mod.
