@@ -16,6 +16,9 @@ All the commands with their descriptions and arguments can be found on our Wiki 
 
 </details>
 
+## «💻» Source Code
+Select a game version (in Branches) which you want to browse the source code for.
+
 ## «👥» Contribute
 *Switch to the latest Minecraft version (in Branches) to propose changes and updates to the mod.*
 
