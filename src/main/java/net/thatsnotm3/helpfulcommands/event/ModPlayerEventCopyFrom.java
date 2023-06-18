@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.thatsnotm3.helpfulcommands.util.IEntityDataSaver;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 
 public class ModPlayerEventCopyFrom implements ServerPlayerEvents.CopyFrom{

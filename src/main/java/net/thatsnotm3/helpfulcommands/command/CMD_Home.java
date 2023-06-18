@@ -12,7 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.thatsnotm3.helpfulcommands.util.IEntityDataSaver;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 
 public class CMD_Home{

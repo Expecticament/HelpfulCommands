@@ -10,7 +10,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.world.explosion.Explosion.DestructionType;
+import net.minecraft.world.World.ExplosionSourceType;
 import net.thatsnotm3.helpfulcommands.gamerule.ModGameRules;
 
 public class CMD_Explosion{
@@ -33,7 +33,7 @@ public class CMD_Explosion{
             player.sendMessage(Text.literal("\u00A7cExplosions this powerful ( >75 ) require \u00A76\"hcUncapExplosionPower\" \u00A7cgame rule to be enabled!"));
             return 1;
         }
-        player.getWorld().createExplosion(null, posX, posY, posZ, power, DestructionType.BREAK);
+        player.getWorld().createExplosion(null, posX, posY, posZ, power, ExplosionSourceType.TNT);
         player.sendMessage(Text.literal("Created an explosion"),true);
 
         return 1;

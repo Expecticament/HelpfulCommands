@@ -26,7 +26,7 @@ public class CMD_Abilities{
                     .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleAbility(ctx, 0, BoolArgumentType.getBool(ctx, "value"))))
                 )*/
                 .then(CommandManager.literal("invulnerable")
-                    .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleAbility(ctx, 0, BoolArgumentType.getBool(ctx, "value"))))
+                    .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleAbility(ctx, 2, BoolArgumentType.getBool(ctx, "value"))))
                 )
                 .then(CommandManager.literal("flySpeed")
                     .then(CommandManager.argument("value", FloatArgumentType.floatArg()).executes(ctx -> setAbilityValue(ctx, 0, FloatArgumentType.getFloat(ctx, "value"))))
