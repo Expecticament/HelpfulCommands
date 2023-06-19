@@ -9,6 +9,12 @@ All the commands with their descriptions and arguments can be found on our Wiki 
 ## «🎮» Minecraft Versions
 *Click on game version to get to the latest mod version for it*
 <details>
+<summary>1.20</summary>
+  
+* [1.20.1](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.2)
+
+</details>
+<details>
 <summary>1.19</summary>
   
 * [1.19.4](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.1)
