@@ -20,7 +20,7 @@ public class CMD_Night{
 
         if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("night",player)) return -1;
         
-        player.getWorld().setTimeOfDay(13000);
+        player.getServerWorld().setTimeOfDay(13000);
         player.sendMessage(Text.literal("Changed daytime to \u00A7bNight"));
 
         return 1;

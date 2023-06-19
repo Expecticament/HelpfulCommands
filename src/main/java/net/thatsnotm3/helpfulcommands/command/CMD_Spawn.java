@@ -42,6 +42,11 @@ public class CMD_Spawn{
 
         if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("spawn",player)) return -1;
         
+        if(player.getSpawnPointPosition()==null){
+            player.sendMessage(Text.literal("\u00A7cSpawn Point position is not set in this world yet!"));
+            return 1;
+        }
+
         ServerWorld targetWorld=player.getServer().getWorld(player.getSpawnPointDimension());
         player.teleport(targetWorld, player.getSpawnPointPosition().getX(), player.getSpawnPointPosition().getY(), player.getSpawnPointPosition().getZ(), player.getYaw(), player.getPitch());
         player.sendMessage(Text.literal("Teleported you to \u00A7byour Spawnpoint"));
@@ -64,6 +69,10 @@ public class CMD_Spawn{
 
         if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("spawn",player)) return -1;
 
+        if(player.getSpawnPointPosition()==null){
+            player.sendMessage(Text.literal("\u00A7cSpawn Point position is not set in this world yet!"));
+            return 1;
+        }
         RegistryKey<World> spawnDimensionKey=player.getSpawnPointDimension();
         String dimensionName=spawnDimensionKey.getValue().toString();
         player.sendMessage(Text.literal("\u00A7bYour Spawnpoint information:\u00A7r\nX: \u00A76"+player.getSpawnPointPosition().getX()+"\u00A7r\nY: \u00A76"+player.getSpawnPointPosition().getY()+"\u00A7r\nZ: \u00A76"+player.getSpawnPointPosition().getZ()+"\u00A7r\nDimension: \u00A76"+dimensionName));
