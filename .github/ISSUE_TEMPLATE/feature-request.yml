@@ -1,0 +1,17 @@
+name: Feature Request
+description: Suggest a new command or other feature for the mod
+labels: [ "new feature" ]
+assignees: ThatsNotM3
+body:
+    -   type: textarea
+        attributes:
+            label: Describe your Idea
+            description: Is it a command or something else? If this is a command, provide all the parameters and ways to use it.
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: Additional context
+            description: Add any other context or screenshots about the feature request here.
+        validations:
+            required: false
