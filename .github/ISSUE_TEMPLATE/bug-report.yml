@@ -1,0 +1,36 @@
+name: Bug Report
+description: Create a report to help us improve
+labels: [ "bug" ]
+assignees: ThatsNotM3
+body:
+    -   type: textarea
+        attributes:
+            label: Describe the Bug
+            description: A clear and concise description of what the bug is.
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: To Reproduce
+            description: Go to ..., type ..., execute ... command, see error
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: Expected behavior
+            description: A clear and concise description of what you expected to happen.
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: Mod Info
+            description: Tell us your mod and game versions
+            value: Mod Version: \nGame Version: 
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: Additional context
+            description: Add any other context, screenshots or videos here.
+        validations:
+            required: false
