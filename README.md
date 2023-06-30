@@ -7,7 +7,7 @@ Minecraft Fabric Mod that adds a bunch of helpful commands and shortcuts for exi
 All the commands with their descriptions and arguments can be found on our Wiki [here](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands).
 
 ## «🎮» Minecraft Versions
-*Click on game version to get to the latest mod version for it*
+*Click on a game version to get the latest mod version for it*
 <details>
 <summary>1.20</summary>
   
