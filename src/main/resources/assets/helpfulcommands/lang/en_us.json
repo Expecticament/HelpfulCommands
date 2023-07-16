@@ -1,7 +1,10 @@
 {
-    "gamerule.hcEnabled":"Helpful Commands Enabled",
+    "gamerule.hcEnabled":"Helpful Commands Mod Enabled",
     "gamerule.hcUncapExplosionPower":"Uncap /explosion command power",
 
     "command.description.abilities":"Configure and get your abilities (fly, invulnerability, etc.)",
-    "command.description.back":"Return to where you last died"
+    "command.description.back":"Return to where you last died",
+
+    "message.command.gm.self":"Updated your game mode to %d",
+    "message.command.gm.target":"Updated game mode to %d for %d player(s)"
 }
