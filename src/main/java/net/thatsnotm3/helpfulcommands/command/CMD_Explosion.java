@@ -24,7 +24,7 @@ public class CMD_Explosion{
     public static int run(CommandContext<ServerCommandSource> ctx,float distance,float power) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("explosion",player)) return -1;
+        if(!ModCommandManager.RunChecks("explosion",player)) return -1;
 
         double posX=player.getX()+player.getRotationVector().getX()*distance;
         double posY=player.getY()+player.getEyeHeight(player.getPose())+player.getRotationVector().getY()*distance;

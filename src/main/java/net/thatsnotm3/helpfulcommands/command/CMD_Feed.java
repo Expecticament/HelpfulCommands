@@ -19,7 +19,7 @@ public class CMD_Feed{
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player = ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("feed",player)) return -1;
+        if(!ModCommandManager.RunChecks("feed",player)) return -1;
 
         player.getHungerManager().setFoodLevel(20);
         player.getHungerManager().setSaturationLevel(5);

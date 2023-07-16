@@ -1,4 +1,7 @@
 {
     "gamerule.hcEnabled":"Helpful Commands Enabled",
-    "gamerule.hcUncapExplosionPower":"Uncap /explosion command power"
+    "gamerule.hcUncapExplosionPower":"Uncap /explosion command power",
+
+    "command.description.abilities":"Configure and get your abilities (fly, invulnerability, etc.)",
+    "command.description.back":"Return to where you last died"
 }

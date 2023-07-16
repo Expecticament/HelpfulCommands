@@ -24,7 +24,7 @@ public class CMD_Gm{
     public static int switchGameMode(CommandContext<ServerCommandSource> ctx, int gm) throws CommandSyntaxException{ // 0 - Creative; 1 - Survival; 2 - Adventure; 3 - Spectator
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("gm",player)) return -1;
+        if(!ModCommandManager.RunChecks("gm",player)) return -1;
 
         GameMode gameMode;
         String name;

@@ -25,7 +25,7 @@ public class CMD_Dimension{
     public static int switchDimension(CommandContext<ServerCommandSource> ctx, Integer dimension) throws CommandSyntaxException{ // 0 - Overworld; 1 - The Nether; 2 - The End
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("dimension",player)) return -1;
+        if(!ModCommandManager.RunChecks("dimension",player)) return -1;
         
         String dimensionName;
         ServerWorld world;
@@ -53,7 +53,7 @@ public class CMD_Dimension{
     public static int getCurrentDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("dimension",player)) return -1;
+        if(!ModCommandManager.RunChecks("dimension",player)) return -1;
 
         RegistryKey<World> currentDimension=player.getWorld().getRegistryKey();
         String dimensionName=currentDimension.getValue().toString();

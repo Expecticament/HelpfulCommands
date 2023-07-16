@@ -25,7 +25,7 @@ public class CMD_Back{
         IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("back",player)) return -1;
+        if(!ModCommandManager.RunChecks("back",player)) return -1;
 
         int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
         String dimensionName=playerData.getPersistentData().getString("deathDimension");
@@ -60,7 +60,7 @@ public class CMD_Back{
         IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("back",player)) return -1;
+        if(!ModCommandManager.RunChecks("back",player)) return -1;
 
         int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
         String dimensionName=playerData.getPersistentData().getString("deathDimension");

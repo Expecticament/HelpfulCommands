@@ -21,7 +21,7 @@ public class CMD_Jump{
     public static int run(CommandContext<ServerCommandSource> ctx,float distance) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("jump",player)) return -1;
+        if(!ModCommandManager.RunChecks("jump",player)) return -1;
 
         double posX=player.getX()+player.getRotationVector().getX()*distance;
         double posY=player.getY()+player.getEyeHeight(player.getPose())+player.getRotationVector().getY()*distance;

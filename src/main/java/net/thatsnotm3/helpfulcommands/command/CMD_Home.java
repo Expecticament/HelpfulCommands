@@ -29,7 +29,7 @@ public class CMD_Home{
         IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("home",player)) return -1;
+        if(!ModCommandManager.RunChecks("home",player)) return -1;
 
         int[] homePos=playerData.getPersistentData().getIntArray("homePosition");
         String dimensionName=playerData.getPersistentData().getString("homeDimension");
@@ -64,7 +64,7 @@ public class CMD_Home{
         IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("home",player)) return -1;
+        if(!ModCommandManager.RunChecks("home",player)) return -1;
 
         BlockPos playerPos=player.getBlockPos();
         playerData.getPersistentData().putIntArray("homePosition",new int[]{playerPos.getX(),playerPos.getY(),playerPos.getZ()});
@@ -80,7 +80,7 @@ public class CMD_Home{
         IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("home",player)) return -1;
+        if(!ModCommandManager.RunChecks("home",player)) return -1;
 
         int[] homePos=playerData.getPersistentData().getIntArray("homePosition");
         String dimensionName=playerData.getPersistentData().getString("homeDimension");

@@ -18,7 +18,7 @@ public class CMD_Extinguish{
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("extinguish",player)) return -1;
+        if(!ModCommandManager.RunChecks("extinguish",player)) return -1;
 
         player.extinguish();
 

@@ -18,7 +18,7 @@ public class CMD_Night{
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player = ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("night",player)) return -1;
+        if(!ModCommandManager.RunChecks("night",player)) return -1;
         
         player.getServerWorld().setTimeOfDay(13000);
         player.sendMessage(Text.literal("Changed daytime to \u00A7bNight"));

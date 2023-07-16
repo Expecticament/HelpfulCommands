@@ -41,7 +41,7 @@ public class CMD_Abilities{
     public static int toggleAbility(CommandContext<ServerCommandSource> ctx, int ability, boolean state) throws CommandSyntaxException{ // 0 - allowFlying; 1 - allowModifyWorld; 2 - invulnerable;
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("abilities",player)) return -1;
+        if(!ModCommandManager.RunChecks("abilities",player)) return -1;
 
         PlayerAbilities abilities=player.getAbilities();
         String abilityName="UNKNOWN";
@@ -71,7 +71,7 @@ public class CMD_Abilities{
     public static int setAbilityValue(CommandContext<ServerCommandSource> ctx, int ability, float value){ // 0 - flySpeed; 1 - walkSpeed
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("abilities",player)) return -1;
+        if(!ModCommandManager.RunChecks("abilities",player)) return -1;
 
         PlayerAbilities abilities=player.getAbilities();
         String abilityName="UNKNOWN";
@@ -93,7 +93,7 @@ public class CMD_Abilities{
     public static int getAbilities(CommandContext<ServerCommandSource> ctx){
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("abilities",player)) return -1;
+        if(!ModCommandManager.RunChecks("abilities",player)) return -1;
 
         PlayerAbilities abilities=player.getAbilities();
         String text="\u00A7bYour abilities list:\u00A7r\n";

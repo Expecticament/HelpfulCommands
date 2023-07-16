@@ -18,7 +18,7 @@ public class CMD_Heal{
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player = ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("heal",player)) return -1;
+        if(!ModCommandManager.RunChecks("heal",player)) return -1;
 
         player.setHealth(player.getMaxHealth());
 

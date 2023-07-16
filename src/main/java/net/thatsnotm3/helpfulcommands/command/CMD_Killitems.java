@@ -18,7 +18,7 @@ public class CMD_Killitems{
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("killitems",player)) return -1;
+        if(!ModCommandManager.RunChecks("killitems",player)) return -1;
 
         player.getServer().getCommandManager().executeWithPrefix(ctx.getSource(), "kill @e[type=item]");
         player.sendMessage(Text.literal("\u00A7b/kill @e[type=item]"),true);

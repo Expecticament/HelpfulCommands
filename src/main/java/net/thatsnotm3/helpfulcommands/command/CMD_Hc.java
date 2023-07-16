@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
@@ -17,63 +18,28 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.thatsnotm3.helpfulcommands.HelpfulCommands;
+import net.thatsnotm3.helpfulcommands.TranslationManager;
 import net.thatsnotm3.helpfulcommands.util.ConfigUtils;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class CMD_Hc{
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
+        LiteralArgumentBuilder<ServerCommandSource> commands=CommandManager.literal("commands");
+        for(String i : ModCommandManager.commands){
+            LiteralArgumentBuilder<ServerCommandSource> literalCommand=CommandManager.literal(i)
+                    .then(CommandManager.argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> toggleCommand(ctx, i, BoolArgumentType.getBool(ctx, "value"))));
+            
+            commands.then(literalCommand);
+        }
+        commands.executes(CMD_Hc::cmdList);
+        
         dispatcher.register(CommandManager.literal("hc")
-            .then(CommandManager.literal("config")
-                .then(CommandManager.literal("commands")
-                    .then(CommandManager.literal("abilities")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "abilities", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("back")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "back", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("day")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "day", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("dimension")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "dimension", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("explosion")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "explosion", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("extinguish")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "extinguish", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("feed")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "feed", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("gm")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "gm", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("heal")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "heal", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("home")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "home", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("jump")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "jump", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("killitems")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "killitems", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("lightning")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "lightning", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("night")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "night", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                    .then(CommandManager.literal("spawn")
-                        .then(CommandManager.argument("value", BoolArgumentType.bool()).executes(ctx -> toggleCommand(ctx, "spawn", BoolArgumentType.getBool(ctx, "value"))))
-                    )
-                )
-            )
-            .then(CommandManager.literal("commandList").executes(CMD_Hc::cmdList))
             .then(CommandManager.literal("info").executes(CMD_Hc::info))
+            .then(commands)
+            .then(CommandManager.literal("config")
+                
+            )
             .executes(CMD_Hc::info)
         );
     }
@@ -128,8 +94,8 @@ public class CMD_Hc{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
         MinecraftServer server=player.getServer();
 
-        player.sendMessage(Text.literal(
-            "\u00A7b\u00A7lCommand List\u00A7r \u00A77|| \u00A7aEnabled \u00A7cDisabled\u00A7r"+
+        /*player.sendMessage(Text.literal(
+            +
             "\n"+getCommandColor("abilities",server)+" Configure and read your abilities (fly, invulnerability, etc.)"+
             "\n"+getCommandColor("back",server)+" Return to where you last died"+
             "\n"+getCommandColor("day",server)+" Set the time to Day"+
@@ -144,7 +110,16 @@ public class CMD_Hc{
             "\n"+getCommandColor("lightning",server)+" Strike a Lightning at your cursor position"+
             "\n"+getCommandColor("night",server)+" Set the time to Night"+
             "\n"+getCommandColor("spawn",server)+" Get or teleport to your or world spawn point"
-        ));
+        ));*/
+        player.sendMessage(Text.literal("\u00A7b\u00A7lCommand List\u00A7r \u00A77|| \u00A7aEnabled \u00A7cDisabled\u00A7r"));
+        for(String i : ModCommandManager.commands){
+            player.sendMessage(Text.literal(
+                getCommandColor(i,server)+": "+TranslationManager.getTranslation("command.description."+i)
+            ).setStyle(Style.EMPTY
+                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+i))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("Click to suggest command")))
+            ));
+        }
 
         return 1;
     }
