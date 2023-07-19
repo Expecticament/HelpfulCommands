@@ -1,15 +1,13 @@
 package net.thatsnotm3.helpfulcommands.command;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.thatsnotm3.helpfulcommands.HelpfulCommands;
+import net.minecraft.util.Formatting;
 import net.thatsnotm3.helpfulcommands.gamerule.ModGameRules;
-import net.thatsnotm3.helpfulcommands.util.ConfigUtils;
+import net.thatsnotm3.helpfulcommands.util.ConfigManager;
 
 public class ModCommandManager{
 
@@ -22,7 +20,6 @@ public class ModCommandManager{
         add("extinguish");
         add("feed");
         add("gm");
-        add("hc");
         add("heal");
         add("home");
         add("jump");
@@ -33,26 +30,26 @@ public class ModCommandManager{
     }};
 
     public static boolean RunChecks(String cmd, ServerPlayerEntity player){
+        ConfigManager.ModConfig cfg;
+        cfg=ConfigManager.loadConfig(player.getServer());
+        ConfigManager.ModCommandProperties cmdProperties=cfg.commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
+
         if(!player.hasPermissionLevel(2)){
-            player.sendMessage(Text.literal("\u00A7cYou can't use Helpful Commands: Insufficient Privileges!"));
+            player.sendMessage(Text.translatable("message.error.commandInsufficientPrivileges",Text.literal(Integer.toString(cmdProperties.opLevel)),Text.literal(Integer.toString(getPlayerPermissionLevel(player))).formatted(Formatting.GOLD)).formatted(Formatting.RED));
             return false;
         }
         if(!player.getWorld().getGameRules().getBoolean(ModGameRules.HC_ENABLED)){
-            player.sendMessage(Text.literal("\u00A7cHelpful Commands Mod is disabled in this world!"));
+            player.sendMessage(Text.translatable("message.error.modDisabled").formatted(Formatting.RED));
             return false;
         }
-
-        Map<String, Boolean> map;
-        try{
-            map=ConfigUtils.loadConfig(player.getServer());
-        } catch(IOException e){
-            HelpfulCommands.LOGGER.error("Failed to load or create server config file", e);
-            return false;
-        }
-        if(map.containsKey(cmd)) if(!map.get(cmd)){
-            player.sendMessage(Text.literal("\u00A7cThis command is disabled in this world!"));
+        if(!cmdProperties.enabled){
+            player.sendMessage(Text.translatable("message.error.commandDisabled",Text.literal(cmd).formatted(Formatting.GOLD)).formatted(Formatting.RED));
             return false;
         }
         return true;
+    }
+
+    public static int getPlayerPermissionLevel(ServerPlayerEntity player){
+        return player.hasPermissionLevel(4) ? 4 : player.hasPermissionLevel(3) ? 3 : player.hasPermissionLevel(2) ? 2 : player.hasPermissionLevel(1) ? 1 : 0;
     }
 }

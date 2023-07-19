@@ -5,6 +5,25 @@
     "command.description.abilities":"Configure and get your abilities (fly, invulnerability, etc.)",
     "command.description.back":"Return to where you last died",
 
+    "message.command.hc.info": "Info",
+    "message.command.hc.info.modVersion": "v. %d || by %d",
+    "message.command.hc.commandList": "Command List",
+    "message.command.hc.commandList.header.opLevel": "OP level",
+    "message.command.hc.commandList.header.enabled": "Enabled",
+    "message.command.hc.commandList.header.disabled": "Disabled",
+    "message.command.enabled": "Enabled %d command",
+    "message.command.disabled": "Disabled %d command",
     "message.command.gm.self":"Updated your game mode to %d",
-    "message.command.gm.target":"Updated game mode to %d for %d player(s)"
+    "message.command.gm.target":"Updated game mode to %d for %d player(s)",
+
+    "message.error.modDisabled": "Helpful Commands Mod is disabled in this world!",
+    "message.error.commandDisabled": "/%d command is disabled in this world!",
+    "message.error.commandInsufficientPrivileges": "You can't use /%d command! It requires higher OP level (%d) than you currently have (%d)",
+
+    "tooltip.highlight.hc.info.button.commandList": "Click to see all the commands",
+    "tooltip.highlight.hc.info.button.gitHub": "Click to open mod's GitHub page",
+    "tooltip.highlight.hc.commands.opLevel": "Click to set required OP level for /%d command",
+    "tooltip.highlight.hc.commands.toggle": "Click to toggle /%d command",
+    "tooltip.highlight.hc.commands.suggest": "Click to suggest /%d command",
+    "tooltip.highlight.hc.commands.disabled": "/%d command is disabled in this world"
 }

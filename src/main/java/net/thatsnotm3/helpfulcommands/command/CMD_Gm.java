@@ -27,49 +27,33 @@ public class CMD_Gm{
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmdName)
-            .then(CommandManager.literal("c").executes(ctx->switchGameMode(ctx,0,null))
+            .then(CommandManager.literal("c").executes(ctx->switchGameMode(ctx,GameMode.CREATIVE,null))
                 .then(CommandManager.argument("target", EntityArgumentType.players())
-                .executes(ctx->switchGameMode(ctx,0,EntityArgumentType.getPlayers(ctx, "target")))
+                .executes(ctx->switchGameMode(ctx,GameMode.CREATIVE,EntityArgumentType.getPlayers(ctx, "target")))
                 )
             )
-            .then(CommandManager.literal("s").executes(ctx->switchGameMode(ctx,1,null))
+            .then(CommandManager.literal("s").executes(ctx->switchGameMode(ctx,GameMode.SURVIVAL,null))
                 .then(CommandManager.argument("target", EntityArgumentType.players())
-                .executes(ctx->switchGameMode(ctx,1,EntityArgumentType.getPlayers(ctx, "target")))
+                .executes(ctx->switchGameMode(ctx,GameMode.SURVIVAL,EntityArgumentType.getPlayers(ctx, "target")))
                 )
             )
-            .then(CommandManager.literal("a").executes(ctx->switchGameMode(ctx,2,null))
+            .then(CommandManager.literal("a").executes(ctx->switchGameMode(ctx,GameMode.ADVENTURE,null))
                 .then(CommandManager.argument("target", EntityArgumentType.players())
-                .executes(ctx->switchGameMode(ctx,2,EntityArgumentType.getPlayers(ctx, "target")))
+                .executes(ctx->switchGameMode(ctx,GameMode.ADVENTURE,EntityArgumentType.getPlayers(ctx, "target")))
                 )
             )
-            .then(CommandManager.literal("sp").executes(ctx->switchGameMode(ctx,3,null))
+            .then(CommandManager.literal("sp").executes(ctx->switchGameMode(ctx,GameMode.SPECTATOR,null))
                 .then(CommandManager.argument("target", EntityArgumentType.players())
-                .executes(ctx->switchGameMode(ctx,3,EntityArgumentType.getPlayers(ctx, "target")))
+                .executes(ctx->switchGameMode(ctx,GameMode.SPECTATOR,EntityArgumentType.getPlayers(ctx, "target")))
                 )
             )
         );
     }
 
-    public static int switchGameMode(CommandContext<ServerCommandSource> ctx, int gm, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException{ // 0 - Creative; 1 - Survival; 2 - Adventure; 3 - Spectator
+    public static int switchGameMode(CommandContext<ServerCommandSource> ctx, GameMode gameMode, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException{ // 0 - Creative; 1 - Survival; 2 - Adventure; 3 - Spectator
         ServerPlayerEntity player=ctx.getSource().getPlayer();
         
         if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
-
-        GameMode gameMode;
-        switch(gm){
-            default:
-                gameMode=GameMode.CREATIVE;
-                break;
-            case 1:
-                gameMode=GameMode.SURVIVAL;
-                break;
-            case 2:
-                gameMode=GameMode.ADVENTURE;
-                break;
-            case 3:
-                gameMode=GameMode.SPECTATOR;
-                break;
-        }
 
         if(targets!=null){
             int i=0;

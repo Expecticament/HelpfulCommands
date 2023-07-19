@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.thatsnotm3.helpfulcommands.command.*;
 import net.thatsnotm3.helpfulcommands.gamerule.ModGameRules;
-import net.thatsnotm3.helpfulcommands.util.ConfigUtils;
 import net.thatsnotm3.helpfulcommands.event.ModPlayerEventCopyFrom;
 
 import org.slf4j.Logger;
@@ -21,8 +20,6 @@ public class HelpfulCommands implements ModInitializer{
 		registerCommands();
 		registerEvents();
 		ModGameRules.registerGameRules();
-
-		ConfigUtils.initialize();
 	}
 
 	public static void registerCommands(){
