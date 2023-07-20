@@ -1,6 +1,7 @@
 package net.thatsnotm3.helpfulcommands.command;
 
 import java.io.IOException;
+import java.text.CompactNumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class CMD_Hc{
             .then(CommandManager.literal("info").executes(CMD_Hc::info))
             .then(commands)
             .then(CommandManager.literal("config")
-                
+
             )
             .executes(CMD_Hc::info)
         );
@@ -56,13 +57,13 @@ public class CMD_Hc{
     public static int toggleCommand(CommandContext<ServerCommandSource> ctx,String cmd,Boolean state) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!player.hasPermissionLevel(3)){
-            player.sendMessage(Text.literal("\u00A7cYou can't toggle commands: Insufficient Privileges!"));
-            return 1;
+        ConfigManager.ModConfig cfg = ConfigManager.loadConfig(player.getServer());
+
+        if(!player.hasPermissionLevel(cfg.configOPLevel)){
+            ModCommandManager.sendConfigEditingInsufficientPrivilegesMessage(player);
+            return -1;
         }
 
-
-        ConfigManager.ModConfig cfg = ConfigManager.loadConfig(player.getServer());
         Map<String, ConfigManager.ModCommandProperties> cmdProperties = cfg.commandProperties;
         ConfigManager.ModCommandProperties cmdInQuestion = cmdProperties.getOrDefault(cmd, new ConfigManager.ModCommandProperties());
         cmdInQuestion.enabled = state;
@@ -89,6 +90,23 @@ public class CMD_Hc{
         return 1;
     }
     public static int changeCommandOpLevel(CommandContext<ServerCommandSource> ctx,String cmd,int level){
+        ServerPlayerEntity player=ctx.getSource().getPlayer();
+
+        ConfigManager.ModConfig cfg = ConfigManager.loadConfig(player.getServer());
+
+        if(!player.hasPermissionLevel(cfg.configOPLevel)){
+            ModCommandManager.sendConfigEditingInsufficientPrivilegesMessage(player);
+            return -1;
+        }
+
+        ConfigManager.ModCommandProperties cmdInQuestion=cfg.commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
+        cmdInQuestion.opLevel=level;
+        cfg.commandProperties.put(cmd,cmdInQuestion);
+        ConfigManager.saveConfig(cfg,player.getServer());
+
+        //MutableText msg=Text.literal("");
+
+        //player.sendMessage(msg);
         return 1;
     }
 
@@ -220,6 +238,7 @@ public class CMD_Hc{
     }
 
     static String getCommandOpLevel(String cmd,MinecraftServer server){
-        return "2";
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(server);
+        return Integer.toString(cfg.commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties()).opLevel);
     }
 }

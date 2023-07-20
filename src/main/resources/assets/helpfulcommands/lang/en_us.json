@@ -1,6 +1,8 @@
 {
-    "gamerule.hcEnabled":"Helpful Commands Mod Enabled",
-    "gamerule.hcUncapExplosionPower":"Uncap /explosion command power",
+    "gamerule.hcEnabled":"Helpful Commands Mod state",
+
+    "modconfig.uncapExplosionPower": "Remove power limit for /explosion command",
+    "modconfig.configOPLevel.description": "OP level required to edit Mod Config, including individual command configuration",
 
     "command.description.abilities":"Configure and get your abilities (fly, invulnerability, etc.)",
     "command.description.back":"Return to where you last died",
@@ -28,9 +30,11 @@
     "message.command.gm.self":"Updated your game mode to %d",
     "message.command.gm.target":"Updated game mode to %d for %d player(s)",
 
-    "message.error.modDisabled": "Helpful Commands Mod is disabled in this world!",
-    "message.error.commandDisabled": "%d command is disabled in this world!",
-    "message.error.commandInsufficientPrivileges": "You can't use %d command! It requires higher OP level (%d) than you currently have (%d)",
+    "message.error.mod.disabled": "Helpful Commands Mod is disabled in this world!",
+    "message.error.command.disabled": "%d command is disabled in this world!",
+    "message.error.command.insufficientPrivileges": "You can't use %d command! It requires higher OP level (%d) than you currently have (%d)",
+    "message.error.config.insufficientPrivileges": "You can't configure Helpful Commands! This action requires higher OP level (%d) than you currently have (%d)",
+    "message.error.config.configOPLevel.insufficientOPLevel": "Your OP level (%d) has to be higher or equal to the value that you are specifying (%d)!",
 
     "tooltip.highlight.hc.info.button.commandList": "Click to see all the commands",
     "tooltip.highlight.hc.info.button.gitHub": "Click to open mod's GitHub page",

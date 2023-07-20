@@ -25,6 +25,7 @@ public class ConfigManager{
     }
     public static final class ModConfig{
         public Boolean uncapExplosionPower=false;
+        public int configOPLevel=3;
         public Map<String,ModCommandProperties> commandProperties=new HashMap<String,ModCommandProperties>();
     }
 
