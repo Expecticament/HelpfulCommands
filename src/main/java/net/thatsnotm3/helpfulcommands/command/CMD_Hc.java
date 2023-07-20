@@ -61,13 +61,14 @@ public class CMD_Hc{
             return 1;
         }
 
-        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(player.getServer());
-        Map<String,ConfigManager.ModCommandProperties> cmdProperties=cfg.commandProperties;
-        ConfigManager.ModCommandProperties cmdInQuestion=cmdProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
-        cmdInQuestion.enabled=state;
-        cmdProperties.put(cmd,cmdInQuestion);
-        cfg.commandProperties=cmdProperties;
-        ConfigManager.saveConfig(cfg,player.getServer());
+
+        ConfigManager.ModConfig cfg = ConfigManager.loadConfig(player.getServer());
+        Map<String, ConfigManager.ModCommandProperties> cmdProperties = cfg.commandProperties;
+        ConfigManager.ModCommandProperties cmdInQuestion = cmdProperties.getOrDefault(cmd, new ConfigManager.ModCommandProperties());
+        cmdInQuestion.enabled = state;
+        cmdProperties.put(cmd, cmdInQuestion);
+        cfg.commandProperties = cmdProperties;
+        ConfigManager.saveConfig(cfg, player.getServer());
 
         MutableText msg;
         if(state){
@@ -201,7 +202,10 @@ public class CMD_Hc{
     }
 
     static boolean getCommandState(String cmd, MinecraftServer server){
-        ConfigManager.ModCommandProperties cmdProperties=ConfigManager.loadConfig(server).commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
+        ConfigManager.ModCommandProperties cmdProperties=new ConfigManager.ModCommandProperties();
+        try {
+            cmdProperties = ConfigManager.loadConfig(server).commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
+        } catch(Exception e){ HelpfulCommands.LOGGER.error("Error reading config file!",e); }
         return cmdProperties.enabled;
     }
 

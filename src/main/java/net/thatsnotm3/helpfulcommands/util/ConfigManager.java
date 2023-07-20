@@ -10,6 +10,7 @@ import net.thatsnotm3.helpfulcommands.HelpfulCommands;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigManager{
@@ -24,30 +25,35 @@ public class ConfigManager{
     }
     public static final class ModConfig{
         public Boolean uncapExplosionPower=false;
-        public Map<String,ModCommandProperties> commandProperties;
+        public Map<String,ModCommandProperties> commandProperties=new HashMap<String,ModCommandProperties>();
     }
 
     public static ModConfig loadConfig(MinecraftServer server){
-        ModConfig ret=new ModConfig();
+        ModConfig ret=null;
 
-        Path folder=server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
-        String file=server.getSavePath(WorldSavePath.ROOT).normalize()+"/"+CONFIG_FILE_FOLDER+"/"+CONFIG_FILE_NAME;
-        HelpfulCommands.LOGGER.info(file);
-        if(Files.exists(folder)) {
-            try(FileReader reader=new FileReader(file)){
-                ret=GSON.fromJson(reader,ModConfig.class);
-            } catch(IOException e){
+        Path folder = server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
+        Path filePath=folder.resolve(CONFIG_FILE_NAME);
+        String file = server.getSavePath(WorldSavePath.ROOT).normalize() + "/" + CONFIG_FILE_FOLDER + "/" + CONFIG_FILE_NAME;
+
+        if(Files.exists(filePath)){
+            try{
+                FileReader reader=new FileReader(file);
+                ret=GSON.fromJson(reader, ModConfig.class);
+                reader.close();
+            } catch (IOException e) {
+                ret=null;
                 throwIOException(e);
             }
         }
 
+        if(ret==null) ret=new ModConfig();
         return ret;
     }
 
     public static void saveConfig(ModConfig cfg,MinecraftServer server){
         Path folder=server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
-        String file=server.getSavePath(WorldSavePath.ROOT).normalize()+"/"+CONFIG_FILE_FOLDER+"/"+CONFIG_FILE_NAME;
-        HelpfulCommands.LOGGER.info(file);
+        Path file=folder.resolve(CONFIG_FILE_NAME);
+
         if(Files.notExists(folder)){
             try{
                 Files.createDirectories(folder);
@@ -56,11 +62,18 @@ public class ConfigManager{
                 return;
             }
         }
-        String json=GSON.toJson(cfg);
-        try(FileWriter writer=new FileWriter(file)){
-            writer.write(json);
-        } catch(IOException e){
+
+        ModConfig newCfg=loadConfig(server);
+        newCfg.commandProperties.putAll(cfg.commandProperties);
+
+        try{
+            FileWriter writer=new FileWriter(file.normalize().toString());
+            writer.write(GSON.toJson(cfg));
+            writer.flush();
+            writer.close();
+        } catch(IOException e) {
             throwIOException(e);
+            return;
         }
     }
 

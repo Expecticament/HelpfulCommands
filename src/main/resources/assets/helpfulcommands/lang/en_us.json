@@ -4,6 +4,18 @@
 
     "command.description.abilities":"Configure and get your abilities (fly, invulnerability, etc.)",
     "command.description.back":"Return to where you last died",
+    "command.description.day":"Set the time to Day",
+    "command.description.dimension":"Get or switch target's dimension",
+    "command.description.explosion":"Create an explosion at a given distance with a given power",
+    "command.description.feed":"Feed and saturate target",
+    "command.description.gm":"Switch target's game mode",
+    "command.description.heal":"Fully restores target's health",
+    "command.description.home":"Set, get, or teleport to your Home Position",
+    "command.description.jump":"Teleport to cursor position with a given distance",
+    "command.description.killitems":"Kill all items lying on the ground",
+    "command.description.lightning":"Strike a Lightning at your cursor position with a given distance",
+    "command.description.night":"Set the time to Night",
+    "command.description.spawn":"Get or teleport to your or the world's spawn point",
 
     "message.command.hc.info": "Info",
     "message.command.hc.info.modVersion": "v. %d || by %d",
@@ -17,8 +29,8 @@
     "message.command.gm.target":"Updated game mode to %d for %d player(s)",
 
     "message.error.modDisabled": "Helpful Commands Mod is disabled in this world!",
-    "message.error.commandDisabled": "/%d command is disabled in this world!",
-    "message.error.commandInsufficientPrivileges": "You can't use /%d command! It requires higher OP level (%d) than you currently have (%d)",
+    "message.error.commandDisabled": "%d command is disabled in this world!",
+    "message.error.commandInsufficientPrivileges": "You can't use %d command! It requires higher OP level (%d) than you currently have (%d)",
 
     "tooltip.highlight.hc.info.button.commandList": "Click to see all the commands",
     "tooltip.highlight.hc.info.button.gitHub": "Click to open mod's GitHub page",
