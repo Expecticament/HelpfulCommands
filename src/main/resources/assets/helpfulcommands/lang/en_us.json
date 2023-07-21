@@ -48,6 +48,8 @@
     "message.command.heal.target":"Healed %d player(s)",
     "message.command.feed.self":"You were fed and completely saturated",
     "message.command.feed.target":"Fed and completely saturated %d player(s)",
+    "message.command.extinguish.self":"You were extinguished",
+    "message.command.extinguish.target":"Extinguished %d entity(-ies)",
     "message.command.ignite.self":"You were ignited for %d seconds",
     "message.command.ignite.target":"Ignited %d entity(-ies) for %d seconds",
 
