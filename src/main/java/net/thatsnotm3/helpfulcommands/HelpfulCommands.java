@@ -39,6 +39,7 @@ public class HelpfulCommands implements ModInitializer{
 		CommandRegistrationCallback.EVENT.register(CMD_Feed::register);
 		CommandRegistrationCallback.EVENT.register(CMD_Heal::register);
 		CommandRegistrationCallback.EVENT.register(CMD_Extinguish::register);
+		CommandRegistrationCallback.EVENT.register(CMD_Ignite::register);
 	}
 
 	public static void registerEvents(){

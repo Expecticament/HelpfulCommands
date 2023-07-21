@@ -22,6 +22,7 @@ public class ModCommandManager{
         add("gm");
         add("heal");
         add("home");
+        add("ignite");
         add("jump");
         add("killitems");
         add("lightning");

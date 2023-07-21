@@ -14,6 +14,7 @@
     "command.description.gm":"Switch target's game mode",
     "command.description.heal":"Fully restores target's health",
     "command.description.home":"Set, get, or teleport to your Home Position",
+    "command.description.ignite":"Set target on fire for a specified number of seconds",
     "command.description.jump":"Teleport to cursor position with a given distance",
     "command.description.killitems":"Kill all items lying on the ground",
     "command.description.lightning":"Strike a Lightning at your cursor position with a given distance",
@@ -47,6 +48,8 @@
     "message.command.heal.target":"Healed %d player(s)",
     "message.command.feed.self":"You were fed and completely saturated",
     "message.command.feed.target":"Fed and completely saturated %d player(s)",
+    "message.command.ignite.self":"You were ignited for %d seconds",
+    "message.command.ignite.target":"Ignited %d entity(-ies) for %d seconds",
 
     "message.error.mod.disabled": "Helpful Commands Mod is disabled in this world!",
     "message.error.command.disabled": "%d command is disabled in this world!",
