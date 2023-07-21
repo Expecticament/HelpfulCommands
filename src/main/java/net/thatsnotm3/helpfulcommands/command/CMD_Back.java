@@ -9,7 +9,12 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.thatsnotm3.helpfulcommands.util.IEntityDataSaver;
 
 public class CMD_Back{
@@ -22,8 +27,8 @@ public class CMD_Back{
     }
 
     public static int returnToPos(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
+        IEntityDataSaver playerData=(IEntityDataSaver) player;
 
         if(!ModCommandManager.RunChecks("back",player)) return -1;
 
@@ -44,30 +49,55 @@ public class CMD_Back{
                     break;
             }
             if(dimension==null){
-                player.sendMessage(Text.literal("\u00A7cUnknown Dimension!"));
-                return 1;
+                player.sendMessage(Text.translatable("text.unknownDimension", Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.RED));
+                return -1;
             }
             player.teleport(dimension,deathPos[0],deathPos[1],deathPos[2],player.getYaw(),player.getPitch());
-            player.sendMessage(Text.literal("Teleported you to \u00A7byour Death Position"));
+            player.sendMessage(Text.translatable("message.command.back.self").setStyle(Style.EMPTY
+                .withFormatting(Formatting.GREEN)
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+deathPos[0]+"\ny: "+deathPos[1]+"\nz: "+deathPos[2])))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+deathPos[0]+" "+deathPos[1]+" "+deathPos[2]))
+            ));
         } else{
-            player.sendMessage(Text.literal("\u00A7cNo Death Position saved yet!"));
+            player.sendMessage(Text.translatable("message.command.back.noDeathPosition").formatted(Formatting.RED));
         }
 
         return 1;
     }
 
     public static int getPos(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
+        IEntityDataSaver playerData=(IEntityDataSaver) ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
         if(!ModCommandManager.RunChecks("back",player)) return -1;
 
         int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
         String dimensionName=playerData.getPersistentData().getString("deathDimension");
+        Style buttonStyle=Style.EMPTY
+            .withFormatting(Formatting.AQUA)
+            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/back"))
+            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("tooltip.highlight.back.get.teleportButton")))
+        ;
         if(deathPos.length!=0){
-            player.sendMessage(Text.literal("\u00A7bYour Death Position coordinates:\u00A7r\nX: \u00A76"+deathPos[0]+"\u00A7r\nY: \u00A76"+deathPos[1]+"\u00A7r\nZ: \u00A76"+deathPos[2]+"\u00A7r\nDimension: \u00A76"+dimensionName));
+            MutableText msg=Text.literal("")
+                .append(Text.literal("\u00AB ").formatted(Formatting.AQUA,Formatting.BOLD))
+                .append(Text.translatable("message.command.back.get.title").formatted(Formatting.AQUA,Formatting.BOLD))
+                .append(Text.literal(" \u00BB").formatted(Formatting.AQUA,Formatting.BOLD))
+                .append(Text.literal("\nx: "))
+                .append(Text.literal(Integer.toString(deathPos[0])).formatted(Formatting.GOLD))
+                .append(Text.literal("\ny: "))
+                .append(Text.literal(Integer.toString(deathPos[1])).formatted(Formatting.GOLD))
+                .append(Text.literal("\nz: "))
+                .append(Text.literal(Integer.toString(deathPos[2])).formatted(Formatting.GOLD))
+                .append(Text.literal("\n"))
+                .append(Text.translatable("text.dimension",Text.literal(dimensionName).formatted(Formatting.GOLD)))
+                .append(Text.literal("\n\n[").setStyle(buttonStyle))
+                .append(Text.translatable("text.teleport").setStyle(buttonStyle))
+                .append(Text.literal("]").setStyle(buttonStyle))
+            ;
+            player.sendMessage(msg);
         } else{
-            player.sendMessage(Text.literal("\u00A7cNo Death Position saved yet!"));
+            player.sendMessage(Text.translatable("message.command.back.noDeathPosition").formatted(Formatting.RED));
         }
 
         return 1;

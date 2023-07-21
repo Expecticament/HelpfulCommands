@@ -34,16 +34,16 @@ public class ModCommandManager{
         cfg=ConfigManager.loadConfig(player.getServer());
         ConfigManager.ModCommandProperties cmdProperties=cfg.commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
 
-        if(!player.hasPermissionLevel(cmdProperties.opLevel)){
-            player.sendMessage(Text.translatable("message.error.command.insufficientPrivileges",Text.literal("/"+cmd).formatted(Formatting.GOLD),Text.literal(Integer.toString(cmdProperties.opLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(getPlayerPermissionLevel(player))).formatted(Formatting.GOLD)).formatted(Formatting.RED));
-            return false;
-        }
         if(!player.getWorld().getGameRules().getBoolean(ModGameRules.HC_ENABLED)){
             player.sendMessage(Text.translatable("message.error.mod.disabled").formatted(Formatting.RED));
             return false;
         }
-        if(!cmdProperties.enabled){
+        if(!cmdProperties.enabled && cmd!="hc"){
             player.sendMessage(Text.translatable("message.error.command.disabled",Text.literal("/"+cmd).formatted(Formatting.GOLD)).formatted(Formatting.RED));
+            return false;
+        }
+        if(!player.hasPermissionLevel(cmdProperties.opLevel) && cmd!="hc"){
+            player.sendMessage(Text.translatable("message.error.command.insufficientPrivileges",Text.literal("/"+cmd).formatted(Formatting.GOLD),Text.literal(Integer.toString(cmdProperties.opLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(getPlayerPermissionLevel(player))).formatted(Formatting.GOLD)).formatted(Formatting.RED));
             return false;
         }
         return true;

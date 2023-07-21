@@ -60,12 +60,13 @@ public class CMD_Gm{
             Iterator iter=targets.iterator();
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
-                ServerPlayerEntity target=(ServerPlayerEntity)iter.next();
+                ServerPlayerEntity target=(ServerPlayerEntity) iter.next();
                 if(target.changeGameMode(gameMode)){
                     if(target!=player){
-                        MutableText part1=Text.literal("\u00A77"+player.getEntityName()+":\u00A7r ");
-                        MutableText part2=Text.translatable("message.command.gm.self", Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD));
-                        MutableText msg=part1.append(part2);
+                        MutableText msg=Text.literal(player.getEntityName()+": ")
+                            .formatted(Formatting.GRAY)
+                            .append(Text.translatable("message.command.gm.self", Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD)).formatted(Formatting.WHITE))
+                        ;
                         target.sendMessage(msg);
                     }
                     targetNames.add(target.getEntityName());
@@ -80,12 +81,14 @@ public class CMD_Gm{
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(allTargetNames)))
                     .withColor(Formatting.AQUA)
                 ;
-                MutableText msg=Text.translatable("message.command.gm.target",Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD),Text.literal(Integer.toString(i)).setStyle(playerList));
+                MutableText msg=Text.translatable("message.command.gm.target",Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD),Text.literal(Integer.toString(i)).setStyle(playerList)).formatted(Formatting.GREEN);
                 player.sendMessage(msg);
+            } else{
+                player.sendMessage(Text.translatable("text.noTargets").formatted(Formatting.RED));
             }
         } else{
             if(player.changeGameMode(gameMode)){
-                MutableText msg=Text.translatable("message.command.gm.self",Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD));
+                MutableText msg=Text.translatable("message.command.gm.self",Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD)).formatted(Formatting.GREEN);
                 player.sendMessage(msg);
             }
         }

@@ -24,8 +24,8 @@ public class ConfigManager{
         public int opLevel=2;
     }
     public static final class ModConfig{
-        public Boolean uncapExplosionPower=false;
         public int configOPLevel=3;
+        public int explosionPowerLimit=75;
         public Map<String,ModCommandProperties> commandProperties=new HashMap<String,ModCommandProperties>();
     }
 
@@ -48,6 +48,15 @@ public class ConfigManager{
         }
 
         if(ret==null) ret=new ModConfig();
+        else{
+            if(ret.configOPLevel<0) ret.configOPLevel=0;
+            if(ret.configOPLevel>4) ret.configOPLevel=4;
+            if(ret.explosionPowerLimit<0) ret.explosionPowerLimit=0;
+            for(ModCommandProperties i : ret.commandProperties.values()){
+                if(i.opLevel<0) i.opLevel=0;
+                if(i.opLevel>4) i.opLevel=4;
+            }
+        }
         return ret;
     }
 

@@ -1,8 +1,5 @@
 package net.thatsnotm3.helpfulcommands.command;
 
-import java.io.IOException;
-import java.text.CompactNumberFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -23,14 +20,17 @@ import net.thatsnotm3.helpfulcommands.HelpfulCommands;
 import net.thatsnotm3.helpfulcommands.util.ConfigManager;
 
 public class CMD_Hc{
+
+    static final String cmdName="hc";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         LiteralArgumentBuilder<ServerCommandSource> commands=CommandManager.literal("commands");
         for(String i : ModCommandManager.commands){
             LiteralArgumentBuilder<ServerCommandSource> literalCommand=CommandManager.literal(i)
                     .then(CommandManager.literal("toggle")
                             .executes(ctx->toggleCommand(ctx,i))
-                            .then(CommandManager.argument("value", BoolArgumentType.bool())
-                            .executes(ctx -> toggleCommand(ctx, i, BoolArgumentType.getBool(ctx, "value"))))
+                            .then(CommandManager.argument("state", BoolArgumentType.bool())
+                            .executes(ctx -> toggleCommand(ctx, i, BoolArgumentType.getBool(ctx, "state"))))
                     )
                     .then(CommandManager.literal("opLevel")
                         .then(CommandManager.argument("value", IntegerArgumentType.integer(0, 4))
@@ -40,11 +40,12 @@ public class CMD_Hc{
         }
         commands.executes(CMD_Hc::cmdList);
         
-        dispatcher.register(CommandManager.literal("hc")
+        dispatcher.register(CommandManager.literal(cmdName)
             .then(CommandManager.literal("info").executes(CMD_Hc::info))
             .then(commands)
             .then(CommandManager.literal("config")
-
+                .then(CommandManager.literal("configOPLevel").executes(null).then(CommandManager.argument("value",IntegerArgumentType.integer(0,4)).executes(null)))
+                .then(CommandManager.literal("explosionPowerLimit").executes(null).then(CommandManager.argument("value",IntegerArgumentType.integer(0)).executes(null)))
             )
             .executes(CMD_Hc::info)
         );
@@ -57,7 +58,7 @@ public class CMD_Hc{
     public static int toggleCommand(CommandContext<ServerCommandSource> ctx,String cmd,Boolean state) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        ConfigManager.ModConfig cfg = ConfigManager.loadConfig(player.getServer());
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(player.getServer());
 
         if(!player.hasPermissionLevel(cfg.configOPLevel)){
             ModCommandManager.sendConfigEditingInsufficientPrivilegesMessage(player);
@@ -75,7 +76,7 @@ public class CMD_Hc{
         if(state){
             Style textStyle=Style.EMPTY.withFormatting(Formatting.GREEN);
             Style clickableCommandStyle=Style.EMPTY
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd))
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd+" "))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.commands.suggest",cmd)))
                     .withFormatting(Formatting.GOLD)
                     ;
@@ -92,7 +93,7 @@ public class CMD_Hc{
     public static int changeCommandOpLevel(CommandContext<ServerCommandSource> ctx,String cmd,int level){
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        ConfigManager.ModConfig cfg = ConfigManager.loadConfig(player.getServer());
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(player.getServer());
 
         if(!player.hasPermissionLevel(cfg.configOPLevel)){
             ModCommandManager.sendConfigEditingInsufficientPrivilegesMessage(player);
@@ -100,13 +101,35 @@ public class CMD_Hc{
         }
 
         ConfigManager.ModCommandProperties cmdInQuestion=cfg.commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties());
+
+        if(cmdInQuestion.opLevel==level) return 1;
         cmdInQuestion.opLevel=level;
         cfg.commandProperties.put(cmd,cmdInQuestion);
         ConfigManager.saveConfig(cfg,player.getServer());
 
-        //MutableText msg=Text.literal("");
+        ClickEvent ce=new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd+" ");
+        HoverEvent he=new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.commands.suggest",Text.literal(cmd)));
 
-        //player.sendMessage(msg);
+        if(!cfg.commandProperties.getOrDefault(cmd, new ConfigManager.ModCommandProperties()).enabled){
+            ce=null;
+            he=new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.commands.disabled",Text.literal(cmd)).formatted(Formatting.RED));
+        }
+        
+        Style clickable=Style.EMPTY
+            .withFormatting(Formatting.GOLD)
+            .withClickEvent(ce)
+            .withHoverEvent(he)
+        ;
+        MutableText msg=Text.translatable("message.command.opLevelChanged",Text.literal(Integer.toString(level)).formatted(Formatting.GOLD),Text.literal("/"+cmd).setStyle(clickable)).formatted(Formatting.GREEN);
+        if(level<=0){
+            MutableText warning=Text.translatable("message.command.opLevelChanged.everyoneCanUse", Text.literal("/"+cmd).setStyle(clickable)).formatted(Formatting.RED);
+            msg
+                .append(Text.literal("\n"))
+                .append(warning)
+            ;
+        }
+
+        player.sendMessage(msg);
         return 1;
     }
 
@@ -181,7 +204,7 @@ public class CMD_Hc{
             ClickEvent descCE;
             HoverEvent descHE;
             if(getCommandState(i,server)){
-                descCE=new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+i);
+                descCE=new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+i+" ");
                 descHE=new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.commands.suggest",i));
             } else{
                 descCE=null;
