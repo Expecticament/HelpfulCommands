@@ -1,8 +1,8 @@
 {
     "gamerule.hcEnabled":"Helpful Commands Mod state",
 
-    "modconfig.explosionPowerLimit.description": "Power value limit for /explosion command",
     "modconfig.configOPLevel.description": "OP level required to edit Mod Config, including individual command configuration",
+    "modconfig.explosionPowerLimit.description": "Power value limit for /explosion command",
 
     "command.description.back":"Get or teleport to your death position",
     "command.description.day":"Set the time to Day",
@@ -70,6 +70,10 @@
     "message.command.dayTime":"Changed daytime to %d",
     "message.command.dayTime.day":"Day",
     "message.command.dayTime.night":"Night",
+    "message.command.spawn.self.teleported":"You were teleported to your Spawn Point",
+    "message.command.spawn.world.teleported":"You were teleported to the World Spawn",
+    "message.command.spawn.self.get.title":"Your Spawn Point",
+    "message.command.spawn.world.get.title":"World Spawn Point",
 
     "message.error.mod.disabled": "Helpful Commands Mod is disabled in this world!",
     "message.error.command.disabled": "%d command is disabled in this world!",
@@ -77,9 +81,13 @@
     "message.error.config.insufficientPrivileges": "You can't configure Helpful Commands! This action requires higher OP level (%d) than you currently have (%d)",
     "message.error.config.configOPLevel.insufficientOPLevel": "Your OP level (%d) has to be higher or equal to the value that you are specifying (%d)!",
     "message.error.command.explosion.explosionTooPowerful": "Specified explosion power (%d) exceeds max value set in the Mod Config (%d)",
+    "message.error.command.spawn.self.notSet":"Your Spawn Point is not set in this world",
 
     "tooltip.highlight.hc.info.button.commandList": "Click to see all the commands",
+    "tooltip.highlight.hc.info.button.config": "Click to view Mod Config",
     "tooltip.highlight.hc.info.button.gitHub": "Click to open mod's GitHub page",
+    "tooltip.highlight.hc.info.button.modrinth": "Click to open mod's Modrinth page",
+    "tooltip.highlight.hc.info.button.curseForge": "Click to open mod's CurseForge page",
     "tooltip.highlight.hc.commands.opLevel": "Click to set required OP level for /%d command",
     "tooltip.highlight.hc.commands.toggle": "Click to toggle /%d command",
     "tooltip.highlight.hc.commands.suggest": "Click to suggest /%d command",
@@ -88,6 +96,8 @@
     "tooltip.highlight.home.get.teleportButton": "Click to teleport to your home position",
     "tooltip.highlight.clickToExecute": "Click to execute this command",
     "tooltip.highlight.clickToEditConfigValue": "Click to edit this config value",
+    "tooltip.highlight.spawn.self.get.teleportButton":"Click to teleport to your spawn point",
+    "tooltip.highlight.spawn.world.get.teleportButton":"Click to teleport to the world spawn point",
 
     "text.teleport": "Teleport",
     "text.dimension":"Dimension: %d",

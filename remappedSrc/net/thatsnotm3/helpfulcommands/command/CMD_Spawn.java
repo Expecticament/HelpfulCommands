@@ -14,8 +14,11 @@ import net.minecraft.world.World;
 import net.minecraft.server.command.CommandManager;
 
 public class CMD_Spawn{
+
+    static final String cmdName="spawn";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("spawn")
+        dispatcher.register(CommandManager.literal(cmdName)
             .then(CommandManager.literal("world")
                 .then(CommandManager.literal("get")
                     .executes(CMD_Spawn::worldGet)
@@ -40,7 +43,7 @@ public class CMD_Spawn{
     public static int playerTeleport(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("spawn",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
         
         if(player.getSpawnPointPosition()==null){
             player.sendMessage(Text.literal("\u00A7cSpawn Point position is not set in this world yet!"));
@@ -56,7 +59,7 @@ public class CMD_Spawn{
     public static int worldTeleport(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("spawn",player)) return -1;
+        if(!ModCommandManager.RunChecks("spawn",player)) return -1;
         
         ServerWorld overworld=player.getServer().getWorld(ServerWorld.OVERWORLD);
         player.teleport(overworld, player.method_48926().getSpawnPos().getX(), player.method_48926().getSpawnPos().getY(), player.method_48926().getSpawnPos().getZ(), player.getYaw(), player.getPitch());
@@ -67,7 +70,7 @@ public class CMD_Spawn{
     public static int playerGet(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("spawn",player)) return -1;
+        if(!ModCommandManager.RunChecks("spawn",player)) return -1;
 
         if(player.getSpawnPointPosition()==null){
             player.sendMessage(Text.literal("\u00A7cSpawn Point position is not set in this world yet!"));
@@ -82,7 +85,7 @@ public class CMD_Spawn{
     public static int worldGet(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("spawn",player)) return -1;
+        if(!ModCommandManager.RunChecks("spawn",player)) return -1;
 
         player.sendMessage(Text.literal("\u00A7bWorld Spawnpoint information:\u00A7r\nX: \u00A76"+player.method_48926().getSpawnPos().getX()+"\u00A7r\nY: \u00A76"+player.method_48926().getSpawnPos().getY()+"\u00A7r\nZ: \u00A76"+player.method_48926().getSpawnPos().getZ()));
 

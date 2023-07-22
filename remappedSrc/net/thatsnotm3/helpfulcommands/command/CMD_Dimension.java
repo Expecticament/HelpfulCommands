@@ -1,5 +1,10 @@
 package net.thatsnotm3.helpfulcommands.command;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -8,56 +13,99 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.command.argument.DimensionArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 
 public class CMD_Dimension{
+
+    static final String cmdName="dimension";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("dimension").executes(CMD_Dimension::getCurrentDimension)
-            .then(CommandManager.literal("overworld").executes(ctx->switchDimension(ctx,0)))
-            .then(CommandManager.literal("nether").executes(ctx->switchDimension(ctx,1)))
-            .then(CommandManager.literal("end").executes(ctx->switchDimension(ctx,2)))
+        dispatcher.register(CommandManager.literal(cmdName)
+            .then(CommandManager.literal("get")
+                .then(CommandManager.argument("target", EntityArgumentType.player()).executes(ctx->getDimension(ctx, EntityArgumentType.getPlayer(ctx, "target"))))
+                .executes(ctx->getDimension(ctx,null))
+            )
+            .then(CommandManager.argument("dimension",DimensionArgumentType.dimension())
+                .executes(ctx->switchDimension(ctx,DimensionArgumentType.getDimensionArgument(ctx, "dimension"),null))
+                .then(CommandManager.argument("target",EntityArgumentType.entities()).executes(ctx->switchDimension(ctx, DimensionArgumentType.getDimensionArgument(ctx, "dimension"), EntityArgumentType.getEntities(ctx, "target"))))
+            )
         );
     }
-
-    public static int switchDimension(CommandContext<ServerCommandSource> ctx, Integer dimension) throws CommandSyntaxException{ // 0 - Overworld; 1 - The Nether; 2 - The End
+    static int switchDimension(CommandContext<ServerCommandSource> ctx, ServerWorld dim, Collection<? extends Entity> targets) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("dimension",player)) return -1;
-        
-        String dimensionName;
-        ServerWorld world;
-        switch(dimension){
-            default:
-                dimensionName="Overworld";
-                world=player.getServer().getWorld(ServerWorld.OVERWORLD);
-                break;
-            case 1:
-                dimensionName="The Nether";
-                world=player.getServer().getWorld(ServerWorld.NETHER);
-                break;
-            case 2:
-                dimensionName="The End";
-                world=player.getServer().getWorld(ServerWorld.END);
-                break;
-        }
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
-        player.teleport(world, player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
-        player.sendMessage(Text.literal("Switched your Dimension to: "+"\u00A76"+dimensionName));
+        String dimensionName=dim.getRegistryKey().getValue().toString();
+
+        if(targets!=null){
+            int i=0;
+            Iterator iter=targets.iterator();
+            List<String> targetNames=new ArrayList<String>();
+            while(iter.hasNext()){
+                Entity target=(Entity) iter.next();
+                if(target.method_48926()==dim) continue;
+                if(target.teleport(dim, target.getX(), target.getY(), target.getZ(), null, target.getYaw(), target.getPitch())){
+                    if(target!=player){
+                        MutableText msg=Text.literal(player.getEntityName()+": ")
+                            .formatted(Formatting.GRAY)
+                            .append(Text.translatable("message.command.dimension.self",Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.WHITE))
+                        ;
+                        target.sendMessage(msg);
+                    }
+                    targetNames.add(target.getEntityName());
+                    ++i;
+                }
+            }
+            if(i>0){
+                String allTargetNames="";
+                for(String n : targetNames) allTargetNames=allTargetNames+n+"\n";
+                allTargetNames=allTargetNames.substring(0, allTargetNames.length()-1);
+                Style playerList=Style.EMPTY
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(allTargetNames)))
+                    .withColor(Formatting.AQUA)
+                ;
+                MutableText msg=Text.translatable("message.command.dimension.target",Text.translatable(dimensionName).formatted(Formatting.GOLD),Text.literal(Integer.toString(i)).setStyle(playerList)).formatted(Formatting.GREEN);
+                player.sendMessage(msg);
+            } else{
+                player.sendMessage(Text.translatable("text.noTargets").formatted(Formatting.RED));
+            }
+        } else{
+            if(player.method_48926()==dim) return 1;
+            player.teleport(dim, player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+            MutableText msg=Text.translatable("message.command.dimension.self", Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.GREEN);
+            player.sendMessage(msg);
+        }
 
         return 1;
     }
-
-    public static int getCurrentDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+    static int getDimension(CommandContext<ServerCommandSource> ctx, ServerPlayerEntity target) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!net.thatsnotm3.helpfulcommands.command.CommandManager.RunChecks("dimension",player)) return -1;
+        if(!ModCommandManager.RunChecks("dimension",player)) return -1;
 
-        RegistryKey<World> currentDimension=player.method_48926().getRegistryKey();
+        if(target==player) target=null;
+
+        RegistryKey<World> currentDimension;
+        if(target==null) currentDimension=player.method_48926().getRegistryKey();
+        else currentDimension=target.method_48926().getRegistryKey();
         String dimensionName=currentDimension.getValue().toString();
-        player.sendMessage(Text.literal("Your current Dimension is: "+"\u00A76"+dimensionName));
+
+        if(target!=null){
+            player.sendMessage(Text.translatable("message.command.dimension.get.target",Text.literal(target.getEntityName()).formatted(Formatting.GOLD),Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.AQUA));
+        } else{
+            player.sendMessage(Text.literal("Your current Dimension is: "+"\u00A76"+dimensionName).formatted(Formatting.AQUA));
+        }
 
         return 1;
     }

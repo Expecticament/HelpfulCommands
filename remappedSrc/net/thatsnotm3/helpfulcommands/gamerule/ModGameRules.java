@@ -11,6 +11,5 @@ public class ModGameRules{
 
     public static void registerGameRules(){
         HC_ENABLED=GameRuleRegistry.register("hcEnabled", Category.CHAT, GameRuleFactory.createBooleanRule(true));
-        HC_UNCAP_EXPLOSION_POWER=GameRuleRegistry.register("hcUncapExplosionPower", Category.CHAT, GameRuleFactory.createBooleanRule(false));
     }
 }

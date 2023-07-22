@@ -1,15 +1,12 @@
 package net.thatsnotm3.helpfulcommands.command;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.HoverEvent;
@@ -17,25 +14,32 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.world.GameMode;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.command.argument.EntityArgumentType;
 
-public class CMD_Feed{
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-    static final String cmdName="feed";
+public class CMD_God {
+
+    static final String cmdName="god";
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmdName)
-            .then(CommandManager.argument("target", EntityArgumentType.players()).executes(ctx->run(ctx,EntityArgumentType.getPlayers(ctx, "target"))))
-            .executes(ctx->run(ctx,null))
+            .then(CommandManager.argument("state", BoolArgumentType.bool())
+                    .executes(ctx->run(ctx, BoolArgumentType.getBool(ctx, "state"),null))
+                    .then(CommandManager.argument("target", EntityArgumentType.players()).executes(ctx->run(ctx,BoolArgumentType.getBool(ctx, "state"),EntityArgumentType.getPlayers(ctx, "target"))))
+            )
         );
     }
 
-    public static int run(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException{
+    public static int run(CommandContext<ServerCommandSource> ctx, Boolean state, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
         if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
+
+        Formatting f=Formatting.GREEN;
+        if(!state) f=Formatting.RED;
 
         if(targets!=null){
             int i=0;
@@ -43,14 +47,14 @@ public class CMD_Feed{
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
                 ServerPlayerEntity target=(ServerPlayerEntity) iter.next();
-                target.getHungerManager().setFoodLevel(20);
-                target.getHungerManager().setSaturationLevel(5);
-                if(target.interactionManager.getGameMode()==GameMode.SURVIVAL || target.interactionManager.getGameMode()==GameMode.ADVENTURE) target.getHungerManager().setExhaustion(0);
-                
+
+                target.getAbilities().invulnerable=state;
+                target.sendAbilitiesUpdate();
+
                 if(target!=player){
                     MutableText msg=Text.literal(player.getEntityName()+": ")
                         .formatted(Formatting.GRAY)
-                        .append(Text.translatable("message.command.feed.self").formatted(Formatting.GREEN))
+                        .append(Text.translatable("message.command.god.self."+state).formatted(f))
                     ;
                     target.sendMessage(msg);
                 }
@@ -66,16 +70,15 @@ public class CMD_Feed{
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(allTargetNames)))
                     .withColor(Formatting.AQUA)
                 ;
-                MutableText msg=Text.translatable("message.command.feed.target",Text.literal(Integer.toString(i)).setStyle(playerList)).formatted(Formatting.GREEN);
+                MutableText msg=Text.translatable("message.command.god.target."+state,Text.literal(Integer.toString(i)).setStyle(playerList)).formatted(Formatting.GREEN);
                 player.sendMessage(msg);
             } else{
                 player.sendMessage(Text.translatable("text.noTargets").formatted(Formatting.RED));
             }
         } else{
-            player.getHungerManager().setFoodLevel(20);
-            player.getHungerManager().setSaturationLevel(5);
-            if(player.interactionManager.getGameMode()==GameMode.SURVIVAL || player.interactionManager.getGameMode()==GameMode.ADVENTURE) player.getHungerManager().setExhaustion(0);
-            player.sendMessage(Text.translatable("message.command.feed.self").formatted(Formatting.GREEN));
+            player.getAbilities().invulnerable=state;
+            player.sendAbilitiesUpdate();
+            player.sendMessage(Text.translatable("message.command.god.self."+state).formatted(f));
         }
 
         return 1;
