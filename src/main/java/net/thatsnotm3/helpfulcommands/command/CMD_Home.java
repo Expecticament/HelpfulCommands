@@ -137,7 +137,7 @@ public class CMD_Home{
     static void sendPosNotSetMessage(ServerPlayerEntity player){
         MutableText msg=Text.translatable("message.command.home.notSet",Text.literal("/home set").setStyle(Style.EMPTY
             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/home set"))
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooptip.highlight.clickToExecute")))
+            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.clickToExecute")))
             .withFormatting(Formatting.GOLD)
         )).formatted(Formatting.RED);
         player.sendMessage(msg);

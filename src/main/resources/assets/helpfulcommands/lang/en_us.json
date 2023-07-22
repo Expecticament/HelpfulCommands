@@ -1,7 +1,7 @@
 {
     "gamerule.hcEnabled":"Helpful Commands Mod state",
 
-    "modconfig.uncapExplosionPower": "Remove power limit for /explosion command",
+    "modconfig.explosionPowerLimit.description": "Power value limit for /explosion command",
     "modconfig.configOPLevel.description": "OP level required to edit Mod Config, including individual command configuration",
 
     "command.description.back":"Get or teleport to your death position",
@@ -29,6 +29,9 @@
     "message.command.hc.commandList.header.enabled": "Enabled",
     "message.command.hc.commandList.header.disabled": "Disabled",
     "message.command.hc.config": "Config",
+    "message.command.hc.config.changedValue": "%d Config value was changed to %d",
+    "message.command.hc.config.changedValue.configOPLevel.everyoneCanEdit": "[!] Now literally everyone can edit Mod Config",
+    "message.command.hc.config.printValue": "Current %d value in Mod Config is: %d",
     "message.command.enabled": "Enabled %d command",
     "message.command.disabled": "Disabled %d command",
     "message.command.opLevelChanged": "Changed required OP level to %d for %d command",
@@ -64,12 +67,16 @@
     "message.command.lightning.success":"Created a lightning strike",
     "message.command.explosion.success":"Created an explosion",
     "message.command.jump.success":"Teleported to the cursor position",
+    "message.command.dayTime":"Changed daytime to %d",
+    "message.command.dayTime.day":"Day",
+    "message.command.dayTime.night":"Night",
 
     "message.error.mod.disabled": "Helpful Commands Mod is disabled in this world!",
     "message.error.command.disabled": "%d command is disabled in this world!",
     "message.error.command.insufficientPrivileges": "You can't use %d command! It requires higher OP level (%d) than you currently have (%d)",
     "message.error.config.insufficientPrivileges": "You can't configure Helpful Commands! This action requires higher OP level (%d) than you currently have (%d)",
     "message.error.config.configOPLevel.insufficientOPLevel": "Your OP level (%d) has to be higher or equal to the value that you are specifying (%d)!",
+    "message.error.command.explosion.explosionTooPowerful": "Specified explosion power (%d) exceeds max value set in the Mod Config (%d)",
 
     "tooltip.highlight.hc.info.button.commandList": "Click to see all the commands",
     "tooltip.highlight.hc.info.button.gitHub": "Click to open mod's GitHub page",
@@ -79,7 +86,8 @@
     "tooltip.highlight.hc.commands.disabled": "/%d command is disabled in this world",
     "tooltip.highlight.back.get.teleportButton": "Click to teleport to your death position",
     "tooltip.highlight.home.get.teleportButton": "Click to teleport to your home position",
-    "tooptip.highlight.clickToExecute": "Click to execute this command",
+    "tooltip.highlight.clickToExecute": "Click to execute this command",
+    "tooltip.highlight.clickToEditConfigValue": "Click to edit this config value",
 
     "text.teleport": "Teleport",
     "text.dimension":"Dimension: %d",

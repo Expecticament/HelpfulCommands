@@ -44,8 +44,8 @@ public class CMD_Hc{
             .then(CommandManager.literal("info").executes(CMD_Hc::info))
             .then(commands)
             .then(CommandManager.literal("config")
-                .then(CommandManager.literal("configOPLevel").executes(null).then(CommandManager.argument("value",IntegerArgumentType.integer(0,4)).executes(null)))
-                .then(CommandManager.literal("explosionPowerLimit").executes(null).then(CommandManager.argument("value",IntegerArgumentType.integer(0)).executes(null)))
+                .then(CommandManager.literal("configOPLevel").executes(ctx->printConfigValue("configOPLevel",ctx.getSource().getPlayer())).then(CommandManager.argument("value",IntegerArgumentType.integer(0,4)).executes(ctx->changeConfigValue("configOPLevel",IntegerArgumentType.getInteger(ctx,"value"),ctx.getSource().getPlayer()))))
+                .then(CommandManager.literal("explosionPowerLimit").executes(ctx->printConfigValue("explosionPowerLimit",ctx.getSource().getPlayer())).then(CommandManager.argument("value",IntegerArgumentType.integer(0)).executes(ctx->changeConfigValue("explosionPowerLimit",IntegerArgumentType.getInteger(ctx,"value"),ctx.getSource().getPlayer()))))
             )
             .executes(CMD_Hc::info)
         );
@@ -263,5 +263,55 @@ public class CMD_Hc{
     static String getCommandOpLevel(String cmd,MinecraftServer server){
         ConfigManager.ModConfig cfg=ConfigManager.loadConfig(server);
         return Integer.toString(cfg.commandProperties.getOrDefault(cmd,new ConfigManager.ModCommandProperties()).opLevel);
+    }
+
+    static int changeConfigValue(String field, Object value,ServerPlayerEntity player){
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(player.getServer());
+
+        MutableText configOPLevelWarning=null;
+
+        switch(field){
+            case "configOPLevel":
+                int specifiedOPLevel=(int) value;
+                int playerOPLevel=ModCommandManager.getPlayerPermissionLevel(player);
+                if(specifiedOPLevel>playerOPLevel){
+                    player.sendMessage(Text.translatable("message.error.config.configOPLevel.insufficientOPLevel",Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(specifiedOPLevel)).formatted(Formatting.GOLD)));
+                    return -1;
+                }
+                cfg.configOPLevel=(int) value;
+                if(specifiedOPLevel<=0) configOPLevelWarning=Text.translatable("message.command.hc.config.changedValue.configOPLevel.everyoneCanEdit").formatted(Formatting.RED);
+                break;
+            case "explosionPowerLimit":
+                cfg.explosionPowerLimit=(int) value;
+                break;
+        }
+
+        ConfigManager.saveConfig(cfg,player.getServer());
+
+        player.sendMessage(Text.translatable("message.command.hc.config.changedValue",Text.literal(field).formatted(Formatting.GOLD),Text.literal(value.toString()).formatted(Formatting.GOLD)).formatted(Formatting.GREEN));
+        if(configOPLevelWarning!=null) player.sendMessage(configOPLevelWarning);
+        return 1;
+    }
+
+    static int printConfigValue(String field,ServerPlayerEntity player){
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(player.getServer());
+        String val="UNKNOWN";
+        switch(field){
+            case "configOPLevel":
+                val=Integer.toString(cfg.configOPLevel);
+                break;
+            case "explosionPowerLimit":
+                val=Integer.toString(cfg.explosionPowerLimit);
+                break;
+        }
+
+        ConfigManager.saveConfig(cfg,player.getServer());
+
+        player.sendMessage(Text.translatable("message.command.hc.config.printValue",Text.literal(field).formatted(Formatting.GOLD),Text.literal(val).setStyle(Style.EMPTY
+                .withFormatting(Formatting.GOLD)
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.clickToEditConfigValue")))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/hc config "+field+" "))
+        )).formatted(Formatting.AQUA));
+        return 1;
     }
 }

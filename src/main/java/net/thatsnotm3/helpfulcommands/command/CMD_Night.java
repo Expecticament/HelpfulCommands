@@ -9,6 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.util.Formatting;
 
 public class CMD_Night{
 
@@ -24,7 +25,7 @@ public class CMD_Night{
         if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
         
         player.getServerWorld().setTimeOfDay(13000);
-        player.sendMessage(Text.literal("Changed daytime to \u00A7bNight"));
+        player.sendMessage(Text.translatable("message.command.dayTime",Text.translatable("message.command.dayTime."+cmdName).formatted(Formatting.AQUA)).formatted(Formatting.GREEN));
 
         return 1;
     }
