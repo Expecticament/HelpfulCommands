@@ -1,17 +1,24 @@
 # 📝║ Helpful Commands Mod
-Minecraft Fabric Mod that adds a bunch of helpful commands and shortcuts for existing ones. This makes your experience more optimized as you don't need to type long phrases anymore. You can also find some new command-related features that are not possible in the base game. Can be easily configured, and each individual command is toggleable.
+Minecraft mod that adds lots of useful commands, as well as shortcuts for existing vanilla ones, making your experience better, more optimized, and flexible. Easy to configure, get used to, and then enjoy in the long run.
 
-• [Download](https://github.com/ThatsNotM3/HelpfulCommands/releases) • [Command List](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands) • [See on CurseForge](https://curseforge.com/minecraft/mc-mods/helpful-commands) •
+• [Download](https://github.com/ThatsNotM3/HelpfulCommands/releases) • [Command List](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands) • [Modrinth](https://modrinth.com/mod/helpfulcommands/) • [CurseForge](https://curseforge.com/minecraft/mc-mods/helpful-commands) •
+
+## «✨» Features
+- **Lots of new useful commands:** save your time, enhance your experience, and enjoy new features
+- **Flexible and easily configurable:** toggle each individual command and set permissions. Make command available only to privileged players, or to literally everyone on the server
+- **Supports targets:** use commands on other players or even entities
+- **Interactive output:** hover on some text and notice how it provides some additional information or even shortcuts
+- **Open Source:** something is missing? Make proposals or submit your own ideas on GitHub
 
 ## «📃» Command List
-All the commands with their descriptions and arguments can be found on our Wiki [here](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands).
+Available in-game (`/hc commands`) or on our Wiki [here](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands).
 
 ## «🎮» Minecraft Versions
 *Click on a game version to get the latest mod version for it*
 <details>
 <summary>1.20</summary>
   
-* [1.20.1](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.2)
+* [1.20.1](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/2.0.0)
 
 </details>
 <details>
