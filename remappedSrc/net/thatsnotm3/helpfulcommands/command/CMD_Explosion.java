@@ -1,6 +1,7 @@
 package net.thatsnotm3.helpfulcommands.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -47,7 +48,7 @@ public class CMD_Explosion{
             )).formatted(Formatting.RED));
             return 1;
         }
-        player.getWorld().createExplosion(null, posX, posY, posZ, power, ExplosionSourceType.TNT);
+        player.method_48926().createExplosion(null, posX, posY, posZ, power, ExplosionSourceType.TNT);
         player.sendMessage(Text.translatable("message.command.explosion.success").formatted(Formatting.AQUA),true);
 
         return 1;

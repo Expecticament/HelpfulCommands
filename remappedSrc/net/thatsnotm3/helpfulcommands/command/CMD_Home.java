@@ -82,7 +82,7 @@ public class CMD_Home{
 
         BlockPos playerPos=player.getBlockPos();
         playerData.getPersistentData().putIntArray("homePosition",new int[]{playerPos.getX(),playerPos.getY(),playerPos.getZ()});
-        RegistryKey<World> dimensionKey=player.getWorld().getRegistryKey();
+        RegistryKey<World> dimensionKey=player.method_48926().getRegistryKey();
         String dimensionName=dimensionKey.getValue().toString();
         playerData.getPersistentData().putString("homeDimension", dimensionName);
         MutableText msg=Text.translatable("message.command.home.positionSet").setStyle(Style.EMPTY

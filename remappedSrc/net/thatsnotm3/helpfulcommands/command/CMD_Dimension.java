@@ -54,7 +54,7 @@ public class CMD_Dimension{
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
                 Entity target=(Entity) iter.next();
-                if(target.getWorld()==dim) continue;
+                if(target.method_48926()==dim) continue;
                 if(target.teleport(dim, target.getX(), target.getY(), target.getZ(), null, target.getYaw(), target.getPitch())){
                     if(target!=player){
                         MutableText msg=Text.literal(player.getEntityName()+": ")
@@ -81,7 +81,7 @@ public class CMD_Dimension{
                 player.sendMessage(Text.translatable("text.noTargets").formatted(Formatting.RED));
             }
         } else{
-            if(player.getWorld()==dim) return 1;
+            if(player.method_48926()==dim) return 1;
             player.teleport(dim, player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
             MutableText msg=Text.translatable("message.command.dimension.self", Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.GREEN);
             player.sendMessage(msg);
@@ -97,8 +97,8 @@ public class CMD_Dimension{
         if(target==player) target=null;
 
         RegistryKey<World> currentDimension;
-        if(target==null) currentDimension=player.getWorld().getRegistryKey();
-        else currentDimension=target.getWorld().getRegistryKey();
+        if(target==null) currentDimension=player.method_48926().getRegistryKey();
+        else currentDimension=target.method_48926().getRegistryKey();
         String dimensionName=currentDimension.getValue().toString();
 
         if(target!=null){

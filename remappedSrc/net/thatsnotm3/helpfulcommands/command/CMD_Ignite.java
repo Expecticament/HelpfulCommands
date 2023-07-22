@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -17,22 +18,23 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.world.GameMode;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 
-public class CMD_Feed{
+public class CMD_Ignite{
 
-    static final String cmdName="feed";
+    static final String cmdName="ignite";
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmdName)
-            .then(CommandManager.argument("target", EntityArgumentType.players()).executes(ctx->run(ctx,EntityArgumentType.getPlayers(ctx, "target"))))
-            .executes(ctx->run(ctx,null))
+            .then(CommandManager.argument("time", IntegerArgumentType.integer(0)).executes(ctx->run(ctx,IntegerArgumentType.getInteger(ctx, "time"),null))
+                .then(CommandManager.argument("target", EntityArgumentType.entities()).executes(ctx->run(ctx,IntegerArgumentType.getInteger(ctx, "time"),EntityArgumentType.getEntities(ctx, "target"))))
+            )
         );
     }
 
-    public static int run(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException{
+    public static int run(CommandContext<ServerCommandSource> ctx, int time, Collection<? extends Entity> targets) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
         if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
@@ -42,15 +44,13 @@ public class CMD_Feed{
             Iterator iter=targets.iterator();
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
-                ServerPlayerEntity target=(ServerPlayerEntity) iter.next();
-                target.getHungerManager().setFoodLevel(20);
-                target.getHungerManager().setSaturationLevel(5);
-                if(target.interactionManager.getGameMode()==GameMode.SURVIVAL || target.interactionManager.getGameMode()==GameMode.ADVENTURE) target.getHungerManager().setExhaustion(0);
+                Entity target=(Entity) iter.next();
+                target.setOnFireFor(time);
                 
                 if(target!=player){
                     MutableText msg=Text.literal(player.getEntityName()+": ")
                         .formatted(Formatting.GRAY)
-                        .append(Text.translatable("message.command.feed.self").formatted(Formatting.GREEN))
+                        .append(Text.translatable("message.command.ignite.self").formatted(Formatting.WHITE))
                     ;
                     target.sendMessage(msg);
                 }
@@ -66,16 +66,14 @@ public class CMD_Feed{
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(allTargetNames)))
                     .withColor(Formatting.AQUA)
                 ;
-                MutableText msg=Text.translatable("message.command.feed.target",Text.literal(Integer.toString(i)).setStyle(playerList)).formatted(Formatting.GREEN);
+                MutableText msg=Text.translatable("message.command.ignite.target",Text.literal(Integer.toString(i)).setStyle(playerList),Text.literal(Integer.toString(time)).formatted(Formatting.GOLD)).formatted(Formatting.GREEN);
                 player.sendMessage(msg);
             } else{
                 player.sendMessage(Text.translatable("text.noTargets").formatted(Formatting.RED));
             }
         } else{
-            player.getHungerManager().setFoodLevel(20);
-            player.getHungerManager().setSaturationLevel(5);
-            if(player.interactionManager.getGameMode()==GameMode.SURVIVAL || player.interactionManager.getGameMode()==GameMode.ADVENTURE) player.getHungerManager().setExhaustion(0);
-            player.sendMessage(Text.translatable("message.command.feed.self").formatted(Formatting.GREEN));
+            player.setOnFireFor(time);
+            player.sendMessage(Text.translatable("message.command.ignite.self",Text.literal(Integer.toString(time)).formatted(Formatting.GOLD)).formatted(Formatting.GREEN));
         }
 
         return 1;

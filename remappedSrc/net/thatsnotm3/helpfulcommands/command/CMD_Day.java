@@ -11,21 +11,21 @@ import net.minecraft.text.Text;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.util.Formatting;
 
-public class CMD_Killitems{
+public class CMD_Day{
 
-    static final String cmdName="killitems";
+    static final String cmdName="day";
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal(cmdName).executes(CMD_Killitems::run));
+        dispatcher.register(CommandManager.literal(cmdName).executes(CMD_Day::run));
     }
 
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        ServerPlayerEntity player=ctx.getSource().getPlayer();
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
 
         if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
-
-        player.getServer().getCommandManager().executeWithPrefix(ctx.getSource(), "kill @e[type=item]");
-        player.sendMessage(Text.literal("/kill @e[type=item]").formatted(Formatting.AQUA),true);
+        
+        player.getServerWorld().setTimeOfDay(1000);
+        player.sendMessage(Text.translatable("message.command.dayTime",Text.translatable("message.command.dayTime."+cmdName).formatted(Formatting.AQUA)).formatted(Formatting.GREEN));
 
         return 1;
     }

@@ -44,7 +44,6 @@ public class CMD_Hc{
             .then(CommandManager.literal("info").executes(CMD_Hc::info))
             .then(commands)
             .then(CommandManager.literal("config")
-                .executes(ctx->printConfig(ctx))
                 .then(CommandManager.literal("configOPLevel").executes(ctx->printConfigValue("configOPLevel",ctx.getSource().getPlayer())).then(CommandManager.argument("value",IntegerArgumentType.integer(0,4)).executes(ctx->changeConfigValue("configOPLevel",IntegerArgumentType.getInteger(ctx,"value"),ctx.getSource().getPlayer()))))
                 .then(CommandManager.literal("explosionPowerLimit").executes(ctx->printConfigValue("explosionPowerLimit",ctx.getSource().getPlayer())).then(CommandManager.argument("value",IntegerArgumentType.integer(0)).executes(ctx->changeConfigValue("explosionPowerLimit",IntegerArgumentType.getInteger(ctx,"value"),ctx.getSource().getPlayer()))))
             )
@@ -142,57 +141,35 @@ public class CMD_Hc{
         MutableText modVersion=Text.literal(" ").append(Text.translatable("message.command.hc.info.modVersion",FabricLoader.getInstance().getModContainer(HelpfulCommands.modID).get().getMetadata().getVersion(),Text.literal("ThatsNotM3")).setStyle(Style.EMPTY.withFormatting(Formatting.GRAY)));
         Formatting buttonFormatting=Formatting.AQUA;
         MutableText buttonCommandList=Text.literal("")
-            .append(Text.translatable("message.command.hc.commandList"))
-            .setStyle(Style.EMPTY
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc commands"))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.commandList")))
-                    .withFormatting(buttonFormatting)
-            )
-        ;
-        MutableText buttonConfig=Text.literal("")
-            .append(Text.translatable("message.command.hc.config"))
-            .setStyle(Style.EMPTY
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config"))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.config")))
-                    .withFormatting(buttonFormatting)
-            )
-        ;
-        MutableText buttonGitHub=Text.literal("GitHub").setStyle(Style.EMPTY
-            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/ThatsNotM3/HelpfulCommands"))
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.gitHub")))
-            .withFormatting(buttonFormatting))
-        ;
-        MutableText buttonModrinth=Text.literal("Modrinth").setStyle(Style.EMPTY
-            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/helpfulcommands/"))
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.modrinth")))
-            .withFormatting(buttonFormatting))
-        ;
-        MutableText buttonCurseforge=Text.literal("CurseForge").setStyle(Style.EMPTY
-            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/helpful-commands"))
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.curseForge")))
-            .withFormatting(buttonFormatting))
-        ;
+                .append(Text.translatable("message.command.hc.commandList"))
+                .setStyle(Style.EMPTY
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc commands"))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.commandList")))
+                        .withFormatting(buttonFormatting)
+                )
+                ;
+        MutableText buttonGitHub=Text.literal("")
+                .append(Text.literal("GitHub"))
+                .setStyle(Style.EMPTY
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/ThatsNotM3/HelpfulCommands"))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltip.highlight.hc.info.button.gitHub")))
+                        .withFormatting(buttonFormatting)
+                )
+                ;
         MutableText buttons=Text.literal("")
-            .append(Text.literal("[ "))
-            .append(buttonCommandList)
-            .append(Text.literal(" • "))
-            .append(buttonConfig)
-            .append(Text.literal(" ]"))
-            .append(Text.literal("\n[ "))
-            .append(buttonGitHub)
-            .append(Text.literal(" • "))
-            .append(buttonModrinth)
-            .append(Text.literal(" • "))
-            .append(buttonCurseforge)
-            .append(Text.literal(" ]"))
-        ;
+                .append(Text.literal("[ "))
+                .append(buttonCommandList)
+                .append(Text.literal(" • "))
+                .append(buttonGitHub)
+                .append(Text.literal(" ]"))
+                ;
         MutableText msg=Text.literal("")
-            .append(modDescription)
-            .append(Text.literal("\n"))
-            .append(modVersion)
-            .append(Text.literal("\n\n"))
-            .append(buttons)
-        ;
+                .append(modDescription)
+                .append(Text.literal("\n"))
+                .append(modVersion)
+                .append(Text.literal("\n\n"))
+                .append(buttons)
+                ;
         player.sendMessage(msg);
         return 1;
     }
@@ -251,41 +228,6 @@ public class CMD_Hc{
 
         return 1;
     }
-    public static int printConfig(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        ServerPlayerEntity player=ctx.getSource().getPlayer();
-        MinecraftServer server=player.getServer();
-
-        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(server);
-        
-        player.sendMessage(getTitleMessage("message.command.hc.config"));
-        
-        HoverEvent he=new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("tooltip.highlight.clickToEditConfigValue"));
-
-        MutableText msg=Text.literal("\n")
-            .append(Text.literal("configOPLevel").formatted(Formatting.YELLOW))
-            .append(Text.literal(": ").formatted(Formatting.GRAY))
-            .append(Text.literal(Integer.toString(cfg.configOPLevel)).setStyle(Style.EMPTY
-                .withFormatting(Formatting.AQUA)
-                .withHoverEvent(he)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/hc config "+"configOPLevel "))
-            ))
-            .append("\n ")
-            .append(Text.translatable("modconfig.configOPLevel.description").formatted(Formatting.GRAY))
-            .append("\n")
-            .append(Text.literal("explosionPowerLimit").formatted(Formatting.YELLOW))
-            .append(Text.literal(": ").formatted(Formatting.GRAY))
-            .append(Text.literal(Integer.toString(cfg.explosionPowerLimit)).setStyle(Style.EMPTY
-                .withFormatting(Formatting.AQUA)
-                .withHoverEvent(he)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/hc config "+"explosionPowerLimit "))
-            ))
-            .append("\n ")
-            .append(Text.translatable("modconfig.explosionPowerLimit.description").formatted(Formatting.GRAY))
-        ;
-        player.sendMessage(msg);
-
-        return 1;
-    }
     static MutableText getTitleMessage(String translationKey){
         return Text.literal("")
                 .setStyle(Style.EMPTY
@@ -328,19 +270,12 @@ public class CMD_Hc{
 
         MutableText configOPLevelWarning=null;
 
-        int playerOPLevel=ModCommandManager.getPlayerPermissionLevel(player);
-        int cfgOPLevel=cfg.configOPLevel;
-
-        if(playerOPLevel<cfgOPLevel){
-            player.sendMessage(Text.translatable("message.error.config.insufficientPrivileges",Text.literal(Integer.toString(cfgOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD)).formatted(Formatting.RED));
-            return -1;
-        }
-
         switch(field){
             case "configOPLevel":
                 int specifiedOPLevel=(int) value;
+                int playerOPLevel=ModCommandManager.getPlayerPermissionLevel(player);
                 if(specifiedOPLevel>playerOPLevel){
-                    player.sendMessage(Text.translatable("message.error.config.configOPLevel.insufficientOPLevel",Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(specifiedOPLevel)).formatted(Formatting.GOLD)).formatted(Formatting.RED));
+                    player.sendMessage(Text.translatable("message.error.config.configOPLevel.insufficientOPLevel",Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(specifiedOPLevel)).formatted(Formatting.GOLD)));
                     return -1;
                 }
                 cfg.configOPLevel=(int) value;
