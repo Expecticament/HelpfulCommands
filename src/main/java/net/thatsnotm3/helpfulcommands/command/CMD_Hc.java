@@ -328,12 +328,19 @@ public class CMD_Hc{
 
         MutableText configOPLevelWarning=null;
 
+        int playerOPLevel=ModCommandManager.getPlayerPermissionLevel(player);
+        int cfgOPLevel=cfg.configOPLevel;
+
+        if(playerOPLevel<cfgOPLevel){
+            player.sendMessage(Text.translatable("message.error.config.insufficientPrivileges",Text.literal(Integer.toString(cfgOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD)).formatted(Formatting.RED));
+            return -1;
+        }
+
         switch(field){
             case "configOPLevel":
                 int specifiedOPLevel=(int) value;
-                int playerOPLevel=ModCommandManager.getPlayerPermissionLevel(player);
                 if(specifiedOPLevel>playerOPLevel){
-                    player.sendMessage(Text.translatable("message.error.config.configOPLevel.insufficientOPLevel",Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(specifiedOPLevel)).formatted(Formatting.GOLD)));
+                    player.sendMessage(Text.translatable("message.error.config.configOPLevel.insufficientOPLevel",Text.literal(Integer.toString(playerOPLevel)).formatted(Formatting.GOLD),Text.literal(Integer.toString(specifiedOPLevel)).formatted(Formatting.GOLD)).formatted(Formatting.RED));
                     return -1;
                 }
                 cfg.configOPLevel=(int) value;
