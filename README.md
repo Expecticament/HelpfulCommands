@@ -24,7 +24,7 @@ Available in-game (`/hc commands`) or on our Wiki [here](https://github.com/That
 <details>
 <summary>1.19</summary>
   
-* [1.19.4](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.1)
+* [1.19.4](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/2.0.0)
 * [1.19.2](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/1.0.1)
 
 </details>
