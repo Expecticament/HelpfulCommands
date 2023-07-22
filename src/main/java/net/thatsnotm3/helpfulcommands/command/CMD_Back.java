@@ -18,8 +18,11 @@ import net.minecraft.util.Formatting;
 import net.thatsnotm3.helpfulcommands.util.IEntityDataSaver;
 
 public class CMD_Back{
+
+    static final String cmdName="back";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("back")
+        dispatcher.register(CommandManager.literal(cmdName)
             .then(CommandManager.literal("get").executes(CMD_Back::getPos))
             .then(CommandManager.literal("tp").executes(CMD_Back::returnToPos))
             .executes(CMD_Back::returnToPos)
@@ -30,7 +33,7 @@ public class CMD_Back{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
         IEntityDataSaver playerData=(IEntityDataSaver) player;
 
-        if(!ModCommandManager.RunChecks("back",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
         String dimensionName=playerData.getPersistentData().getString("deathDimension");

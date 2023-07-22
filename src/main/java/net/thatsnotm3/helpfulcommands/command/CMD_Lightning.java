@@ -12,10 +12,14 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 public class CMD_Lightning{
+
+    static final String cmdName="lightning";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("lightning")
+        dispatcher.register(CommandManager.literal(cmdName)
             .then(CommandManager.argument("distance", FloatArgumentType.floatArg()).executes(ctx -> run(ctx, FloatArgumentType.getFloat(ctx, "distance"))))
         );
     }
@@ -23,7 +27,7 @@ public class CMD_Lightning{
     public static int run(CommandContext<ServerCommandSource> ctx,float distance) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!ModCommandManager.RunChecks("lightning",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         double posX=player.getX()+player.getRotationVector().getX()*distance;
         double posY=player.getY()+player.getEyeHeight(player.getPose())+player.getRotationVector().getY()*distance;
@@ -32,7 +36,7 @@ public class CMD_Lightning{
         LightningEntity le=new LightningEntity(EntityType.LIGHTNING_BOLT, player.getWorld());
         le.setPos(posX,posY,posZ);
         player.getWorld().spawnEntity(le);
-        player.sendMessage(Text.literal("Created a Lightning Bolt strike"),true);
+        player.sendMessage(Text.translatable("message.command.lightning.success").formatted(Formatting.AQUA),true);
 
         return 1;
     }

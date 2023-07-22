@@ -9,19 +9,23 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.util.Formatting;
 
 public class CMD_Killitems{
+
+    static final String cmdName="killitems";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("killitems").executes(CMD_Killitems::run));
+        dispatcher.register(CommandManager.literal(cmdName).executes(CMD_Killitems::run));
     }
 
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!ModCommandManager.RunChecks("killitems",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         player.getServer().getCommandManager().executeWithPrefix(ctx.getSource(), "kill @e[type=item]");
-        player.sendMessage(Text.literal("\u00A7b/kill @e[type=item]"),true);
+        player.sendMessage(Text.literal("/kill @e[type=item]".formatted(Formatting.AQUA)),true);
 
         return 1;
     }

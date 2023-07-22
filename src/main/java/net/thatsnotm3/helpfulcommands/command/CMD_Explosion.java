@@ -10,21 +10,25 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World.ExplosionSourceType;
 import net.thatsnotm3.helpfulcommands.gamerule.ModGameRules;
 
 public class CMD_Explosion{
+
+    static final String cmdName="explosion";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("explosion")
-            .then(CommandManager.argument("distance", FloatArgumentType.floatArg())
-            .then(CommandManager.argument("power", FloatArgumentType.floatArg()).executes(ctx -> run(ctx, FloatArgumentType.getFloat(ctx, "distance"),FloatArgumentType.getFloat(ctx, "power")))))
+        dispatcher.register(CommandManager.literal(cmdName)
+            .then(CommandManager.argument("distance", FloatArgumentType.floatArg(0))
+            .then(CommandManager.argument("power", FloatArgumentType.floatArg(0)).executes(ctx -> run(ctx, FloatArgumentType.getFloat(ctx, "distance"),FloatArgumentType.getFloat(ctx, "power")))))
         );
     }
 
     public static int run(CommandContext<ServerCommandSource> ctx,float distance,float power) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!ModCommandManager.RunChecks("explosion",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         double posX=player.getX()+player.getRotationVector().getX()*distance;
         double posY=player.getY()+player.getEyeHeight(player.getPose())+player.getRotationVector().getY()*distance;
@@ -34,7 +38,7 @@ public class CMD_Explosion{
             return 1;
         }
         player.getWorld().createExplosion(null, posX, posY, posZ, power, ExplosionSourceType.TNT);
-        player.sendMessage(Text.literal("Created an explosion"),true);
+        player.sendMessage(Text.translatable("message.command.explosion.success").formatted(Formatting.AQUA),true);
 
         return 1;
     }

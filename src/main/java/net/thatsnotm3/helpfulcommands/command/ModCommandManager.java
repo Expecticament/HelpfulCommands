@@ -3,6 +3,7 @@ package net.thatsnotm3.helpfulcommands.command;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -12,14 +13,15 @@ import net.thatsnotm3.helpfulcommands.util.ConfigManager;
 public class ModCommandManager{
 
     public static List<String> commands=new ArrayList<String>(){{
-        add("abilities");
         add("back");
         add("day");
         add("dimension");
         add("explosion");
         add("extinguish");
         add("feed");
+        add("fly");
         add("gm");
+        add("god");
         add("heal");
         add("home");
         add("ignite");
@@ -29,6 +31,27 @@ public class ModCommandManager{
         add("night");
         add("spawn");
     }};
+
+    public static void registerCommands(){
+        CommandRegistrationCallback.EVENT.register(CMD_Hc::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Gm::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Day::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Night::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Spawn::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Dimension::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Jump::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Explosion::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Lightning::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Killitems::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Home::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Back::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Feed::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Heal::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Extinguish::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Ignite::register);
+        CommandRegistrationCallback.EVENT.register(CMD_Fly::register);
+        CommandRegistrationCallback.EVENT.register(CMD_God::register);
+    }
 
     public static boolean RunChecks(String cmd, ServerPlayerEntity player){
         ConfigManager.ModConfig cfg;

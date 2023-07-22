@@ -21,8 +21,11 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 
 public class CMD_Home{
+
+    static final String cmdName="home";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("home")
+        dispatcher.register(CommandManager.literal(cmdName)
             .then(CommandManager.literal("set").executes(CMD_Home::setHome))
             .then(CommandManager.literal("get").executes(CMD_Home::getHome))
             .then(CommandManager.literal("tp").executes(CMD_Home::returnHome))
@@ -34,7 +37,7 @@ public class CMD_Home{
         IEntityDataSaver playerData=(IEntityDataSaver)ctx.getSource().getPlayer();
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!ModCommandManager.RunChecks("home",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         int[] homePos=playerData.getPersistentData().getIntArray("homePosition");
         String dimensionName=playerData.getPersistentData().getString("homeDimension");

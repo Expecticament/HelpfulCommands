@@ -26,8 +26,11 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 
 public class CMD_Dimension{
+
+    static final String cmdName="dimension";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("dimension")
+        dispatcher.register(CommandManager.literal(cmdName)
             .then(CommandManager.literal("get")
                 .then(CommandManager.argument("target", EntityArgumentType.player()).executes(ctx->getDimension(ctx, EntityArgumentType.getPlayer(ctx, "target"))))
                 .executes(ctx->getDimension(ctx,null))
@@ -41,7 +44,7 @@ public class CMD_Dimension{
     static int switchDimension(CommandContext<ServerCommandSource> ctx, ServerWorld dim, Collection<? extends Entity> targets) throws CommandSyntaxException{
         ServerPlayerEntity player=ctx.getSource().getPlayer();
 
-        if(!ModCommandManager.RunChecks("dimension",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         String dimensionName=dim.getRegistryKey().getValue().toString();
 

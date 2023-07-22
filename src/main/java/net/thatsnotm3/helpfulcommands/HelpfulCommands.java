@@ -17,29 +17,9 @@ public class HelpfulCommands implements ModInitializer{
 
 	@Override
 	public void onInitialize(){
-		registerCommands();
+		ModCommandManager.registerCommands();
 		registerEvents();
 		ModGameRules.registerGameRules();
-	}
-
-	public static void registerCommands(){
-		CommandRegistrationCallback.EVENT.register(CMD_Hc::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Gm::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Day::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Night::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Spawn::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Dimension::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Abilities::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Jump::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Explosion::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Lightning::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Killitems::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Home::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Back::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Feed::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Heal::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Extinguish::register);
-		CommandRegistrationCallback.EVENT.register(CMD_Ignite::register);
 	}
 
 	public static void registerEvents(){

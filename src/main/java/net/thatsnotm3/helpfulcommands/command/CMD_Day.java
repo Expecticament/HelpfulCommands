@@ -11,14 +11,17 @@ import net.minecraft.text.Text;
 import net.minecraft.server.command.CommandManager;
 
 public class CMD_Day{
+
+    static final String cmdName="day";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        dispatcher.register(CommandManager.literal("day").executes(CMD_Day::run));
+        dispatcher.register(CommandManager.literal(cmdName).executes(CMD_Day::run));
     }
 
     public static int run(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerPlayerEntity player = ctx.getSource().getPlayer();
 
-        if(!ModCommandManager.RunChecks("day",player)) return -1;
+        if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
         
         player.getServerWorld().setTimeOfDay(1000);
         player.sendMessage(Text.literal("Changed daytime to \u00A7bDay"));
