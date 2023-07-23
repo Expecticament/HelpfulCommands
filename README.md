@@ -1,7 +1,7 @@
 # 📝║ Helpful Commands Mod
 Minecraft mod that adds lots of useful commands, as well as shortcuts for existing vanilla ones, making your experience better, more optimized, and flexible. Easy to configure, get used to, and then enjoy in the long run.
 
-• [Download](https://github.com/ThatsNotM3/HelpfulCommands/releases) • [Command List](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands) • [Modrinth](https://modrinth.com/mod/helpfulcommands/) • [CurseForge](https://curseforge.com/minecraft/mc-mods/helpful-commands) •
+• [Command List](https://github.com/ThatsNotM3/HelpfulCommands/wiki#commands) • [Discord](https://discord.gg/zkacdSH8Vu) • [Modrinth](https://modrinth.com/mod/helpfulcommands/) • [CurseForge](https://curseforge.com/minecraft/mc-mods/helpful-commands) •
 
 ## «✨» Features
 - **Lots of new useful commands:** save your time, enhance your experience, and enjoy new features
