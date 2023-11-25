@@ -1,5 +1,5 @@
 # 💻║ Source code for 1.19
-You are viewing source code for the latest update that mod supports of this Minecraft global version.
+You are viewing the source code for the latest mod version that supports this Minecraft version.
 
 > **This branch contains:** Helpful Commands 2.0.0 for Minecraft 1.19.4
 
