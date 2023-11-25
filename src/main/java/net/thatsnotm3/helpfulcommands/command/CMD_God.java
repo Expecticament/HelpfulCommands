@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,7 +44,7 @@ public class CMD_God {
 
         if(targets!=null){
             int i=0;
-            Iterator iter=targets.iterator();
+            Iterator<? extends Entity> iter=targets.iterator();
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
                 ServerPlayerEntity target=(ServerPlayerEntity) iter.next();

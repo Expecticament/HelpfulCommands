@@ -20,6 +20,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 
 public class CMD_Feed{
 
@@ -39,7 +40,7 @@ public class CMD_Feed{
 
         if(targets!=null){
             int i=0;
-            Iterator iter=targets.iterator();
+            Iterator<? extends Entity> iter=targets.iterator();
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
                 ServerPlayerEntity target=(ServerPlayerEntity) iter.next();

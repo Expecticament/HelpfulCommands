@@ -41,7 +41,7 @@ public class CMD_Ignite{
 
         if(targets!=null){
             int i=0;
-            Iterator iter=targets.iterator();
+            Iterator<? extends Entity> iter=targets.iterator();
             List<String> targetNames=new ArrayList<String>();
             while(iter.hasNext()){
                 Entity target=(Entity) iter.next();

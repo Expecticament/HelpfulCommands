@@ -1,7 +1,6 @@
 package net.thatsnotm3.helpfulcommands;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.thatsnotm3.helpfulcommands.command.*;
 import net.thatsnotm3.helpfulcommands.gamerule.ModGameRules;
