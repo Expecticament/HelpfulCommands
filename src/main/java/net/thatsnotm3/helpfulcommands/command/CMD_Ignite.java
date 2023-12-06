@@ -48,14 +48,14 @@ public class CMD_Ignite{
                 target.setOnFireFor(time);
                 
                 if(target!=player){
-                    MutableText msg=Text.literal(player.getEntityName()+": ")
+                    MutableText msg=Text.literal(player.getName().getString()+": ")
                         .formatted(Formatting.GRAY)
                         .append(Text.translatable("message.command.ignite.self").formatted(Formatting.WHITE))
                     ;
                     target.sendMessage(msg);
                 }
 
-                targetNames.add(target.getEntityName());
+                targetNames.add(target.getName().getString());
                 ++i;
             }
             if(i>0){

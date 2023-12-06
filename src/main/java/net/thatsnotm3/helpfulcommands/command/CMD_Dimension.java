@@ -57,13 +57,13 @@ public class CMD_Dimension{
                 if(target.getWorld()==dim) continue;
                 if(target.teleport(dim, target.getX(), target.getY(), target.getZ(), null, target.getYaw(), target.getPitch())){
                     if(target!=player){
-                        MutableText msg=Text.literal(player.getEntityName()+": ")
+                        MutableText msg=Text.literal(player.getName().getString()+": ")
                             .formatted(Formatting.GRAY)
                             .append(Text.translatable("message.command.dimension.self",Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.WHITE))
                         ;
                         target.sendMessage(msg);
                     }
-                    targetNames.add(target.getEntityName());
+                    targetNames.add(target.getName().getString());
                     ++i;
                 }
             }
@@ -102,7 +102,7 @@ public class CMD_Dimension{
         String dimensionName=currentDimension.getValue().toString();
 
         if(target!=null){
-            player.sendMessage(Text.translatable("message.command.dimension.get.target",Text.literal(target.getEntityName()).formatted(Formatting.GOLD),Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.AQUA));
+            player.sendMessage(Text.translatable("message.command.dimension.get.target",Text.literal(target.getName().getString()).formatted(Formatting.GOLD),Text.literal(dimensionName).formatted(Formatting.GOLD)).formatted(Formatting.AQUA));
         } else{
             player.sendMessage(Text.literal("Your current Dimension is: "+"\u00A76"+dimensionName).formatted(Formatting.AQUA));
         }

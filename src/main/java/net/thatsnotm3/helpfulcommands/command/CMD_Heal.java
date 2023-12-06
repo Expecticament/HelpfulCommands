@@ -46,14 +46,14 @@ public class CMD_Heal{
                 target.setHealth(target.getMaxHealth());
                 
                 if(target!=player){
-                    MutableText msg=Text.literal(player.getEntityName()+": ")
+                    MutableText msg=Text.literal(player.getName().getString()+": ")
                         .formatted(Formatting.GRAY)
                         .append(Text.translatable("message.command.heal.self").formatted(Formatting.GREEN))
                     ;
                     target.sendMessage(msg);
                 }
 
-                targetNames.add(target.getEntityName());
+                targetNames.add(target.getName().getString());
                 ++i;
             }
             if(i>0){

@@ -64,13 +64,13 @@ public class CMD_Gm{
                 ServerPlayerEntity target=(ServerPlayerEntity) iter.next();
                 if(target.changeGameMode(gameMode)){
                     if(target!=player){
-                        MutableText msg=Text.literal(player.getEntityName()+": ")
+                        MutableText msg=Text.literal(player.getName().getString()+": ")
                             .formatted(Formatting.GRAY)
                             .append(Text.translatable("message.command.gm.self", Text.translatable("gameMode."+gameMode.getName()).formatted(Formatting.GOLD)).formatted(Formatting.WHITE))
                         ;
                         target.sendMessage(msg);
                     }
-                    targetNames.add(target.getEntityName());
+                    targetNames.add(target.getName().getString());
                     ++i;
                 }
             }
