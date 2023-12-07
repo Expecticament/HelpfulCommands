@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Helpful Commands",
-  "description": "Minecraft mod that adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
+  "description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
   "authors": [
     "ThatsNotM3"
   ],
@@ -31,9 +31,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.22",
+    "fabricloader": ">=0.15.0",
     "fabric-api": "*",
-    "minecraft": "~1.20.2",
+    "minecraft": "~1.20.3",
     "java": ">=17"
   },
   "suggests": {

@@ -25,7 +25,6 @@ public class CMD_Killitems{
         if(!ModCommandManager.RunChecks(cmdName,player)) return -1;
 
         player.getServer().getCommandManager().executeWithPrefix(ctx.getSource(), "kill @e[type=item]");
-        player.sendMessage(Text.literal("/kill @e[type=item]").formatted(Formatting.AQUA),true);
 
         return 1;
     }
