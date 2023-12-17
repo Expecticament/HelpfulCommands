@@ -18,9 +18,10 @@ Available in-game (`/hc commands`) or on our Wiki [here](https://github.com/That
 <details>
 <summary>1.20</summary>
   
-* [1.20.3](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/2.0.2)
-* [1.20.2](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/2.0.1)
-* [1.20.1](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/2.0.0)
+* [1.20.4](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/3.0.0a-preview1)
+* [1.20.3](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/3.0.0a-preview1)
+* [1.20.2](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/3.0.0a-preview1)
+* [1.20.1](https://github.com/ThatsNotM3/HelpfulCommands/releases/tag/3.0.0a-preview1)
 
 </details>
 <details>
