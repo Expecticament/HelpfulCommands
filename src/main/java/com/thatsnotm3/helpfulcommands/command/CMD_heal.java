@@ -62,7 +62,7 @@ public class CMD_heal implements IHelpfulCommandsCommand{
                 target.sendMessage(Text.translatable("commands.heal.success.self").setStyle(HelpfulCommands.style.success));
             }
             Text name=target.getDisplayName();
-            source.sendFeedback(() -> Text.translatable("commands.heal.success.other", name).setStyle(HelpfulCommands.style.inactive), true);
+            source.sendFeedback(() -> Text.translatable("commands.heal.success.other", name).setStyle(HelpfulCommands.style.success), true);
         }
     }
 }

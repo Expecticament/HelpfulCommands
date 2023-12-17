@@ -60,7 +60,7 @@ public class CMD_extinguish implements IHelpfulCommandsCommand{
                 target.sendMessage(Text.translatable("commands.extinguish.success.self").setStyle(HelpfulCommands.style.success));
             }
             Text name=target.getDisplayName();
-            source.sendFeedback(() -> Text.translatable("commands.extinguish.success.other", name).setStyle(HelpfulCommands.style.inactive), true);
+            source.sendFeedback(() -> Text.translatable("commands.extinguish.success.other", name).setStyle(HelpfulCommands.style.success), true);
         }
     }
 }

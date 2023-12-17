@@ -74,7 +74,8 @@ public class CMD_fly implements IHelpfulCommandsCommand {
                 if(state) player.sendMessage(Text.translatable("commands.fly.success.self.true").setStyle(HelpfulCommands.style.enabled));
                 else player.sendMessage(Text.translatable("commands.fly.success.self.false").setStyle(HelpfulCommands.style.disabled));
             }
-            source.sendFeedback(() -> Text.translatable("commands.fly.success.other."+state, player.getDisplayName()).setStyle(HelpfulCommands.style.inactive), true);
+            if(state) source.sendFeedback(() -> Text.translatable("commands.fly.success.other.true", player.getDisplayName()).setStyle(HelpfulCommands.style.enabled), true);
+            else source.sendFeedback(() -> Text.translatable("commands.fly.success.other.false", player.getDisplayName()).setStyle(HelpfulCommands.style.disabled), true);
         }
     }
 

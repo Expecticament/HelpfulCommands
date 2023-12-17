@@ -64,7 +64,7 @@ public class CMD_feed implements IHelpfulCommandsCommand{
                 target.sendMessage(Text.translatable("commands.feed.success.self").setStyle(HelpfulCommands.style.success));
             }
             Text name=target.getDisplayName();
-            source.sendFeedback(() -> Text.translatable("commands.feed.success.other", name).setStyle(HelpfulCommands.style.inactive), true);
+            source.sendFeedback(() -> Text.translatable("commands.feed.success.other", name).setStyle(HelpfulCommands.style.success), true);
         }
     }
 }

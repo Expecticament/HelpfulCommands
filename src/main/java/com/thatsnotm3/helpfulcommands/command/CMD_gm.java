@@ -97,15 +97,14 @@ public class CMD_gm implements IHelpfulCommandsCommand{
     }
 
     private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, GameMode gameMode){
-        MutableText gmNamePrimary=Text.translatable("gameMode."+gameMode.getName()).setStyle(HelpfulCommands.style.primary);
-        MutableText gmNameInactive=Text.translatable("gameMode."+gameMode.getName()).setStyle(HelpfulCommands.style.inactive);
+        MutableText gmName=Text.translatable("gameMode."+gameMode.getName()).setStyle(HelpfulCommands.style.primary);
         if(source.getEntity()==player){
-            source.sendFeedback(()->Text.translatable("commands.gamemode.success.self", gmNamePrimary).setStyle(HelpfulCommands.style.success), true);
+            source.sendFeedback(()->Text.translatable("commands.gamemode.success.self", gmName).setStyle(HelpfulCommands.style.success), true);
         } else {
             if(source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)){
-                player.sendMessage(Text.translatable("gameMode.changed", gmNamePrimary).setStyle(HelpfulCommands.style.tertiary));
+                player.sendMessage(Text.translatable("gameMode.changed", gmName).setStyle(HelpfulCommands.style.tertiary));
             }
-            source.sendFeedback(() -> Text.translatable("commands.gamemode.success.other", player.getDisplayName(), gmNameInactive), true);
+            source.sendFeedback(() -> Text.translatable("commands.gamemode.success.other", player.getDisplayName(), gmName), true);
         }
     }
 }
