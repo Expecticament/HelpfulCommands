@@ -1,0 +1,76 @@
+{
+  "mod.description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
+  "mod.version": "v. %d || by %d",
+
+  "about.title": "About",
+  "about.commandList.tooltip": "Click to see all the commands",
+  "about.config.tooltip": "Click to view and edit the mod configuration",
+  "about.modrinth.tooltip": "Click to open the mod's Modrinth page",
+  "about.curseForge.tooltip": "Click to open the mod's CurseForge page",
+  "about.github.tooltip": "Click to open the mod's GitHub page",
+
+  "config.title": "Config",
+
+  "commands.category.main": "Main",
+  "commands.category.time": "Time",
+  "commands.category.abilities": "Abilities",
+  "commands.category.teleportation": "Teleportation",
+  "commands.category.uncategorized": "Uncategorized",
+
+  "commandList.title": "Command List",
+  "commandList.command.enabled": "Enabled",
+  "commandList.command.disabled": "Disabled",
+  "commandList.command.usage.you": "You",
+  "commandList.command.usage.can": "can",
+  "commandList.command.usage.cant": "can't",
+  "commandList.command.usage.use": "use",
+
+  "error.specifyTargets": "Please specify target(s)!",
+  "error.notAllowed": "You're not allowed to use %d command!",
+  "error.inGameOnly": "This command can only be used in game!",
+
+  "commands.hc.description": "Main command used to view information and mod configuration",
+  "commands.day.description": "Set the time to Day",
+  "commands.night.description": "Set the time to Night",
+  "commands.back.description": "Get or teleport to your death position",
+  "commands.extinguish.description": "Extinguish target(s)",
+  "commands.feed.description": "Feed and saturate target(s)",
+  "commands.gm.description": "Change game mode for target(s)",
+  "commands.heal.description": "Restore health for target(s)",
+  "commands.jump.description": "Teleport to the block you are looking at, or in the direction you are looking at with a given distance",
+  "commands.killitems.description": "Kill all the items lying on the ground nearby",
+  "commands.fly.description": "Toggle flying for target(s)",
+  "commands.god.description": "Toggle invulnerability for target(s)",
+  "commands.rename.description": "Rename an item in your main hand",
+
+  "commands.extinguish.success.self": "You were extinguished",
+  "commands.extinguish.success.other": "Extinguished %d",
+
+  "commands.feed.success.self": "You were fed and saturated",
+  "commands.feed.success.other": "Fed and saturated %d",
+
+  "commands.heal.success.self": "You were healed",
+  "commands.heal.success.other": "Healed %d",
+
+  "commands.rename.success": "Renamed your %d to %d",
+  "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
+  "commands.rename.error.sameName": "The new name is the same as the old one!",
+
+  "commands.killitems.success": "Killed %d item(s) lying on the ground",
+  "commands.killitems.error.nothingFound": "No items found on the ground nearby!",
+
+  "commands.jump.success": "Teleported to x: %d, y: %d, z: %d",
+
+  "commands.fly.success.self.true": "Enabled flying",
+  "commands.fly.success.self.false": "Disabled flying",
+  "commands.fly.success.other.true": "Enabled flying for %d",
+  "commands.fly.success.other.false": "Disabled flying for %d",
+
+  "commands.god.success.self.true": "Enabled invulnerability",
+  "commands.god.success.self.false": "Disabled invulnerability",
+  "commands.god.success.other.true": "Enabled invulnerability for %d",
+  "commands.god.success.other.false": "Disabled invulnerability for %d",
+
+  "tooltips.clickToSuggestCommand": "Click to suggest %d command",
+  "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates"
+}

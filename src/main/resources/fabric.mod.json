@@ -1,42 +1,35 @@
 {
-  "schemaVersion": 1,
-  "id": "helpfulcommands",
-  "version": "${version}",
+	"schemaVersion": 1,
+	"id": "helpfulcommands",
+	"version": "${version}",
+	"name": "Helpful Commands",
+	"description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
+	"authors": [
+		"ThatsNotM3"
+	],
+	"contact": {
+		"homepage": "https://github.com/ThatsNotM3/HelpfulCommands",
+		"sources": "https://github.com/ThatsNotM3/HelpfulCommands/tree/1.20",
+		"issues": "https://github.com/ThatsNotM3/HelpfulCommands/issues"
+	},
+	"license": "MIT License",
+	"icon": "assets/helpfulcommands/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.thatsnotm3.helpfulcommands.HelpfulCommands"
+		],
+		"client": [
 
-  "name": "Helpful Commands",
-  "description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
-  "authors": [
-    "ThatsNotM3"
-  ],
-  "contact": {
-    "homepage": "https://github.com/ThatsNotM3/HelpfulCommands",
-    "sources": "https://github.com/ThatsNotM3/HelpfulCommands/tree/1.20",
-    "issues": "https://github.com/ThatsNotM3/HelpfulCommands/issues"
-  },
-
-  "license": "MIT License",
-  "icon": "assets/helpfulcommands/icon.png",
-
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "net.thatsnotm3.helpfulcommands.HelpfulCommands"
-    ],
-    "client":[
-      "net.thatsnotm3.helpfulcommands.HelpfulCommandsClient"
-    ]
-  },
-  "mixins": [
-    "helpfulcommands.mixins.json"
-  ],
-
-  "depends": {
-    "fabricloader": ">=0.15.0",
-    "fabric-api": "*",
-    "minecraft": "~1.20.3",
-    "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
-  }
+		]
+	},
+	"mixins": [
+		"helpfulcommands.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.0",
+		"java": ">=17",
+		"fabric-api": "*",
+		"fabric-permissions-api-v0": "*"
+	}
 }
