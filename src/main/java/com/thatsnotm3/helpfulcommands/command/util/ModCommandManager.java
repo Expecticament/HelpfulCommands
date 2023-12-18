@@ -87,6 +87,12 @@ public class ModCommandManager{
             register=()-> { CMD_heal.init(this); CommandRegistrationCallback.EVENT.register(CMD_heal::registerCommand); };
         }});
         add(new hcCommand(){{
+            name="ignite";
+            category=hcCategory.Uncategorized;
+            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            register=()-> { CMD_ignite.init(this); CommandRegistrationCallback.EVENT.register(CMD_ignite::registerCommand); };
+        }});
+        add(new hcCommand(){{
             name="killitems";
             category=hcCategory.Uncategorized;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;

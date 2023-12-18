@@ -26,6 +26,7 @@
   "commandList.command.usage.use": "use",
 
   "error.specifyTargets": "Please specify target(s)!",
+  "error.didntFindTargets": "Didn't find any targets!",
   "error.notAllowed": "You're not allowed to use %d command!",
   "error.inGameOnly": "This command can only be used in game!",
 
@@ -35,16 +36,20 @@
   "commands.back.description": "Get or teleport to your death position",
   "commands.extinguish.description": "Extinguish target(s)",
   "commands.feed.description": "Feed and saturate target(s)",
+  "commands.fly.description": "Toggle flying for target(s)",
   "commands.gm.description": "Change game mode for target(s)",
+  "commands.god.description": "Toggle invulnerability for target(s)",
   "commands.heal.description": "Restore health for target(s)",
+  "commands.ignite.description": "Set target(s) on fire for a specified number of seconds",
   "commands.jump.description": "Teleport to the block you are looking at, or in the direction you are looking at with a given distance",
   "commands.killitems.description": "Kill all the items lying on the ground nearby",
-  "commands.fly.description": "Toggle flying for target(s)",
-  "commands.god.description": "Toggle invulnerability for target(s)",
   "commands.rename.description": "Rename an item in your main hand",
 
   "commands.extinguish.success.self": "You were extinguished",
   "commands.extinguish.success.other": "Extinguished %d",
+
+  "commands.ignite.success.self": "You were set on fire",
+  "commands.ignite.success.other": "Set on fire %d target(s) for %d seconds",
 
   "commands.feed.success.self": "You were fed and saturated",
   "commands.feed.success.other": "Fed and saturated %d",
