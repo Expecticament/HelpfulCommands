@@ -27,16 +27,16 @@ public class ModCommandManager{
             register=()-> { CMD_hc.init(this); CommandRegistrationCallback.EVENT.register(CMD_hc::registerCommand); };
         }});
         add(new hcCommand(){{
-            name="day";
-            category=hcCategory.Time;
+            name="fly";
+            category=hcCategory.Abilities;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
-            register=()-> { CMD_day.init(this); CommandRegistrationCallback.EVENT.register(CMD_day::registerCommand); };
+            register=()-> { CMD_fly.init(this); CommandRegistrationCallback.EVENT.register(CMD_fly::registerCommand); };
         }});
         add(new hcCommand(){{
-            name="night";
-            category=hcCategory.Time;
+            name="god";
+            category=hcCategory.Abilities;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
-            register=()-> { CMD_night.init(this); CommandRegistrationCallback.EVENT.register(CMD_night::registerCommand); };
+            register=()-> { CMD_god.init(this); CommandRegistrationCallback.EVENT.register(CMD_god::registerCommand); };
         }});
         add(new hcCommand(){{
             name="back";
@@ -51,16 +51,16 @@ public class ModCommandManager{
             register=()-> { CMD_jump.init(this); CommandRegistrationCallback.EVENT.register(CMD_jump::registerCommand); };
         }});
         add(new hcCommand(){{
-            name="fly";
-            category=hcCategory.Abilities;
+            name="day";
+            category=hcCategory.Time;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
-            register=()-> { CMD_fly.init(this); CommandRegistrationCallback.EVENT.register(CMD_fly::registerCommand); };
+            register=()-> { CMD_day.init(this); CommandRegistrationCallback.EVENT.register(CMD_day::registerCommand); };
         }});
         add(new hcCommand(){{
-            name="god";
-            category=hcCategory.Abilities;
+            name="night";
+            category=hcCategory.Time;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
-            register=()-> { CMD_god.init(this); CommandRegistrationCallback.EVENT.register(CMD_god::registerCommand); };
+            register=()-> { CMD_night.init(this); CommandRegistrationCallback.EVENT.register(CMD_night::registerCommand); };
         }});
         add(new hcCommand(){{
             name="extinguish";
