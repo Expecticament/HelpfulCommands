@@ -84,6 +84,10 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                         .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config"))
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.config.tooltip")))
                 );
+        MutableText buttonWiki=Text.translatable("about.wiki").setStyle(buttonStyle
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://thatsnotm3.github.io/HelpfulCommands/"))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.wiki.tooltip")))
+        );
         MutableText buttonGitHub=Text.literal("GitHub").setStyle(buttonStyle
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/ThatsNotM3/HelpfulCommands"))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.github.tooltip")))
@@ -105,6 +109,8 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(buttonConfig)
                     .append(Text.literal("〛"))
                     .append(Text.literal("\n〚"))
+                    .append(buttonWiki)
+                    .append(Text.literal(" • "))
                     .append(buttonGitHub)
                     .append(Text.literal(" • "))
                     .append(buttonModrinth)

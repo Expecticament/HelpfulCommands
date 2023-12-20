@@ -5,6 +5,8 @@
   "about.title": "About",
   "about.commandList.tooltip": "Click to see all the commands",
   "about.config.tooltip": "Click to view and edit the mod configuration",
+  "about.wiki": "Wiki",
+  "about.wiki.tooltip": "Click to open the mod's Documentation",
   "about.modrinth.tooltip": "Click to open the mod's Modrinth page",
   "about.curseForge.tooltip": "Click to open the mod's CurseForge page",
   "about.github.tooltip": "Click to open the mod's GitHub page",
