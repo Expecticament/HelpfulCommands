@@ -1,8 +1,9 @@
 {
 	"required": true,
-	"package": "com.thatsnotm3.mixin",
+	"package": "com.thatsnotm3.helpfulcommands.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"ModEntityDataSaver"
 	],
 	"injectors": {
 		"defaultRequire": 1

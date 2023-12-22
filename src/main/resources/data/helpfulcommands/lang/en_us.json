@@ -2,6 +2,12 @@
   "mod.description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
   "mod.version": "v. %d || by %d",
 
+  "commands.category.main": "Main",
+  "commands.category.time": "Time",
+  "commands.category.abilities": "Abilities",
+  "commands.category.teleportation": "Teleportation",
+  "commands.category.uncategorized": "Uncategorized",
+
   "about.title": "About",
   "about.commandList.tooltip": "Click to see all the commands",
   "about.config.tooltip": "Click to view and edit the mod configuration",
@@ -13,11 +19,7 @@
 
   "config.title": "Config",
 
-  "commands.category.main": "Main",
-  "commands.category.time": "Time",
-  "commands.category.abilities": "Abilities",
-  "commands.category.teleportation": "Teleportation",
-  "commands.category.uncategorized": "Uncategorized",
+  "deathPosition.title": "Death position",
 
   "commandList.title": "Command List",
   "commandList.command.enabled": "Enabled",
@@ -26,11 +28,6 @@
   "commandList.command.usage.can": "can",
   "commandList.command.usage.cant": "can't",
   "commandList.command.usage.use": "use",
-
-  "error.specifyTargets": "Please specify target(s)!",
-  "error.didntFindTargets": "Didn't find any targets!",
-  "error.notAllowed": "You're not allowed to use %d command!",
-  "error.inGameOnly": "This command can only be used in game!",
 
   "commands.hc.description": "Main command used to view information and mod configuration",
   "commands.day.description": "Set the time to Day",
@@ -47,40 +44,54 @@
   "commands.killitems.description": "Kill all the items lying on the ground nearby",
   "commands.rename.description": "Rename an item in your main hand",
 
+  "commands.back.success": "Teleported to your death position in %d at x: %d; y: %d; z: %d",
+  "commands.back.error.noDeathPos": "No death position saved yet",
+
   "commands.extinguish.success.self": "You were extinguished",
   "commands.extinguish.success.other": "Extinguished %d target(s)",
 
-  "commands.ignite.success.self": "You were set on fire",
-  "commands.ignite.success.other": "Set on fire %d target(s) for %d seconds",
-
   "commands.feed.success.self": "You were fed and saturated",
   "commands.feed.success.other": "Fed and saturated %d target(s)",
-
-  "commands.heal.success.self": "You were healed",
-  "commands.heal.success.other": "Healed %d target(s)",
-
-  "commands.rename.success": "Renamed your %d to %d",
-  "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
-  "commands.rename.error.sameName": "The new name is the same as the old one!",
-
-  "commands.killitems.success": "Killed %d item(s) lying on the ground",
-  "commands.killitems.error.nothingFound": "No items found on the ground nearby!",
-
-  "commands.jump.success": "Teleported to x: %d, y: %d, z: %d",
 
   "commands.fly.success.self.true": "Enabled flying",
   "commands.fly.success.self.false": "Disabled flying",
   "commands.fly.success.other.true": "Enabled flying for %d target(s)",
   "commands.fly.success.other.false": "Disabled flying for %d target(s)",
 
+  "commands.gm.success.self": "Changed game mode to %d",
+  "commands.gm.success.other": "Changed game mode to %d for %d player(s)",
+
   "commands.god.success.self.true": "Enabled invulnerability",
   "commands.god.success.self.false": "Disabled invulnerability",
   "commands.god.success.other.true": "Enabled invulnerability for %d target(s)",
   "commands.god.success.other.false": "Disabled invulnerability for %d target(s)",
 
-  "commands.gm.success.self": "Changed game mode to %d",
-  "commands.gm.success.other": "Changed game mode to %d for %d player(s)",
+  "commands.heal.success.self": "You were healed",
+  "commands.heal.success.other": "Healed %d target(s)",
+
+  "commands.ignite.success.self": "You were set on fire",
+  "commands.ignite.success.other": "Set on fire %d target(s) for %d seconds",
+
+  "commands.jump.success": "Teleported to x: %d, y: %d, z: %d",
+
+  "commands.killitems.success": "Killed %d item(s) lying on the ground",
+  "commands.killitems.error.nothingFound": "No items found on the ground nearby!",
+
+  "commands.rename.success": "Renamed your %d to %d",
+  "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
+  "commands.rename.error.sameName": "The new name is the same as the old one!",
 
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
-  "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates"
+  "tooltips.clickToTeleport": "Click to teleport",
+  "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
+  "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",
+
+  "error.specifyTargets": "Please specify target(s)!",
+  "error.didntFindTargets": "Didn't find any targets!",
+  "error.notAllowed": "You're not allowed to use %d command!",
+  "error.inGameOnly": "This command can only be used in game!",
+  "error.unknownDimension": "Unknown dimension!",
+
+  "phrase.dimension": "Dimension",
+  "phrase.teleport": "Teleport"
 }

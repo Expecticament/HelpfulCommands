@@ -1,4 +1,4 @@
-package com.thatsnotm3.helpfulcommands.command;
+package com.thatsnotm3.helpfulcommands.command.abilities;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
+import com.thatsnotm3.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
@@ -19,7 +20,7 @@ import net.minecraft.world.GameRules;
 
 import java.util.Collection;
 
-public class CMD_god implements IHelpfulCommandsCommand {
+public class CMD_fly implements IHelpfulCommandsCommand {
     public static ModCommandManager.hcCommand cmd;
 
     public static void init(ModCommandManager.hcCommand newData){
@@ -34,7 +35,7 @@ public class CMD_god implements IHelpfulCommandsCommand {
                                 )
                                 .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
                         )
-                .executes(CMD_god::execute)
+                .executes(CMD_fly::execute)
                 .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
     }
@@ -48,46 +49,48 @@ public class CMD_god implements IHelpfulCommandsCommand {
         }
 
         ServerPlayerEntity plr=src.getPlayer();
-        sendFeedback(src,plr,toggleInvulnerabilityForTarget(plr));
+        sendFeedback(src,plr,toggleFlyingForTarget(plr));
         return Command.SINGLE_SUCCESS;
     }
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException {
         for(ServerPlayerEntity i : targets){
-            sendFeedback(ctx.getSource(), i, toggleInvulnerabilityForTarget(i));
+            sendFeedback(ctx.getSource(), i, toggleFlyingForTarget(i));
         }
         return Command.SINGLE_SUCCESS;
     }
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets,boolean state) throws CommandSyntaxException {
         for(ServerPlayerEntity i : targets){
-            if(i.getAbilities().invulnerable==state) continue;
-            sendFeedback(ctx.getSource(), i, toggleInvulnerabilityForTarget(i,state));
+            if(i.getAbilities().allowFlying==state) continue;
+            sendFeedback(ctx.getSource(), i, toggleFlyingForTarget(i,state));
         }
         return Command.SINGLE_SUCCESS;
     }
 
     private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, boolean state){
         if(source.getEntity()==player){
-            if(state) source.sendFeedback(()->Text.translatable("commands.god.success.self.true").setStyle(HelpfulCommands.style.enabled), true);
-            else source.sendFeedback(()->Text.translatable("commands.god.success.self.false").setStyle(HelpfulCommands.style.disabled), true);
+            if(state) source.sendFeedback(()->Text.translatable("commands.fly.success.self.true").setStyle(HelpfulCommands.style.enabled), true);
+            else source.sendFeedback(()->Text.translatable("commands.fly.success.self.false").setStyle(HelpfulCommands.style.disabled), true);
         } else {
             if(source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)){
-                if(state) player.sendMessage(Text.translatable("commands.god.success.self.true").setStyle(HelpfulCommands.style.enabled));
-                else player.sendMessage(Text.translatable("commands.god.success.self.false").setStyle(HelpfulCommands.style.disabled));
+                if(state) player.sendMessage(Text.translatable("commands.fly.success.self.true").setStyle(HelpfulCommands.style.enabled));
+                else player.sendMessage(Text.translatable("commands.fly.success.self.false").setStyle(HelpfulCommands.style.disabled));
             }
-            if(state) source.sendFeedback(() -> Text.translatable("commands.god.success.other.true", player.getDisplayName()).setStyle(HelpfulCommands.style.enabled), true);
-            else source.sendFeedback(() -> Text.translatable("commands.god.success.other.false", player.getDisplayName()).setStyle(HelpfulCommands.style.disabled), true);
+            if(state) source.sendFeedback(() -> Text.translatable("commands.fly.success.other.true", player.getDisplayName()).setStyle(HelpfulCommands.style.enabled), true);
+            else source.sendFeedback(() -> Text.translatable("commands.fly.success.other.false", player.getDisplayName()).setStyle(HelpfulCommands.style.disabled), true);
         }
     }
 
-    private static boolean toggleInvulnerabilityForTarget(ServerPlayerEntity target){
+    private static boolean toggleFlyingForTarget(ServerPlayerEntity target){
         PlayerAbilities abilities=target.getAbilities();
-        abilities.invulnerable=!abilities.invulnerable;
+        abilities.allowFlying=!abilities.allowFlying;
+        if(!abilities.allowFlying) abilities.flying=false;
         target.sendAbilitiesUpdate();
-        return abilities.invulnerable;
+        return abilities.allowFlying;
     }
-    private static boolean toggleInvulnerabilityForTarget(ServerPlayerEntity target, boolean state){
+    private static boolean toggleFlyingForTarget(ServerPlayerEntity target, boolean state){
         PlayerAbilities abilities=target.getAbilities();
-        abilities.invulnerable=state;
+        abilities.allowFlying=state;
+        if(!state) abilities.flying=false;
         target.sendAbilitiesUpdate();
         return state;
     }

@@ -1,4 +1,4 @@
-package com.thatsnotm3.helpfulcommands.command;
+package com.thatsnotm3.helpfulcommands.command.teleportation;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
+import com.thatsnotm3.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;

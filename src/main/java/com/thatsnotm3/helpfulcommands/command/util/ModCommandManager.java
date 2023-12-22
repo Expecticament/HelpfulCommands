@@ -1,6 +1,10 @@
 package com.thatsnotm3.helpfulcommands.command.util;
 
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
+import com.thatsnotm3.helpfulcommands.command.abilities.CMD_fly;
+import com.thatsnotm3.helpfulcommands.command.abilities.CMD_god;
+import com.thatsnotm3.helpfulcommands.command.teleportation.CMD_back;
+import com.thatsnotm3.helpfulcommands.command.teleportation.CMD_jump;
 import com.thatsnotm3.helpfulcommands.command.time.*;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 

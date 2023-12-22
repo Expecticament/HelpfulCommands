@@ -1,6 +1,7 @@
 package com.thatsnotm3.helpfulcommands;
 
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
+import com.thatsnotm3.helpfulcommands.event.ModEventManager;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,7 +25,7 @@ public class HelpfulCommands implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(modID);
 
 	public static class style {
-		public static final Style simpleText=Style.EMPTY;
+		public static final Style simpleText=Style.EMPTY.withColor(Formatting.WHITE);
 		public static final Style error=simpleText.withColor(Formatting.RED);
 		public static final Style critical=simpleText.withColor(Formatting.DARK_RED);
 		public static final Style warning=simpleText.withColor(Formatting.YELLOW);
@@ -46,5 +47,6 @@ public class HelpfulCommands implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		ModCommandManager.registerCommands();
+		ModEventManager.registerEvents();
 	}
 }
