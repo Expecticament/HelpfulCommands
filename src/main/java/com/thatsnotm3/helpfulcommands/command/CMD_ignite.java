@@ -13,6 +13,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -46,11 +47,19 @@ public class CMD_ignite implements IHelpfulCommandsCommand{
 
         Map<String, Integer> entries=new HashMap<>(ignite(src, targets, duration));
 
+        int count=0;
         String entryList="";
-        for(Map.Entry<String, Integer> i : entries.entrySet()) entryList+=i.getValue()+"x "+i.getKey()+"\n";
+        for(Map.Entry<String, Integer> i : entries.entrySet()){
+            if(i.getValue()<0){
+                entryList+=i.getKey()+"\n";
+                count+=1;
+            }
+            else{
+                entryList+=i.getValue()+"x "+i.getKey()+"\n";
+                count+=i.getValue();
+            }
+        }
         if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
-
-        int count=entries.size();
 
         if(count>0) {
             MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
@@ -68,12 +77,20 @@ public class CMD_ignite implements IHelpfulCommandsCommand{
         boolean feedback=src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
 
         for(Entity i : targets){
-            i.setOnFireFor(duration);
-            String name=i.getName().getString();
-            entries.put(name,entries.getOrDefault(name,0)+1);
-            if(feedback){
-                i.sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
+            if(i.isPlayer()){
+                ServerPlayerEntity plr=(ServerPlayerEntity) i;
+                if(plr.getAbilities().invulnerable) continue;
             }
+            i.setOnFireFor(duration);
+            int diff=1;
+            if(i.isPlayer()){
+                diff=-1;
+                if(feedback){
+                    if(src.getEntity()!=null) if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
+                }
+            }
+            String name=i.getName().getString();
+            entries.put(name,entries.getOrDefault(name,0)+diff);
         }
 
         return entries;

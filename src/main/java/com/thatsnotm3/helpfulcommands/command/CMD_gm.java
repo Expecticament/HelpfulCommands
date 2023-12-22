@@ -9,9 +9,11 @@ import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -21,6 +23,8 @@ import net.minecraft.world.GameRules;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CMD_gm implements IHelpfulCommandsCommand{
 
@@ -36,75 +40,94 @@ public class CMD_gm implements IHelpfulCommandsCommand{
                         .then(CommandManager.argument("player(s)", EntityArgumentType.players())
                                 .executes(ctx->execute(ctx,GameMode.ADVENTURE,EntityArgumentType.getPlayers(ctx,"player(s)")))
                         )
-                        .executes(ctx->{
-                            if(!ctx.getSource().isExecutedByPlayer()){
-                                ctx.getSource().sendMessage(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
-                                return -1;
-                            }
-                            execute(ctx,GameMode.ADVENTURE,new ArrayList<>(){{ add(ctx.getSource().getPlayer()); }});
-                            return Command.SINGLE_SUCCESS;
-                        })
+                        .executes(ctx->execute(ctx,GameMode.ADVENTURE))
                 )
                 .then(CommandManager.literal("c")
                         .then(CommandManager.argument("player(s)", EntityArgumentType.players())
                                 .executes(ctx->execute(ctx,GameMode.CREATIVE,EntityArgumentType.getPlayers(ctx,"player(s)")))
                         )
-                        .executes(ctx->{
-                            if(!ctx.getSource().isExecutedByPlayer()){
-                                ctx.getSource().sendMessage(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
-                                return -1;
-                            }
-                            execute(ctx,GameMode.CREATIVE,new ArrayList<>(){{ add(ctx.getSource().getPlayer()); }});
-                            return Command.SINGLE_SUCCESS;
-                        })
+                        .executes(ctx->execute(ctx,GameMode.CREATIVE))
                 )
                 .then(CommandManager.literal("s")
                         .then(CommandManager.argument("player(s)", EntityArgumentType.players())
                                 .executes(ctx->execute(ctx,GameMode.SURVIVAL,EntityArgumentType.getPlayers(ctx,"player(s)")))
                         )
-                        .executes(ctx->{
-                            if(!ctx.getSource().isExecutedByPlayer()){
-                                ctx.getSource().sendMessage(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
-                                return -1;
-                            }
-                            execute(ctx,GameMode.SURVIVAL,new ArrayList<>(){{ add(ctx.getSource().getPlayer()); }});
-                            return Command.SINGLE_SUCCESS;
-                        })
+                        .executes(ctx->execute(ctx,GameMode.SURVIVAL))
                 )
                 .then(CommandManager.literal("sp")
                         .then(CommandManager.argument("player(s)", EntityArgumentType.players())
                                 .executes(ctx->execute(ctx,GameMode.SPECTATOR,EntityArgumentType.getPlayers(ctx,"player(s)")))
                         )
-                        .executes(ctx->{
-                            if(!ctx.getSource().isExecutedByPlayer()){
-                                ctx.getSource().sendMessage(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
-                                return -1;
-                            }
-                            execute(ctx,GameMode.SPECTATOR,new ArrayList<>(){{ add(ctx.getSource().getPlayer()); }});
-                            return Command.SINGLE_SUCCESS;
-                        })
+                        .executes(ctx->execute(ctx,GameMode.SPECTATOR))
                 )
                 .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gameMode, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException{
-        for(ServerPlayerEntity serverPlayerEntity : targets){
-            if(!serverPlayerEntity.changeGameMode(gameMode)) continue;
-            sendFeedback(ctx.getSource(), serverPlayerEntity, gameMode);
+    private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gm) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
+
+        if(!src.isExecutedByPlayer()){
+            src.sendError(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
+            return -1;
         }
+
+        ServerPlayerEntity plr=src.getPlayer();
+        if(!plr.changeGameMode(gm)) return Command.SINGLE_SUCCESS;
+
+        src.sendFeedback(()->Text.translatable("commands.gm.success.self", Text.translatable("gameMode."+gm.getName()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
+
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, GameMode gameMode){
-        MutableText gmName=Text.translatable("gameMode."+gameMode.getName()).setStyle(HelpfulCommands.style.primary);
-        if(source.getEntity()==player){
-            source.sendFeedback(()->Text.translatable("commands.gamemode.success.self", gmName).setStyle(HelpfulCommands.style.success), true);
-        } else {
-            if(source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)){
-                player.sendMessage(Text.translatable("gameMode.changed", gmName).setStyle(HelpfulCommands.style.tertiary));
+    private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gm, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
+
+        Map<String, Integer> entries=new HashMap<>(changeGameMode(src, gm, targets));
+
+        int count=0;
+        String entryList="";
+        for(Map.Entry<String, Integer> i : entries.entrySet()){
+            if(i.getValue()<0){
+                entryList+=i.getKey()+"\n";
+                count+=1;
             }
-            source.sendFeedback(() -> Text.translatable("commands.gamemode.success.other", player.getDisplayName(), gmName), true);
+            else{
+                entryList+=i.getValue()+"x "+i.getKey()+"\n";
+                count+=i.getValue();
+            }
         }
+        if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
+
+        if(count>0) {
+            MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
+            );
+            src.sendFeedback(() -> Text.translatable("commands.gm.success.other", Text.translatable("gameMode."+gm.getName()).setStyle(HelpfulCommands.style.primary), finalCount).setStyle(HelpfulCommands.style.success), true);
+        } else{
+            src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+    private static Map<String,Integer> changeGameMode(ServerCommandSource src, GameMode gm, Collection<? extends ServerPlayerEntity> targets){
+        Map<String, Integer> entries=new HashMap<>();
+        boolean feedback=src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+
+        for(ServerPlayerEntity i : targets){
+            if(!i.changeGameMode(gm)) continue;
+            i.extinguishWithSound();
+            int diff=1;
+            if(i.isPlayer()){
+                diff=-1;
+                if(feedback){
+                    if(src.getEntity()!=null) if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.gm.success.self").setStyle(HelpfulCommands.style.success));
+                }
+            }
+            String name=i.getName().getString();
+            entries.put(name,entries.getOrDefault(name,0)+diff);
+        }
+
+        return entries;
     }
 }

@@ -48,11 +48,14 @@ public class CMD_killitems implements IHelpfulCommandsCommand{
             entries.putAll(killItems(src,new Box(src.getWorld().getSpawnPos()).expand(boxExpansion)));
         }
 
-        String entryList="";
-        for(Map.Entry<String, Integer> i : entries.entrySet()) entryList+=i.getValue()+"x "+i.getKey()+"\n";
-        if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
+        int count=0;
 
-        int count=entries.size();
+        String entryList="";
+        for(Map.Entry<String, Integer> i : entries.entrySet()){
+            entryList+=i.getValue()+"x "+i.getKey()+"\n";
+            count+=i.getValue();
+        }
+        if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
 
         if(count>0) {
             MutableText finalCount = Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary

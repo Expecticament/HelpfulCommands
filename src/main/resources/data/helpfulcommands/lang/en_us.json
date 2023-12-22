@@ -48,16 +48,16 @@
   "commands.rename.description": "Rename an item in your main hand",
 
   "commands.extinguish.success.self": "You were extinguished",
-  "commands.extinguish.success.other": "Extinguished %d",
+  "commands.extinguish.success.other": "Extinguished %d target(s)",
 
   "commands.ignite.success.self": "You were set on fire",
   "commands.ignite.success.other": "Set on fire %d target(s) for %d seconds",
 
   "commands.feed.success.self": "You were fed and saturated",
-  "commands.feed.success.other": "Fed and saturated %d",
+  "commands.feed.success.other": "Fed and saturated %d target(s)",
 
   "commands.heal.success.self": "You were healed",
-  "commands.heal.success.other": "Healed %d",
+  "commands.heal.success.other": "Healed %d target(s)",
 
   "commands.rename.success": "Renamed your %d to %d",
   "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
@@ -70,13 +70,16 @@
 
   "commands.fly.success.self.true": "Enabled flying",
   "commands.fly.success.self.false": "Disabled flying",
-  "commands.fly.success.other.true": "Enabled flying for %d",
-  "commands.fly.success.other.false": "Disabled flying for %d",
+  "commands.fly.success.other.true": "Enabled flying for %d target(s)",
+  "commands.fly.success.other.false": "Disabled flying for %d target(s)",
 
   "commands.god.success.self.true": "Enabled invulnerability",
   "commands.god.success.self.false": "Disabled invulnerability",
-  "commands.god.success.other.true": "Enabled invulnerability for %d",
-  "commands.god.success.other.false": "Disabled invulnerability for %d",
+  "commands.god.success.other.true": "Enabled invulnerability for %d target(s)",
+  "commands.god.success.other.false": "Disabled invulnerability for %d target(s)",
+
+  "commands.gm.success.self": "Changed game mode to %d",
+  "commands.gm.success.other": "Changed game mode to %d for %d player(s)",
 
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates"
