@@ -117,7 +117,7 @@ public class CMD_gm implements IHelpfulCommandsCommand{
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getEntity()!=null) if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.gm.success.self").setStyle(HelpfulCommands.style.success));
+                    if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.gm.success.self",Text.translatable("gameMode."+gm.getName()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.tertiary));
                 }
             }
             String name=i.getName().getString();

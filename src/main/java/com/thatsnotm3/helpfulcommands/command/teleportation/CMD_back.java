@@ -89,6 +89,10 @@ public class CMD_back implements IHelpfulCommandsCommand {
         IEntityDataSaver playerData=(IEntityDataSaver) plr;
 
         int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
+        if(deathPos.length==0){
+            src.sendError(Text.translatable("commands.back.error.noDeathPos").setStyle(HelpfulCommands.style.error));
+            return -1;
+        }
         String dimensionName=playerData.getPersistentData().getString("deathDimension");
         Style valueStyle=HelpfulCommands.style.tertiary;
 

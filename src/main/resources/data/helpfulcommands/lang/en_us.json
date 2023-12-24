@@ -59,6 +59,7 @@
   "commands.fly.success.self.false": "Disabled flying",
   "commands.fly.success.other.true": "Enabled flying for %d target(s)",
   "commands.fly.success.other.false": "Disabled flying for %d target(s)",
+  "commands.fly.success.other": "Toggled flying for %d target(s)",
 
   "commands.gm.success.self": "Changed game mode to %d",
   "commands.gm.success.other": "Changed game mode to %d for %d player(s)",
@@ -67,6 +68,7 @@
   "commands.god.success.self.false": "Disabled invulnerability",
   "commands.god.success.other.true": "Enabled invulnerability for %d target(s)",
   "commands.god.success.other.false": "Disabled invulnerability for %d target(s)",
+  "commands.god.success.other": "Toggled invulnerability for %d target(s)",
 
   "commands.heal.success.self": "You were healed",
   "commands.heal.success.other": "Healed %d target(s)",
@@ -85,6 +87,7 @@
 
   "commands.spawn.world.success": "Teleported to the World Spawn",
   "commands.spawn.player.self.success": "Teleported to your Spawn Point",
+  "commands.spawn.player.error.notSet": "Your spawn point is not set in this world!",
 
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
   "tooltips.clickToTeleport": "Click to teleport",

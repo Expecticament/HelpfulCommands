@@ -15,10 +15,15 @@ import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CMD_god implements IHelpfulCommandsCommand {
     public static ModCommandManager.hcCommand cmd;
@@ -29,18 +34,18 @@ public class CMD_god implements IHelpfulCommandsCommand {
 
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmd.name)
-                        .then(CommandManager.argument("target(s)", EntityArgumentType.players())
-                                .then(CommandManager.argument("state", BoolArgumentType.bool())
-                                        .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),BoolArgumentType.getBool(ctx,"state")))
-                                )
-                                .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
-                        )
+                    .then(CommandManager.argument("target(s)", EntityArgumentType.players())
+                            .then(CommandManager.argument("state", BoolArgumentType.bool())
+                                    .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),BoolArgumentType.getBool(ctx,"state"),true))
+                            )
+                            .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),false,false))
+                    )
                 .executes(CMD_god::execute)
                 .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -49,47 +54,79 @@ public class CMD_god implements IHelpfulCommandsCommand {
         }
 
         ServerPlayerEntity plr=src.getPlayer();
-        sendFeedback(src,plr,toggleInvulnerabilityForTarget(plr));
-        return Command.SINGLE_SUCCESS;
-    }
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException {
-        for(ServerPlayerEntity i : targets){
-            sendFeedback(ctx.getSource(), i, toggleInvulnerabilityForTarget(i));
-        }
-        return Command.SINGLE_SUCCESS;
-    }
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets,boolean state) throws CommandSyntaxException {
-        for(ServerPlayerEntity i : targets){
-            if(i.getAbilities().invulnerable==state) continue;
-            sendFeedback(ctx.getSource(), i, toggleInvulnerabilityForTarget(i,state));
-        }
+        toggleInvulnerabilityForTarget(plr);
+
+        boolean newState=plr.getAbilities().invulnerable;
+        Style s=newState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+        src.sendFeedback(()-> Text.translatable("commands.god.success.self."+newState).setStyle(s),true);
+
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, boolean state){
-        if(source.getEntity()==player){
-            if(state) source.sendFeedback(()->Text.translatable("commands.god.success.self.true").setStyle(HelpfulCommands.style.enabled), true);
-            else source.sendFeedback(()->Text.translatable("commands.god.success.self.false").setStyle(HelpfulCommands.style.disabled), true);
-        } else {
-            if(source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)){
-                if(state) player.sendMessage(Text.translatable("commands.god.success.self.true").setStyle(HelpfulCommands.style.enabled));
-                else player.sendMessage(Text.translatable("commands.god.success.self.false").setStyle(HelpfulCommands.style.disabled));
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets, boolean state, boolean useState) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
+
+        Map<String, Boolean> entries=new HashMap<>(toggleInvulnerability(src, targets,state,useState));
+
+        int count=0;
+        MutableText entryList=Text.empty();
+        for(Map.Entry<String, Boolean> i : entries.entrySet()){
+            Style s=HelpfulCommands.style.simpleText;
+            if(!useState) s=i.getValue() ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+            entryList.append(Text.literal(i.getKey()).setStyle(s));
+            if(count!=entries.size()-1) entryList.append("\n");
+
+            count+=1;
+        }
+
+        if(count>0) {
+            MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,entryList))
+            );
+            String translationKey="commands.god.success.other";
+            if(useState) translationKey+="."+state;
+            String finalTranslationKey=translationKey;
+            src.sendFeedback(() -> Text.translatable(finalTranslationKey, finalCount).setStyle(HelpfulCommands.style.success), true);
+
+        } else{
+            src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static Map<String, Boolean> toggleInvulnerability(ServerCommandSource src, Collection<? extends ServerPlayerEntity> targets, boolean state, boolean useState){
+        Map<String, Boolean> entries=new HashMap<>();
+        boolean feedback=src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+
+        for(ServerPlayerEntity i : targets){
+            if(useState){
+                if(!toggleInvulnerabilityForTarget(i,state)) continue;
+            } else toggleInvulnerabilityForTarget(i);
+            boolean newState=useState ? state : i.getAbilities().invulnerable;
+            if(feedback){
+                if(src!=i.getCommandSource()){
+                    Style s=newState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+                    if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.god.success.self."+newState).setStyle(s));
+                }
             }
-            if(state) source.sendFeedback(() -> Text.translatable("commands.god.success.other.true", player.getDisplayName()).setStyle(HelpfulCommands.style.enabled), true);
-            else source.sendFeedback(() -> Text.translatable("commands.god.success.other.false", player.getDisplayName()).setStyle(HelpfulCommands.style.disabled), true);
+            String name=i.getName().getString();
+            entries.put(name,newState);
         }
+
+        return entries;
     }
 
-    private static boolean toggleInvulnerabilityForTarget(ServerPlayerEntity target){
+    private static void toggleInvulnerabilityForTarget(ServerPlayerEntity target){
         PlayerAbilities abilities=target.getAbilities();
         abilities.invulnerable=!abilities.invulnerable;
         target.sendAbilitiesUpdate();
-        return abilities.invulnerable;
     }
     private static boolean toggleInvulnerabilityForTarget(ServerPlayerEntity target, boolean state){
         PlayerAbilities abilities=target.getAbilities();
+        if(abilities.invulnerable==state) return false;
         abilities.invulnerable=state;
         target.sendAbilitiesUpdate();
-        return state;
+        return true;
     }
 }

@@ -106,7 +106,7 @@ public class CMD_feed implements IHelpfulCommandsCommand{
             int diff=1;
             diff=-1;
             if(feedback){
-                if(src.getEntity()!=null) if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.feed.success.self").setStyle(HelpfulCommands.style.success));
+                if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.feed.success.self").setStyle(HelpfulCommands.style.success));
             }
             String name=i.getName().getString();
             entries.put(name,entries.getOrDefault(name,0)+diff);

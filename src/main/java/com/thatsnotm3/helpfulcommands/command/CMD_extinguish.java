@@ -98,7 +98,7 @@ public class CMD_extinguish implements IHelpfulCommandsCommand{
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getEntity()!=null) if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.extinguish.success.self").setStyle(HelpfulCommands.style.success));
+                    if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.extinguish.success.self").setStyle(HelpfulCommands.style.success));
                 }
             }
             String name=i.getName().getString();

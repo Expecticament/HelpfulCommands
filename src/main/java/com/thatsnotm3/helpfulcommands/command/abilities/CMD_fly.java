@@ -11,14 +11,20 @@ import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CMD_fly implements IHelpfulCommandsCommand {
     public static ModCommandManager.hcCommand cmd;
@@ -31,16 +37,16 @@ public class CMD_fly implements IHelpfulCommandsCommand {
         dispatcher.register(CommandManager.literal(cmd.name)
                         .then(CommandManager.argument("target(s)", EntityArgumentType.players())
                                 .then(CommandManager.argument("state", BoolArgumentType.bool())
-                                        .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),BoolArgumentType.getBool(ctx,"state")))
+                                        .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),BoolArgumentType.getBool(ctx,"state"),true))
                                 )
-                                .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
+                                .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),false,false))
                         )
                 .executes(CMD_fly::execute)
                 .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -49,49 +55,81 @@ public class CMD_fly implements IHelpfulCommandsCommand {
         }
 
         ServerPlayerEntity plr=src.getPlayer();
-        sendFeedback(src,plr,toggleFlyingForTarget(plr));
-        return Command.SINGLE_SUCCESS;
-    }
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets) throws CommandSyntaxException {
-        for(ServerPlayerEntity i : targets){
-            sendFeedback(ctx.getSource(), i, toggleFlyingForTarget(i));
-        }
-        return Command.SINGLE_SUCCESS;
-    }
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<ServerPlayerEntity> targets,boolean state) throws CommandSyntaxException {
-        for(ServerPlayerEntity i : targets){
-            if(i.getAbilities().allowFlying==state) continue;
-            sendFeedback(ctx.getSource(), i, toggleFlyingForTarget(i,state));
-        }
+        toggleFlyingForTarget(plr);
+
+        boolean newState=plr.getAbilities().allowFlying;
+        Style s=newState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+        src.sendFeedback(()-> Text.translatable("commands.fly.success.self."+newState).setStyle(s),true);
+
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, boolean state){
-        if(source.getEntity()==player){
-            if(state) source.sendFeedback(()->Text.translatable("commands.fly.success.self.true").setStyle(HelpfulCommands.style.enabled), true);
-            else source.sendFeedback(()->Text.translatable("commands.fly.success.self.false").setStyle(HelpfulCommands.style.disabled), true);
-        } else {
-            if(source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)){
-                if(state) player.sendMessage(Text.translatable("commands.fly.success.self.true").setStyle(HelpfulCommands.style.enabled));
-                else player.sendMessage(Text.translatable("commands.fly.success.self.false").setStyle(HelpfulCommands.style.disabled));
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets, boolean state, boolean useState) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
+
+        Map<String, Boolean> entries=new HashMap<>(toggleFlying(src, targets,state,useState));
+
+        int count=0;
+        MutableText entryList=Text.empty();
+        for(Map.Entry<String, Boolean> i : entries.entrySet()){
+            Style s=HelpfulCommands.style.simpleText;
+            if(!useState) s=i.getValue() ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+            entryList.append(Text.literal(i.getKey()).setStyle(s));
+            if(count!=entries.size()-1) entryList.append("\n");
+
+            count+=1;
+        }
+
+        if(count>0) {
+            MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,entryList))
+            );
+            String translationKey="commands.fly.success.other";
+            if(useState) translationKey+="."+state;
+            String finalTranslationKey=translationKey;
+            src.sendFeedback(() -> Text.translatable(finalTranslationKey, finalCount).setStyle(HelpfulCommands.style.success), true);
+
+        } else{
+            src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static Map<String, Boolean> toggleFlying(ServerCommandSource src, Collection<? extends ServerPlayerEntity> targets, boolean state, boolean useState){
+        Map<String, Boolean> entries=new HashMap<>();
+        boolean feedback=src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+
+        for(ServerPlayerEntity i : targets){
+            if(useState){
+                if(!toggleFlyingForTarget(i,state)) continue;
+            } else toggleFlyingForTarget(i);
+            boolean newState=useState ? state : i.getAbilities().allowFlying;
+            if(feedback){
+                if(src!=i.getCommandSource()){
+                    Style s=newState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+                    if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.fly.success.self."+newState).setStyle(s));
+                }
             }
-            if(state) source.sendFeedback(() -> Text.translatable("commands.fly.success.other.true", player.getDisplayName()).setStyle(HelpfulCommands.style.enabled), true);
-            else source.sendFeedback(() -> Text.translatable("commands.fly.success.other.false", player.getDisplayName()).setStyle(HelpfulCommands.style.disabled), true);
+            String name=i.getName().getString();
+            entries.put(name,newState);
         }
+
+        return entries;
     }
 
-    private static boolean toggleFlyingForTarget(ServerPlayerEntity target){
+    private static void toggleFlyingForTarget(ServerPlayerEntity target){
         PlayerAbilities abilities=target.getAbilities();
         abilities.allowFlying=!abilities.allowFlying;
         if(!abilities.allowFlying) abilities.flying=false;
         target.sendAbilitiesUpdate();
-        return abilities.allowFlying;
     }
     private static boolean toggleFlyingForTarget(ServerPlayerEntity target, boolean state){
         PlayerAbilities abilities=target.getAbilities();
+        if(abilities.allowFlying==state) return false;
         abilities.allowFlying=state;
         if(!state) abilities.flying=false;
         target.sendAbilitiesUpdate();
-        return state;
+        return true;
     }
 }

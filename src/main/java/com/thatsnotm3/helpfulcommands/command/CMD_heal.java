@@ -70,8 +70,7 @@ public class CMD_heal implements IHelpfulCommandsCommand{
             if(i.getValue()<0){
                 entryList+=i.getKey()+"\n";
                 count+=1;
-            }
-            else{
+            } else{
                 entryList+=i.getValue()+"x "+i.getKey()+"\n";
                 count+=i.getValue();
             }
@@ -103,7 +102,7 @@ public class CMD_heal implements IHelpfulCommandsCommand{
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getEntity()!=null) if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.heal.success.self").setStyle(HelpfulCommands.style.success));
+                    if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.heal.success.self").setStyle(HelpfulCommands.style.success));
                 }
             }
             String name=i.getName().getString();

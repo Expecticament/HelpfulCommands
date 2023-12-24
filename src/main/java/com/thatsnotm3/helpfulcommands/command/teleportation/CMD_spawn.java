@@ -62,6 +62,11 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
         ServerWorld world=src.getServer().getWorld(plr.getSpawnPointDimension());
         BlockPos pos=plr.getSpawnPointPosition();
 
+        if(pos==null){
+            src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
+            return -1;
+        }
+
         plr.teleport(world,pos.getX(),pos.getY(),pos.getZ(),plr.getYaw(),plr.getPitch());
         src.sendFeedback(()-> Text.translatable("commands.spawn.player.self.success").setStyle(HelpfulCommands.style.secondary
                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
@@ -120,6 +125,7 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
         }
 
         if(world==null || pos==null){
+            src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
             return -1;
         }
 
