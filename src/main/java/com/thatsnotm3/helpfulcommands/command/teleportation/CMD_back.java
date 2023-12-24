@@ -53,7 +53,6 @@ public class CMD_back implements IHelpfulCommandsCommand {
 
         int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
         String dimensionName=playerData.getPersistentData().getString("deathDimension");
-        Style coordsStyle=HelpfulCommands.style.primary;
         if(deathPos.length!=0){
             ServerWorld dimension=null;
             for(RegistryKey<World> i : src.getWorldKeys()){
@@ -67,12 +66,9 @@ public class CMD_back implements IHelpfulCommandsCommand {
                 return -1;
             }
             plr.teleport(dimension,deathPos[0],deathPos[1],deathPos[2],plr.getYaw(),plr.getPitch());
-            src.sendFeedback(()-> Text.translatable("commands.back.success",Text.literal(dimensionName).setStyle(HelpfulCommands.style.primary
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/dimension switch "+dimensionName))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleportToDimension")))
-            ),Text.literal(String.valueOf(deathPos[0])).setStyle(coordsStyle),Text.literal(String.valueOf(deathPos[1])).setStyle(coordsStyle),Text.literal(String.valueOf(deathPos[2])).setStyle(coordsStyle)).setStyle(HelpfulCommands.style.secondary
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/tp @s "+deathPos[0]+" "+deathPos[1]+" "+deathPos[2]))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleportToCoordinates")))
+            src.sendFeedback(()-> Text.translatable("commands.back.success").setStyle(HelpfulCommands.style.secondary
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+deathPos[0]+" "+deathPos[1]+" "+deathPos[2]))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+deathPos[0]+"\ny: "+deathPos[1]+"\nz: "+deathPos[2])))
             ),true);
         } else{
             src.sendError(Text.translatable("commands.back.error.noDeathPos").setStyle(HelpfulCommands.style.error));

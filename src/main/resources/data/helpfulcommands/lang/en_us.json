@@ -20,6 +20,7 @@
   "config.title": "Config",
 
   "deathPosition.title": "Death position",
+  "spawnPoint.title": "Spawn point",
 
   "commandList.title": "Command List",
   "commandList.command.enabled": "Enabled",
@@ -43,8 +44,9 @@
   "commands.jump.description": "Teleport to the block you are looking at, or in the direction you are looking at with a given distance",
   "commands.killitems.description": "Kill all the items lying on the ground nearby",
   "commands.rename.description": "Rename an item in your main hand",
+  "commands.spawn.description": "Teleport to your or the world's spawn point",
 
-  "commands.back.success": "Teleported to your death position in %d at x: %d; y: %d; z: %d",
+  "commands.back.success": "Teleported to your death position",
   "commands.back.error.noDeathPos": "No death position saved yet",
 
   "commands.extinguish.success.self": "You were extinguished",
@@ -81,6 +83,9 @@
   "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
   "commands.rename.error.sameName": "The new name is the same as the old one!",
 
+  "commands.spawn.world.success": "Teleported to the World Spawn",
+  "commands.spawn.player.self.success": "Teleported to your Spawn Point",
+
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
   "tooltips.clickToTeleport": "Click to teleport",
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
@@ -89,9 +94,10 @@
   "error.specifyTargets": "Please specify target(s)!",
   "error.didntFindTargets": "Didn't find any targets!",
   "error.notAllowed": "You're not allowed to use %d command!",
-  "error.inGameOnly": "This command can only be used in game!",
+  "error.inGameOnly": "This command or parameter can only be used in game!",
   "error.unknownDimension": "Unknown dimension!",
 
   "phrase.dimension": "Dimension",
-  "phrase.teleport": "Teleport"
+  "phrase.teleport": "Teleport",
+  "phrase.world": "World"
 }

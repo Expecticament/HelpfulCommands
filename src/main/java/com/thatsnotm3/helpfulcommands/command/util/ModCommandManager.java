@@ -1,10 +1,8 @@
 package com.thatsnotm3.helpfulcommands.command.util;
 
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
-import com.thatsnotm3.helpfulcommands.command.abilities.CMD_fly;
-import com.thatsnotm3.helpfulcommands.command.abilities.CMD_god;
-import com.thatsnotm3.helpfulcommands.command.teleportation.CMD_back;
-import com.thatsnotm3.helpfulcommands.command.teleportation.CMD_jump;
+import com.thatsnotm3.helpfulcommands.command.abilities.*;
+import com.thatsnotm3.helpfulcommands.command.teleportation.*;
 import com.thatsnotm3.helpfulcommands.command.time.*;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
@@ -53,6 +51,13 @@ public class ModCommandManager{
             category=hcCategory.Teleportation;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_jump.init(this); CommandRegistrationCallback.EVENT.register(CMD_jump::registerCommand); };
+        }});
+
+        add(new hcCommand(){{
+            name="spawn";
+            category=hcCategory.Teleportation;
+            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            register=()-> { CMD_spawn.init(this); CommandRegistrationCallback.EVENT.register(CMD_spawn::registerCommand); };
         }});
         add(new hcCommand(){{
             name="day";
