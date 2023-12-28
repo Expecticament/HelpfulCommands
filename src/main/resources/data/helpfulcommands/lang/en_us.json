@@ -49,6 +49,12 @@
   "commands.back.success": "Teleported to your death position",
   "commands.back.error.noDeathPos": "No death position saved yet",
 
+  "commands.dimension.success.self": "Switched dimension to %d",
+  "commands.dimension.success.other": "Switched dimension to %d for %d targets",
+  "commands.dimension.get.success.self": "Your current dimension is %d",
+  "commands.dimension.get.success.other": "%s's current dimension is %d",
+  "commands.dimension.error.alreadyInDimension": "You are already in this dimension!",
+
   "commands.extinguish.success.self": "You were extinguished",
   "commands.extinguish.success.other": "Extinguished %d target(s)",
 

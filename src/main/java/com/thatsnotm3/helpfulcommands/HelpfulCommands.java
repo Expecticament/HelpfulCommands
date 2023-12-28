@@ -5,13 +5,10 @@ import com.thatsnotm3.helpfulcommands.event.ModEventManager;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
 
 public class HelpfulCommands implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
