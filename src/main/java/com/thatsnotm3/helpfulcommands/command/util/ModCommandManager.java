@@ -53,6 +53,12 @@ public class ModCommandManager{
             register=()-> { CMD_dimension.init(this); CommandRegistrationCallback.EVENT.register(CMD_dimension::registerCommand); };
         }});
         add(new hcCommand(){{
+            name="home";
+            category=hcCategory.Teleportation;
+            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            register=()-> { CMD_home.init(this); CommandRegistrationCallback.EVENT.register(CMD_home::registerCommand); };
+        }});
+        add(new hcCommand(){{
             name="jump";
             category=hcCategory.Teleportation;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;

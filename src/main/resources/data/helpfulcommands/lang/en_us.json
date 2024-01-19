@@ -20,6 +20,7 @@
   "config.title": "Config",
 
   "deathPosition.title": "Death position",
+  "homePosition.title": "Home position",
   "spawnPoint.title": "Spawn point",
 
   "commandList.title": "Command List",
@@ -34,12 +35,14 @@
   "commands.day.description": "Set the time to Day",
   "commands.night.description": "Set the time to Night",
   "commands.back.description": "Get or teleport to your death position",
+  "commands.dimension.description": "Teleport target(s) across dimensions",
   "commands.extinguish.description": "Extinguish target(s)",
   "commands.feed.description": "Feed and saturate target(s)",
   "commands.fly.description": "Toggle flying for target(s)",
   "commands.gm.description": "Change game mode for target(s)",
   "commands.god.description": "Toggle invulnerability for target(s)",
   "commands.heal.description": "Restore health for target(s)",
+  "commands.home.description": "Set, get or teleport to your home position",
   "commands.ignite.description": "Set target(s) on fire for a specified number of seconds",
   "commands.jump.description": "Teleport to the block you are looking at, or in the direction you are looking at with a given distance",
   "commands.killitems.description": "Kill all the items lying on the ground nearby",
@@ -79,6 +82,10 @@
   "commands.heal.success.self": "You were healed",
   "commands.heal.success.other": "Healed %d target(s)",
 
+  "commands.home.teleport.success": "Teleported to your home position",
+  "commands.home.set.success": "Updated home position",
+  "commands.home.error.noHomePos": "Home position is not set in this world yet. Set it with %d",
+
   "commands.ignite.success.self": "You were set on fire",
   "commands.ignite.success.other": "Set on fire %d target(s) for %d seconds",
 
@@ -96,6 +103,7 @@
   "commands.spawn.player.error.notSet": "Your spawn point is not set in this world!",
 
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
+  "tooltips.clickToSuggestThisCommand": "Click to suggest this command",
   "tooltips.clickToTeleport": "Click to teleport",
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
   "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",
