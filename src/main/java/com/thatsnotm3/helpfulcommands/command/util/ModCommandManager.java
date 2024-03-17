@@ -83,6 +83,13 @@ public class ModCommandManager{
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_night.init(this); CommandRegistrationCallback.EVENT.register(CMD_night::registerCommand); };
         }});
+
+        add(new hcCommand(){{
+            name="explosion";
+            category=hcCategory.Uncategorized;
+            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            register=()-> { CMD_explosion.init(this); CommandRegistrationCallback.EVENT.register(CMD_explosion::registerCommand); };
+        }});
         add(new hcCommand(){{
             name="extinguish";
             category=hcCategory.Uncategorized;
@@ -118,6 +125,12 @@ public class ModCommandManager{
             category=hcCategory.Uncategorized;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_killitems.init(this); CommandRegistrationCallback.EVENT.register(CMD_killitems::registerCommand); };
+        }});
+        add(new hcCommand(){{
+            name="lightning";
+            category=hcCategory.Uncategorized;
+            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            register=()-> { CMD_lightning.init(this); CommandRegistrationCallback.EVENT.register(CMD_lightning::registerCommand); };
         }});
         add(new hcCommand(){{
             name="rename";

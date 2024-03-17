@@ -214,7 +214,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 .append(Text.literal("\n"))
                 .append(commandList)
         ;
-        msg.append(Text.literal("\n\n[!] Not all the commands are implemented in this version yet!").setStyle(HelpfulCommands.style.error).append(Text.literal("\n Please note that you are using an alpha version, a preview of the next major update which is not fully finished and polished.").setStyle(HelpfulCommands.style.secondary)));
         source.sendMessage(msg);
 
         return Command.SINGLE_SUCCESS;

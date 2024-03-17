@@ -36,6 +36,7 @@
   "commands.night.description": "Set the time to Night",
   "commands.back.description": "Get or teleport to your death position",
   "commands.dimension.description": "Teleport target(s) across dimensions",
+  "commands.explosion.description": "Create an explosion of a given power at a given distance",
   "commands.extinguish.description": "Extinguish target(s)",
   "commands.feed.description": "Feed and saturate target(s)",
   "commands.fly.description": "Toggle flying for target(s)",
@@ -46,6 +47,7 @@
   "commands.ignite.description": "Set target(s) on fire for a specified number of seconds",
   "commands.jump.description": "Teleport to the block you are looking at, or in the direction you are looking at with a given distance",
   "commands.killitems.description": "Kill all the items lying on the ground nearby",
+  "commands.lightning.description": "Strike a lightning bolt at your cursor position at a given distance or near the block you are looking at",
   "commands.rename.description": "Rename an item in your main hand",
   "commands.spawn.description": "Teleport to your or the world's spawn point",
 
@@ -57,6 +59,8 @@
   "commands.dimension.get.success.self": "Your current dimension is %d",
   "commands.dimension.get.success.other": "%s's current dimension is %d",
   "commands.dimension.error.alreadyInDimension": "You are already in this dimension!",
+
+  "commands.explosion.success": "Created explosion with the power of %d at x: %d, y: %d, z: %d",
 
   "commands.extinguish.success.self": "You were extinguished",
   "commands.extinguish.success.other": "Extinguished %d target(s)",
@@ -94,6 +98,8 @@
   "commands.killitems.success": "Killed %d item(s) lying on the ground",
   "commands.killitems.error.nothingFound": "No items found on the ground nearby!",
 
+  "commands.lightning.success": "Struck a lightning bolt at x: %d, y: %d, z: %d",
+
   "commands.rename.success": "Renamed your %d to %d",
   "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
   "commands.rename.error.sameName": "The new name is the same as the old one!",
@@ -110,7 +116,7 @@
 
   "error.specifyTargets": "Please specify target(s)!",
   "error.didntFindTargets": "Didn't find any targets!",
-  "error.notAllowed": "You're not allowed to use %d command!",
+  "error.notAllowed": "You are not allowed to use %d command!",
   "error.inGameOnly": "This command or parameter can only be used in game!",
   "error.unknownDimension": "Unknown dimension!",
 
