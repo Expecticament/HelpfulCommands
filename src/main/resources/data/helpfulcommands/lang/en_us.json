@@ -101,8 +101,10 @@
   "commands.lightning.success": "Struck a lightning bolt at x: %d, y: %d, z: %d",
 
   "commands.rename.success": "Renamed your %d to %d",
+  "commands.rename.success.customNameRemoved": "Removed a custom name from an item in your main hand",
   "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
   "commands.rename.error.sameName": "The new name is the same as the old one!",
+  "commands.rename.error.customNameNotSet": "Nothing to reset! An item in your main hand doesn't have a custom name",
 
   "commands.spawn.world.success": "Teleported to the World Spawn",
   "commands.spawn.player.self.success": "Teleported to your Spawn Point",

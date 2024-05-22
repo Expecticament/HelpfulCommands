@@ -9,6 +9,7 @@ import com.thatsnotm3.helpfulcommands.HelpfulCommands;
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -29,6 +30,7 @@ public class CMD_rename implements IHelpfulCommandsCommand{
                 .then(CommandManager.argument("newName", StringArgumentType.string())
                         .executes(ctx->execute(ctx,StringArgumentType.getString(ctx,"newName")))
                 )
+                .executes(CMD_rename::execute)
                 .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
     }
@@ -40,21 +42,53 @@ public class CMD_rename implements IHelpfulCommandsCommand{
             return -1;
         } else{
             ServerPlayerEntity player=source.getPlayer();
-            if(player==null) return -1;;
+            if(player==null) return -1;
 
             ItemStack itemStack=player.getMainHandStack();
             if(itemStack==null || itemStack.isEmpty()){
                 source.sendError(Text.translatable("commands.rename.error.nothingInHand"));
                 return -1;
             }
-            MutableText oldName=((MutableText) itemStack.getName()).setStyle(HelpfulCommands.style.primary);
-            if(oldName.getString().equals(newName)){
-                source.sendError(Text.translatable("commands.rename.error.sameName"));
+
+            if(newName.isEmpty()){
+                itemStack.set(DataComponentTypes.CUSTOM_NAME,null);
+                source.sendFeedback(()-> Text.translatable("commands.rename.success.customNameRemoved").setStyle(HelpfulCommands.style.success),true);
+            } else{
+                MutableText oldName=((MutableText) itemStack.getName()).setStyle(HelpfulCommands.style.primary);
+                if(oldName.getString().equals(newName)){
+                    source.sendError(Text.translatable("commands.rename.error.sameName"));
+                    return -1;
+                }
+                itemStack.set(DataComponentTypes.CUSTOM_NAME,Text.literal(newName));
+                Text newNameText=Text.literal(newName).setStyle(HelpfulCommands.style.primary);
+                source.sendFeedback(()-> Text.translatable("commands.rename.success",oldName,newNameText).setStyle(HelpfulCommands.style.success),true);
+            }
+        }
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+        ServerCommandSource source=ctx.getSource();
+        if(!source.isExecutedByPlayer()){
+            source.sendError(Text.translatable("error.inGameOnly"));
+            return -1;
+        } else{
+            ServerPlayerEntity player=source.getPlayer();
+            if(player==null) return -1;
+
+            ItemStack itemStack=player.getMainHandStack();
+            if(itemStack==null || itemStack.isEmpty()){
+                source.sendError(Text.translatable("commands.rename.error.nothingInHand"));
                 return -1;
             }
-            player.getMainHandStack().setCustomName(Text.literal(newName));
-            Text newNameText=Text.literal(newName).setStyle(HelpfulCommands.style.primary);
-            source.sendFeedback(()-> Text.translatable("commands.rename.success",oldName,newNameText).setStyle(HelpfulCommands.style.success),true);
+
+            if(itemStack.get(DataComponentTypes.CUSTOM_NAME)==null){
+                source.sendError(Text.translatable("commands.rename.error.customNameNotSet"));
+                return -1;
+            }
+
+            itemStack.set(DataComponentTypes.CUSTOM_NAME,null);
+            source.sendFeedback(()-> Text.translatable("commands.rename.success.customNameRemoved").setStyle(HelpfulCommands.style.success),true);
         }
         return Command.SINGLE_SUCCESS;
     }
