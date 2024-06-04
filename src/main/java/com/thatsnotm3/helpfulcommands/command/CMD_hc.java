@@ -2,10 +2,12 @@ package com.thatsnotm3.helpfulcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
+import com.thatsnotm3.helpfulcommands.util.ConfigManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
@@ -18,9 +20,9 @@ import java.util.Map;
 
 public class CMD_hc implements IHelpfulCommandsCommand {
 
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
@@ -32,9 +34,31 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                         .executes(CMD_hc::printCommandList)
                 )
                 .then(CommandManager.literal("config")
-//                        .then(CommandManager.literal("toggleCommand")
-//                                .requires(Permissions.require(HelpfulCommands.modID+".config.toggleCommand",HelpfulCommands.defaultConfigEditLevel))
-//                        )
+                        .then(CommandManager.literal("toggleCommand")
+                                .requires(Permissions.require(HelpfulCommands.modID+".config.toggleCommand",HelpfulCommands.defaultConfigEditLevel))
+                        )
+                        .then(CommandManager.literal("set")
+                                .then(CommandManager.literal("explosionPowerLimit")
+                                        .then(CommandManager.argument("value", IntegerArgumentType.integer(1))
+                                                .executes(ctx->{
+                                                    int newValue=IntegerArgumentType.getInteger(ctx,"value");
+
+                                                    ConfigManager.ModConfig cfg=ConfigManager.loadConfig(ctx.getSource().getServer());
+                                                    cfg.explosionPowerLimit=newValue;
+
+                                                    configValueChanged(ctx,cfg,"explosionPowerLimit",String.valueOf(newValue));
+                                                    return Command.SINGLE_SUCCESS;
+                                                })
+                                        )
+                                )
+                                .requires(Permissions.require(HelpfulCommands.modID+".config.set",HelpfulCommands.defaultConfigEditLevel))
+                        )
+                        .then(CommandManager.literal("get")
+                                .then(CommandManager.literal("explosionPowerLimit")
+                                        .executes(ctx->printConfigValue(ctx,"explosionPowerLimit"))
+                                )
+                                .requires(Permissions.require(HelpfulCommands.modID+".config.get",HelpfulCommands.defaultConfigEditLevel))
+                        )
                         .executes(CMD_hc::printModConfig)
                         .requires(Permissions.require(HelpfulCommands.modID+".config",HelpfulCommands.defaultConfigEditLevel))
                 )
@@ -96,10 +120,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/helpfulcommands"))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.modrinth.tooltip")))
         );
-        MutableText buttonCurseforge=Text.literal("CurseForge").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/helpful-commands"))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.curseForge.tooltip")))
-        );
         MutableText buttons=Text.empty();
         if(ctx.getSource().isExecutedByPlayer()) {
             buttons
@@ -115,8 +135,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.literal(" • "))
                     .append(buttonModrinth)
                     .append(Text.literal(" • "))
-                    .append(buttonCurseforge)
-                    .append(Text.literal("〛"))
             ;
         } else{
             buttons
@@ -128,8 +146,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.literal(": https://github.com/ThatsNotM3/HelpfulCommands \n"))
                     .append(buttonModrinth)
                     .append(Text.literal(": https://modrinth.com/mod/helpfulcommands \n"))
-                    .append(buttonCurseforge)
-                    .append(Text.literal(": https://www.curseforge.com/minecraft/mc-mods/helpful-commands \n"))
             ;
         }
 
@@ -185,7 +201,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         MutableText commandList=Text.empty();
         Style charsStyle=HelpfulCommands.style.tertiary;
 
-        for(Map.Entry<ModCommandManager.hcCategory, LinkedList<ModCommandManager.hcCommand>> i : ModCommandManager.commandListByCategory.entrySet()){
+        for(Map.Entry<ModCommandManager.ModCommandCategory, LinkedList<ModCommandManager.ModCommand>> i : ModCommandManager.commandListByCategory.entrySet()){
             if(i.getValue().isEmpty()) continue;
             commandList
                     .append(Text.literal("\n"))
@@ -193,7 +209,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.translatable("commands.category."+i.getKey().name().toLowerCase()).setStyle(HelpfulCommands.style.tertiary))
             ;
 
-            for(ModCommandManager.hcCommand j : i.getValue()){
+            for(ModCommandManager.ModCommand j : i.getValue()){
                 Style descriptionStyle=HelpfulCommands.style.inactive;
                 if(hasPerms) descriptionStyle=getSuggestCommandStyle(j.name).withColor(HelpfulCommands.style.inactive.getColor());
 
@@ -219,8 +235,8 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static Style getCommandNameStyle(ModCommandManager.hcCommand command,ServerCommandSource src,boolean hasPerms){
-        Style ret=HelpfulCommands.style.secondary;
+    private static Style getCommandNameStyle(ModCommandManager.ModCommand command, ServerCommandSource src, boolean hasPerms){
+        Style ret;
 
         Style suggestCommand=getSuggestCommandStyle(command.name);
 
@@ -241,7 +257,31 @@ public class CMD_hc implements IHelpfulCommandsCommand {
     }
 
     private static int printModConfig(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        ctx.getSource().sendMessage(Text.literal("Mod configuration is not available in this alpha preview yet!").setStyle(HelpfulCommands.style.error).append(Text.literal("\n For now, you can use any permission management mod to allow/disallow certain commands, or download the previous 2.0.* version of the mod.").setStyle(HelpfulCommands.style.secondary)));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int configValueChanged(CommandContext<ServerCommandSource> ctx, ConfigManager.ModConfig cfg, String name, String newValue) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
+
+        ConfigManager.saveConfig(cfg,src.getServer());
+        src.sendFeedback(()->Text.translatable("commands.hc.config.setValue",Text.literal(name).setStyle(HelpfulCommands.style.primary),Text.literal(newValue).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
+
+        return Command.SINGLE_SUCCESS;
+    }
+    private static int printConfigValue(CommandContext<ServerCommandSource> ctx, String key){
+        ServerCommandSource src=ctx.getSource();
+
+        String value="(unknown)";
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+
+        switch(key){
+            case "explosionPowerLimit":
+                value=String.valueOf(cfg.explosionPowerLimit);
+        }
+
+        src.sendMessage(Text.translatable("commands.hc.config.getValue",Text.literal(key).setStyle(HelpfulCommands.style.primary),Text.literal(value).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.secondary));
+
         return Command.SINGLE_SUCCESS;
     }
 }

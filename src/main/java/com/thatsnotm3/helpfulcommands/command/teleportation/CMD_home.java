@@ -21,9 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CMD_home implements IHelpfulCommandsCommand {
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 

@@ -11,7 +11,6 @@ import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -27,9 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CMD_fly implements IHelpfulCommandsCommand {
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 

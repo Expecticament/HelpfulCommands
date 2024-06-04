@@ -24,9 +24,9 @@ import java.util.Map;
 
 public class CMD_extinguish implements IHelpfulCommandsCommand{
 
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 
@@ -41,6 +41,8 @@ public class CMD_extinguish implements IHelpfulCommandsCommand{
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd.name)) return -1;
+
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -58,6 +60,8 @@ public class CMD_extinguish implements IHelpfulCommandsCommand{
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets) throws CommandSyntaxException{
+        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd.name)) return -1;
+
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(extinguish(src, targets));

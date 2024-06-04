@@ -7,10 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
 import com.thatsnotm3.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
-import com.thatsnotm3.helpfulcommands.util.IEntityDataSaver;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,9 +19,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CMD_spawn implements IHelpfulCommandsCommand {
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 

@@ -19,9 +19,9 @@ import net.minecraft.text.Text;
 
 public class CMD_rename implements IHelpfulCommandsCommand{
 
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 

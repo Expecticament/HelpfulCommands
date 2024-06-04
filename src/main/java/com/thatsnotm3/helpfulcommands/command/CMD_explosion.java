@@ -8,6 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.thatsnotm3.helpfulcommands.HelpfulCommands;
 import com.thatsnotm3.helpfulcommands.command.util.ModCommandManager;
+import com.thatsnotm3.helpfulcommands.util.ConfigManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
@@ -20,9 +21,9 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 public class CMD_explosion implements IHelpfulCommandsCommand {
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 
@@ -40,6 +41,11 @@ public class CMD_explosion implements IHelpfulCommandsCommand {
 
     private static int execute(CommandContext<ServerCommandSource> ctx,int power) throws CommandSyntaxException {
         ServerCommandSource src=ctx.getSource();
+
+        if(power>ConfigManager.loadConfig(src.getServer()).explosionPowerLimit){
+            powerLimitExceeded(src,power);
+            return -1;
+        }
 
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.inGameOnly"));
@@ -61,6 +67,11 @@ public class CMD_explosion implements IHelpfulCommandsCommand {
     private static int execute(CommandContext<ServerCommandSource> ctx,int power,double distance) throws CommandSyntaxException {
         ServerCommandSource src=ctx.getSource();
 
+        if(power>ConfigManager.loadConfig(src.getServer()).explosionPowerLimit){
+            powerLimitExceeded(src,power);
+            return -1;
+        }
+
         if(!src.isExecutedByPlayer()) {
             src.sendError(Text.translatable("error.inGameOnly"));
             return -1;
@@ -74,6 +85,11 @@ public class CMD_explosion implements IHelpfulCommandsCommand {
             createExplosion(src,power,posX,posY,posZ);
         }
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static void powerLimitExceeded(ServerCommandSource src, int specifiedPower){
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+        src.sendError(Text.translatable("commands.explosion.error.powerLimitExceeded",Text.literal(String.valueOf(specifiedPower)).setStyle(HelpfulCommands.style.primary),Text.literal(String.valueOf(cfg.explosionPowerLimit)).setStyle(HelpfulCommands.style.primary)));
     }
 
     private static void createExplosion(ServerCommandSource src, int power, double posX, double posY, double posZ){

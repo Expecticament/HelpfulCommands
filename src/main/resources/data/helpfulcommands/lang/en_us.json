@@ -5,7 +5,10 @@
   "commands.category.main": "Main",
   "commands.category.time": "Time",
   "commands.category.abilities": "Abilities",
+  "commands.category.entities": "Players & Entities",
   "commands.category.teleportation": "Teleportation",
+  "commands.category.utility": "Utility",
+  "commands.category.world": "World",
   "commands.category.uncategorized": "Uncategorized",
 
   "about.title": "About",
@@ -51,6 +54,9 @@
   "commands.rename.description": "Rename an item in your main hand",
   "commands.spawn.description": "Teleport to your or the world's spawn point",
 
+  "commands.hc.config.setValue": "Config value %d has been set to %d",
+  "commands.hc.config.getValue": "Config value %d is currently set to %d",
+
   "commands.back.success": "Teleported to your death position",
   "commands.back.error.noDeathPos": "No death position saved yet",
 
@@ -61,6 +67,7 @@
   "commands.dimension.error.alreadyInDimension": "You are already in this dimension!",
 
   "commands.explosion.success": "Created explosion with the power of %d at x: %d, y: %d, z: %d",
+  "commands.explosion.error.powerLimitExceeded": "Specified power (%d) exceeds the limit of %d",
 
   "commands.extinguish.success.self": "You were extinguished",
   "commands.extinguish.success.other": "Extinguished %d target(s)",
@@ -116,6 +123,7 @@
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
   "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",
 
+  "error.commandDisabled": "%d command is disabled in this world!",
   "error.specifyTargets": "Please specify target(s)!",
   "error.didntFindTargets": "Didn't find any targets!",
   "error.notAllowed": "You are not allowed to use %d command!",

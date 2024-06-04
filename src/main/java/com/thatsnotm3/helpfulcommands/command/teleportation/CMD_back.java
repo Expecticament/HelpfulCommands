@@ -22,9 +22,9 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 public class CMD_back implements IHelpfulCommandsCommand {
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 

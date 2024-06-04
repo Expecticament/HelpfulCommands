@@ -21,9 +21,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
 
 public class CMD_lightning implements IHelpfulCommandsCommand {
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
 

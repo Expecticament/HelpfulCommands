@@ -33,13 +33,13 @@ import java.util.Map;
 
 public class CMD_dimension implements IHelpfulCommandsCommand {
 
-    public static ModCommandManager.hcCommand cmd;
+    public static ModCommandManager.ModCommand cmd;
     private static MinecraftServer server=null;
     private static CommandDispatcher<ServerCommandSource> dispatcher_;
     private static CommandRegistryAccess registryAccess_;
     private static CommandManager.RegistrationEnvironment environment_;
 
-    public static void init(ModCommandManager.hcCommand newData){
+    public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
         ServerLifecycleEvents.SERVER_STARTED.register(CMD_dimension::onServerStarted);
     }
