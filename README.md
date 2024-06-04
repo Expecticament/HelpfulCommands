@@ -9,9 +9,9 @@ Minecraft mod that adds lots of useful commands, as well as shortcuts for existi
 <br></br>
 
 ## «📖» Wiki
-Check out the mod's Wiki [here](https://thatsnotm3.github.io/HelpfulCommands/commands). There you'll find more information about the mod, all its features and commands.
+Check out the mod's Wiki [here](https://expecticament.github.io/HelpfulCommands/commands). There you'll find more information about the mod, all its features and commands.
 
 ## «💻» Source Code & Contribution
 In Branches, select a version of the game for which you want to see the source code.
 
-Feel free to suggest any changes that you think will make the mod better. Use the [Issues](https://github.com/ThatsNotM3/HelpfulCommands/issues) page to report bugs and submit your ideas.
+Feel free to suggest any changes that you think will make the mod better. Use the [Issues](https://github.com/Expecticament/HelpfulCommands/issues) page to report bugs and submit your ideas.
