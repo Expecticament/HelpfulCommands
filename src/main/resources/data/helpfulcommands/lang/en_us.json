@@ -54,8 +54,13 @@
   "commands.rename.description": "Rename an item in your main hand",
   "commands.spawn.description": "Teleport to your or the world's spawn point",
 
-  "commands.hc.config.setValue": "Config value %d has been set to %d",
-  "commands.hc.config.getValue": "Config value %d is currently set to %d",
+  "commands.hc.config.setValue.success": "Config value %d has been set to %d",
+  "commands.hc.config.setValue.error.unknownValue": "Couldn't change config value! Unknown value: %d",
+  "commands.hc.config.getValue.success": "Config value %d is currently set to %d",
+  "commands.hc.config.getValue.error.unknownValue": "Couldn't get config value! Unknown value: %d",
+  "commands.hc.config.toggleCommand.success.true": "Enabled %d command",
+  "commands.hc.config.toggleCommand.success.false": "Disabled %d command",
+  "commands.hc.config.toggleCommand.error.unknownCommand": "Failed to toggle command! Unknown command.",
 
   "commands.back.success": "Teleported to your death position",
   "commands.back.error.noDeathPos": "No death position saved yet",
@@ -67,7 +72,7 @@
   "commands.dimension.error.alreadyInDimension": "You are already in this dimension!",
 
   "commands.explosion.success": "Created explosion with the power of %d at x: %d, y: %d, z: %d",
-  "commands.explosion.error.powerLimitExceeded": "Specified power (%d) exceeds the limit of %d",
+  "commands.explosion.error.powerLimitExceeded": "Specified power (%d) exceeds the set limit of %d",
 
   "commands.extinguish.success.self": "You were extinguished",
   "commands.extinguish.success.other": "Extinguished %d target(s)",
@@ -123,7 +128,7 @@
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
   "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",
 
-  "error.commandDisabled": "%d command is disabled in this world!",
+  "error.commandDisabled": "%d command is currently disabled!",
   "error.specifyTargets": "Please specify target(s)!",
   "error.didntFindTargets": "Didn't find any targets!",
   "error.notAllowed": "You are not allowed to use %d command!",

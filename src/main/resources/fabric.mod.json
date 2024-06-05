@@ -5,19 +5,19 @@
 	"name": "Helpful Commands",
 	"description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
 	"authors": [
-		"ThatsNotM3"
+		"Expecticament"
 	],
 	"contact": {
-		"homepage": "https://thatsnotm3.github.io/HelpfulCommands/",
-		"sources": "https://github.com/ThatsNotM3/HelpfulCommands/tree/1.20",
-		"issues": "https://github.com/ThatsNotM3/HelpfulCommands/issues"
+		"homepage": "https://expecticament.github.io/HelpfulCommands/",
+		"sources": "https://github.com/Expecticament/HelpfulCommands/tree/1.20",
+		"issues": "https://github.com/Expecticament/HelpfulCommands/issues"
 	},
 	"license": "MIT License",
 	"icon": "data/helpfulcommands/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.thatsnotm3.helpfulcommands.HelpfulCommands"
+			"com.expecticament.helpfulcommands.HelpfulCommands"
 		],
 		"client": [
 
