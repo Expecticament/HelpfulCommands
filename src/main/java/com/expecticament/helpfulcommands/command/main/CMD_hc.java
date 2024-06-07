@@ -261,21 +261,29 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static Style getCommandNameStyle(ModCommandManager.ModCommand command, ServerCommandSource src, ConfigManager.ModConfig cfg, boolean hasPerms){
+    private static Style getCommandNameStyle(ModCommandManager.ModCommand command, ServerCommandSource src, ConfigManager.ModConfig cfg, boolean hasConfigPerms){
         Style ret;
 
         Style suggestCommand=getSuggestCommandStyle(command.name);
 
-        if(hasPerms){
-            ret = cfg.commands.getOrDefault(command.name,new ConfigManager.ModConfigCommandEntry()).enabled ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+        boolean commandState=cfg.commands.getOrDefault(command.name,new ConfigManager.ModConfigCommandEntry()).enabled;
+
+        if(hasConfigPerms){
+            ret = commandState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
             if(command.category!=ModCommandManager.ModCommandCategory.Main){
                 ret=ret
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommand",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.primary))))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommand",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary))))
                         .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config toggleCommand "+command.name));
             }
         } else{
-            ret=Permissions.check(src,HelpfulCommands.modID+".command."+command.category.toString().toLowerCase()+"."+command.name, command.defaultRequiredLevel) ? suggestCommand.withColor(HelpfulCommands.style.enabled.getColor())
-                    : HelpfulCommands.style.disabled.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("error.notAllowed",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error)));
+            ret=suggestCommand.withColor(HelpfulCommands.style.enabled.getColor());
+            boolean hasPermsToUseCommand=Permissions.check(src,HelpfulCommands.modID+".command."+command.category.toString().toLowerCase()+"."+command.name, command.defaultRequiredLevel);
+            if(!commandState && hasPermsToUseCommand){
+                ret=HelpfulCommands.style.disabled.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("error.commandDisabled",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error)));
+            }
+            if(!hasPermsToUseCommand){
+                ret=HelpfulCommands.style.disabled.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("error.notAllowed",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error)));
+            }
         }
         return ret;
     }
