@@ -1,7 +1,7 @@
 {
 	"required": true,
 	"package": "com.expecticament.helpfulcommands.mixin",
-	"compatibilityLevel": "JAVA_17",
+	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ModEntityDataSaver"
 	],

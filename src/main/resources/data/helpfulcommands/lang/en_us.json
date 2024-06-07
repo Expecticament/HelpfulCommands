@@ -1,5 +1,5 @@
 {
-  "mod.description": "Adds lots of useful commands to make your experience better, more optimized, and flexible. Easily configurable, feature-rich, and interactive.",
+  "mod.description": "Feature-rich mod that adds lots of useful commands to make your experience better and more optimized. Easily configurable and interactive.",
   "mod.version": "v. %d || by %d",
 
   "commands.category.main": "Main",
@@ -14,11 +14,11 @@
   "about.title": "About",
   "about.commandList.tooltip": "Click to see all the commands",
   "about.config.tooltip": "Click to view and edit the mod configuration",
-  "about.wiki": "Wiki",
-  "about.wiki.tooltip": "Click to open the mod's Documentation",
-  "about.modrinth.tooltip": "Click to open the mod's Modrinth page",
-  "about.curseForge.tooltip": "Click to open the mod's CurseForge page",
-  "about.github.tooltip": "Click to open the mod's GitHub page",
+  "about.documentation": "Documentation",
+  "about.documentation.tooltip": "Official Documentation for Helpful Commands",
+  "about.modrinth.tooltip": "Mod's Modrinth page",
+  "about.discord.tooltip": "Developer's Discord server",
+  "about.github.tooltip": "Mod's GitHub repository and source code",
 
   "config.title": "Config",
 
@@ -124,6 +124,7 @@
 
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
   "tooltips.clickToSuggestThisCommand": "Click to suggest this command",
+  "tooltips.clickToToggleCommand": "Click to toggle %d command",
   "tooltips.clickToTeleport": "Click to teleport",
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
   "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",

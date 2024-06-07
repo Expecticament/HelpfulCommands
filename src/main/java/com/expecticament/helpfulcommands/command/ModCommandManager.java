@@ -28,6 +28,7 @@ public class ModCommandManager{
         public String name="command";
         public ModCommandCategory category=ModCommandCategory.Uncategorized;
         public int defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+        public boolean defaultState=true;
         Runnable register;
     }
     public static final List<ModCommand> commands=new ArrayList<>(){{
@@ -97,6 +98,7 @@ public class ModCommandManager{
             name="explosion";
             category=ModCommandCategory.World;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            defaultState=false;
             register=()-> { CMD_explosion.init(this); CommandRegistrationCallback.EVENT.register(CMD_explosion::registerCommand); };
         }});
         add(new ModCommand(){{

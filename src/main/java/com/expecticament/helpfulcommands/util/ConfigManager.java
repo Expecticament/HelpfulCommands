@@ -70,8 +70,10 @@ public class ConfigManager{
 
         if(ret==null) ret=new ModConfig();
         for(ModCommandManager.ModCommand i : ModCommandManager.commands) {
-            if(Objects.equals(i.name, "hc")) continue;
-            ret.commands.putIfAbsent(i.name,new ModConfigCommandEntry());
+            if(i.category==ModCommandManager.ModCommandCategory.Main) continue;
+            ModConfigCommandEntry newEntry=new ModConfigCommandEntry();
+            newEntry.enabled=i.defaultState;
+            ret.commands.putIfAbsent(i.name,newEntry);
         }
         for(Map.Entry<String, ModConfigFieldEntry> e : defaultConfigFieldEntries.entrySet()){
             ret.fields.putIfAbsent(e.getKey(),e.getValue().defaultValue);
@@ -84,22 +86,18 @@ public class ConfigManager{
         Path folder=server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
         Path file=folder.resolve(CONFIG_FILE_NAME);
 
-        if(Files.notExists(folder)){
-            try{
+        if(Files.notExists(folder)) {
+            try {
                 Files.createDirectories(folder);
-            } catch(IOException e){
+            } catch (IOException e) {
                 throwIOException(e);
                 return;
             }
         }
 
-        ModConfig cfg=loadConfig(server);
-        cfg.commands.putAll(newCfg.commands);
-        cfg.fields.putAll(newCfg.fields);
-
         try{
             FileWriter writer=new FileWriter(file.normalize().toString());
-            writer.write(GSON.toJson(cfg));
+            writer.write(GSON.toJson(newCfg));
             writer.flush();
             writer.close();
         } catch(IOException e) {
