@@ -122,7 +122,10 @@ public class CMD_home implements IHelpfulCommandsCommand {
 
         int[] pos=playerData.getPersistentData().getIntArray("homePosition");
         if(pos.length==0){
-            src.sendError(Text.translatable("commands.home.error.noHomePos").setStyle(HelpfulCommands.style.error));
+            src.sendError(Text.translatable("commands.home.error.noHomePos",Text.literal("/home set").setStyle(HelpfulCommands.style.primary
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/home set"))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand")))
+            )).setStyle(HelpfulCommands.style.error));
             return -1;
         }
         String dimensionName=playerData.getPersistentData().getString("homeDimension");
