@@ -52,6 +52,7 @@
   "commands.killitems.description": "Kill all the items lying on the ground nearby",
   "commands.lightning.description": "Strike a lightning bolt at your cursor position at a given distance or near the block you are looking at",
   "commands.rename.description": "Rename an item in your main hand",
+  "commands.repair.description": "Repair an item in the target's main hand",
   "commands.spawn.description": "Teleport to your or the world's spawn point",
 
   "commands.hc.config.setValue.success": "Config value %d has been set to %d",
@@ -114,9 +115,13 @@
 
   "commands.rename.success": "Renamed your %d to %d",
   "commands.rename.success.customNameRemoved": "Removed a custom name from an item in your main hand",
-  "commands.rename.error.nothingInHand": "There is nothing in your main hand!",
   "commands.rename.error.sameName": "The new name is the same as the old one!",
   "commands.rename.error.customNameNotSet": "Nothing to reset! An item in your main hand doesn't have a custom name",
+
+  "commands.repair.success.self": "Your %d has been repaired",
+  "commands.repair.success.other": "Repaired %d item(s)",
+  "commands.repair.error.notDamageable": "An item in your main hand is not damageable!",
+  "commands.repair.error.notDamaged": "An item in your main hand is not damaged!",
 
   "commands.spawn.world.success": "Teleported to the World Spawn",
   "commands.spawn.player.self.success": "Teleported to your Spawn Point",
@@ -135,6 +140,7 @@
   "error.notAllowed": "You are not allowed to use %d command!",
   "error.inGameOnly": "This command or parameter can only be used in game!",
   "error.unknownDimension": "Unknown dimension!",
+  "error.nothingInMainHand": "There is nothing in your main hand!",
 
   "phrase.dimension": "Dimension",
   "phrase.teleport": "Teleport",

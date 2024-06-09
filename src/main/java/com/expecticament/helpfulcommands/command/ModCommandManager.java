@@ -1,16 +1,14 @@
 package com.expecticament.helpfulcommands.command;
 
-import com.expecticament.helpfulcommands.command.entities.*;
-import com.expecticament.helpfulcommands.command.main.CMD_hc;
-import com.expecticament.helpfulcommands.command.utility.CMD_rename;
-import com.expecticament.helpfulcommands.command.world.CMD_explosion;
-import com.expecticament.helpfulcommands.command.world.CMD_killitems;
-import com.expecticament.helpfulcommands.command.world.CMD_lightning;
-import com.mojang.brigadier.context.CommandContext;
-import com.expecticament.helpfulcommands.HelpfulCommands;
+import com.expecticament.helpfulcommands.command.main.*;
 import com.expecticament.helpfulcommands.command.abilities.*;
+import com.expecticament.helpfulcommands.command.entities.*;
 import com.expecticament.helpfulcommands.command.teleportation.*;
 import com.expecticament.helpfulcommands.command.time.*;
+import com.expecticament.helpfulcommands.command.utility.*;
+import com.expecticament.helpfulcommands.command.world.*;
+import com.mojang.brigadier.context.CommandContext;
+import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.util.ConfigManager;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
@@ -148,6 +146,12 @@ public class ModCommandManager{
             category=ModCommandCategory.Utility;
             defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_rename.init(this); CommandRegistrationCallback.EVENT.register(CMD_rename::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name="repair";
+            category=ModCommandCategory.Utility;
+            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
+            register=()-> { CMD_repair.init(this); CommandRegistrationCallback.EVENT.register(CMD_repair::registerCommand); };
         }});
     }};
 

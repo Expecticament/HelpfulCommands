@@ -49,7 +49,7 @@ public class CMD_rename implements IHelpfulCommandsCommand {
 
             ItemStack itemStack=player.getMainHandStack();
             if(itemStack==null || itemStack.isEmpty()){
-                source.sendError(Text.translatable("commands.rename.error.nothingInHand"));
+                source.sendError(Text.translatable("error.nothingInMainHand"));
                 return -1;
             }
 
@@ -83,7 +83,7 @@ public class CMD_rename implements IHelpfulCommandsCommand {
 
             ItemStack itemStack=player.getMainHandStack();
             if(itemStack==null || itemStack.isEmpty()){
-                source.sendError(Text.translatable("commands.rename.error.nothingInHand"));
+                source.sendError(Text.translatable("error.nothingInMainHand"));
                 return -1;
             }
 
