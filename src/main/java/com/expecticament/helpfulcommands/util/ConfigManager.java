@@ -45,7 +45,7 @@ public class ConfigManager{
     }
     public static final Map<String, ModConfigFieldEntry> defaultConfigFieldEntries=new HashMap<>(){{
         put("explosionPowerLimit",new ModConfigFieldEntry(){{
-            defaultValue=25;
+            defaultValue=15;
             configCommandArgument=CommandManager.argument("value",IntegerArgumentType.integer(1));
             getValue=()-> IntegerArgumentType.getInteger(context,"value");
         }});
