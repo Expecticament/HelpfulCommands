@@ -35,7 +35,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.14.0",
-		"java": ">=17",
+		"java": ">=21",
 		"fabric-api": "*",
 		"fabric-permissions-api-v0": "*"
 	}

@@ -45,7 +45,7 @@ dependencies {
 	include(modImplementation('me.lucko:fabric-permissions-api:0.3.1'))
 
 	// Server Translation API
-	modImplementation include("xyz.nucleoid:server-translations-api:2.3.0+1.20.5-rc2")
+	modImplementation include("xyz.nucleoid:server-translations-api:2.3.1+1.21-pre2")
 
 	
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
