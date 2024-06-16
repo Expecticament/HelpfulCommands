@@ -21,6 +21,8 @@
   "about.github.tooltip": "Mod's GitHub repository and source code",
 
   "config.title": "Config",
+  "config.topNotice": "Below are all the configuration fields and their values. Use %d for command management.",
+  "config.field.explosionPowerLimit.description": "Maximum power limit for /explosion command. Be careful: strong explosions are destructive and can cause lag.",
 
   "deathPosition.title": "Death position",
   "homePosition.title": "Home position",
@@ -141,6 +143,7 @@
   "tooltips.clickToTeleport": "Click to teleport",
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
   "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",
+  "tooltips.clickToEditConfigValue": "Click to edit this value",
 
   "error.commandDisabled": "%d command is currently disabled!",
   "error.specifyTargets": "Please specify target(s)!",
@@ -149,6 +152,7 @@
   "error.inGameOnly": "This command or parameter can only be used in game!",
   "error.unknownDimension": "Unknown dimension!",
   "error.nothingInMainHand": "There is nothing in your main hand!",
+  "error.notAllowedToConfigureFields": "You are not allowed to view or change configuration fields!",
 
   "phrase.dimension": "Dimension",
   "phrase.teleport": "Teleport",

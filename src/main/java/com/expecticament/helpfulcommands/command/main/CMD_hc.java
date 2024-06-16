@@ -78,7 +78,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 .then(CommandManager.literal("config")
                         .then(cmdManagement)
                         .then(fieldManagement)
-                        .executes(CMD_hc::printModConfigHelp)
+                        .executes(CMD_hc::printModConfig)
                         .requires(Permissions.require(HelpfulCommands.modID+".config",HelpfulCommands.defaultConfigEditLevel))
                 )
                 .executes(CMD_hc::printModInfo)
@@ -315,8 +315,34 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         ;
     }
 
-    private static int printModConfigHelp(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+    private static int printModConfig(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
+        if(!Permissions.check(src,"hc.config.manageField",HelpfulCommands.defaultConfigEditLevel)){
+            src.sendError(Text.translatable("error.notAllowedToConfigureFields"));
+            return -1;
+        }
+        boolean isPlayer=src.isExecutedByPlayer();
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
 
+        MutableText msg=Text.literal("\n");
+        msg
+                .append(getHeader("config.title",isPlayer))
+                .append(Text.literal(" "))
+                .append(Text.translatable("config.topNotice",Text.empty().append(Text.literal("[").append(Text.translatable("commandList.title").append("]")).setStyle(HelpfulCommands.style.secondary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.commandList.tooltip"))).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc commandList"))))))
+        ;
+        for(Map.Entry<String, Object> e : cfg.fields.entrySet()){
+            msg
+                    .append(Text.literal("\n"))
+                    .append(Text.literal("\n"))
+                    .append(Text.literal("- ").append(Text.literal(e.getKey()).setStyle(HelpfulCommands.style.primary)))
+                    .append(Text.literal(" | "))
+                    .append(Text.literal(e.getValue().toString()).setStyle(HelpfulCommands.style.tertiary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToEditConfigValue"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/hc config manageField "+e.getKey()+" set "))))
+                    .append(Text.literal("\n "))
+                    .append(Text.translatable("config.field."+e.getKey()+".description").setStyle(HelpfulCommands.style.inactive))
+            ;
+        }
+
+        src.sendMessage(msg);
         return Command.SINGLE_SUCCESS;
     }
 
