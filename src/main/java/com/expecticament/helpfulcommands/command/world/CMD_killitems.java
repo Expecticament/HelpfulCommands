@@ -33,7 +33,7 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmd.name)
                 .executes(CMD_killitems::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

@@ -19,7 +19,7 @@ public class CMD_night implements IHelpfulCommandsCommand {
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmd.name)
                 .executes(ctx->TimeCommands.execute(ctx,cmd,13000))
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 }

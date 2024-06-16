@@ -36,7 +36,8 @@ public class ConfigManager{
         public CommandContext<ServerCommandSource> context=null;
     }
     public static class ModConfigCommandEntry {
-        public Boolean enabled=true;
+        public boolean isEnabled=true;
+        public boolean isPublic=false;
         //public String[] aliases=new String[]{};
     }
     public static class ModConfig{
@@ -72,7 +73,8 @@ public class ConfigManager{
         for(ModCommandManager.ModCommand i : ModCommandManager.commands) {
             if(i.category==ModCommandManager.ModCommandCategory.Main) continue;
             ModConfigCommandEntry newEntry=new ModConfigCommandEntry();
-            newEntry.enabled=i.defaultState;
+            newEntry.isEnabled=i.defaultState;
+            newEntry.isPublic=i.defaultPublic;
             ret.commands.putIfAbsent(i.name,newEntry);
         }
         for(Map.Entry<String, ModConfigFieldEntry> e : defaultConfigFieldEntries.entrySet()){

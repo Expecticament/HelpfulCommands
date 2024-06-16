@@ -37,7 +37,7 @@ public class CMD_feed implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
                 )
                 .executes(CMD_feed::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

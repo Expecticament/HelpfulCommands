@@ -36,7 +36,7 @@ public class CMD_explosion implements IHelpfulCommandsCommand {
                         )
                         .executes(ctx->execute(ctx,IntegerArgumentType.getInteger(ctx,"power")))
                 )
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

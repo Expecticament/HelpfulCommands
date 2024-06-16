@@ -34,7 +34,7 @@ public class CMD_repair implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
                 )
                 .executes(CMD_repair::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

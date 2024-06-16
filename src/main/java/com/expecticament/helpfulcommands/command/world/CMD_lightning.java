@@ -34,7 +34,7 @@ public class CMD_lightning implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx, DoubleArgumentType.getDouble(ctx,"distance")))
                 )
                 .executes(CMD_lightning::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

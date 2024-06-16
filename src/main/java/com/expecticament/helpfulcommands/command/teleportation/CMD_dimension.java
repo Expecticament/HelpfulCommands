@@ -73,7 +73,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
                         .executes(CMD_dimension::getDimension)
                 )
                 .executes(null)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

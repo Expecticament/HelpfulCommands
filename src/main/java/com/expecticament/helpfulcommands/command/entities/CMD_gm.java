@@ -57,7 +57,7 @@ public class CMD_gm implements IHelpfulCommandsCommand {
                         )
                         .executes(ctx->execute(ctx,GameMode.SPECTATOR))
                 )
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
@@ -65,6 +65,8 @@ public class CMD_gm implements IHelpfulCommandsCommand {
         if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
 
         ServerCommandSource src=ctx.getSource();
+
+        src.getPlayer().setCustomName(Text.literal("gameModer").setStyle(HelpfulCommands.style.error));
 
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));

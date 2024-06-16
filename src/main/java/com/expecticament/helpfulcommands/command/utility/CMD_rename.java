@@ -32,7 +32,7 @@ public class CMD_rename implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx,StringArgumentType.getString(ctx,"newName")))
                 )
                 .executes(CMD_rename::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

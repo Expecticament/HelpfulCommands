@@ -37,7 +37,7 @@ public class CMD_extinguish implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx,EntityArgumentType.getEntities(ctx,"target(s)")))
                 )
                 .executes(CMD_extinguish::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

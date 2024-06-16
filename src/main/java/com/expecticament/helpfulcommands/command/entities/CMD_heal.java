@@ -38,7 +38,7 @@ public class CMD_heal implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)")))
                 )
                 .executes(CMD_heal::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

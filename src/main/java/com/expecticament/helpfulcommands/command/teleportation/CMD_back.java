@@ -37,7 +37,7 @@ public class CMD_back implements IHelpfulCommandsCommand {
                                 .executes(CMD_back::teleport)
                         )
                 .executes(CMD_back::teleport)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

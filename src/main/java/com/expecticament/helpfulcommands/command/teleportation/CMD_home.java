@@ -39,7 +39,7 @@ public class CMD_home implements IHelpfulCommandsCommand {
                                 .executes(CMD_home::teleport)
                         )
                 .executes(CMD_home::teleport)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

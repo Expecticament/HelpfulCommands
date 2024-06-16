@@ -41,7 +41,7 @@ public class CMD_god implements IHelpfulCommandsCommand {
                             .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)"),false,false))
                     )
                 .executes(CMD_god::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 

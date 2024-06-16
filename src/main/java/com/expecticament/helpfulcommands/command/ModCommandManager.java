@@ -10,9 +10,13 @@ import com.expecticament.helpfulcommands.command.world.*;
 import com.mojang.brigadier.context.CommandContext;
 import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.util.ConfigManager;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 import java.util.*;
@@ -24,133 +28,114 @@ public class ModCommandManager{
 
     public static class ModCommand {
         public String name="command";
-        public ModCommandCategory category=ModCommandCategory.Uncategorized;
-        public int defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
-        public boolean defaultState=true;
+        public ModCommandCategory category=ModCommandCategory.Uncategorized; // Commands in the "Main" category are ALWAYS available to everyone
+        public boolean defaultState=true; // Whether the command is enabled by default
+        public boolean defaultPublic=false; // Public commands are available to everyone regardless of their permissions
         Runnable register;
     }
     public static final List<ModCommand> commands=new ArrayList<>(){{
         add(new ModCommand(){{
             name="hc";
             category=ModCommandCategory.Main;
-            defaultRequiredLevel=0;
+            defaultPublic=true;
             register=()-> { CMD_hc.init(this); CommandRegistrationCallback.EVENT.register(CMD_hc::registerCommand); };
         }});
         add(new ModCommand(){{
             name="fly";
             category=ModCommandCategory.Abilities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_fly.init(this); CommandRegistrationCallback.EVENT.register(CMD_fly::registerCommand); };
         }});
         add(new ModCommand(){{
             name="god";
             category=ModCommandCategory.Abilities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_god.init(this); CommandRegistrationCallback.EVENT.register(CMD_god::registerCommand); };
         }});
         add(new ModCommand(){{
             name="back";
             category=ModCommandCategory.Teleportation;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_back.init(this); CommandRegistrationCallback.EVENT.register(CMD_back::registerCommand); };
         }});
         add(new ModCommand(){{
             name="dimension";
             category=ModCommandCategory.Teleportation;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_dimension.init(this); CommandRegistrationCallback.EVENT.register(CMD_dimension::registerCommand); };
         }});
         add(new ModCommand(){{
             name="home";
             category=ModCommandCategory.Teleportation;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_home.init(this); CommandRegistrationCallback.EVENT.register(CMD_home::registerCommand); };
         }});
         add(new ModCommand(){{
             name="jump";
             category=ModCommandCategory.Teleportation;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_jump.init(this); CommandRegistrationCallback.EVENT.register(CMD_jump::registerCommand); };
         }});
 
         add(new ModCommand(){{
             name="spawn";
             category=ModCommandCategory.Teleportation;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_spawn.init(this); CommandRegistrationCallback.EVENT.register(CMD_spawn::registerCommand); };
         }});
         add(new ModCommand(){{
             name="day";
             category=ModCommandCategory.Time;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_day.init(this); CommandRegistrationCallback.EVENT.register(CMD_day::registerCommand); };
         }});
         add(new ModCommand(){{
             name="night";
             category=ModCommandCategory.Time;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_night.init(this); CommandRegistrationCallback.EVENT.register(CMD_night::registerCommand); };
         }});
 
         add(new ModCommand(){{
             name="explosion";
             category=ModCommandCategory.World;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             defaultState=false;
             register=()-> { CMD_explosion.init(this); CommandRegistrationCallback.EVENT.register(CMD_explosion::registerCommand); };
         }});
         add(new ModCommand(){{
             name="killitems";
             category=ModCommandCategory.World;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_killitems.init(this); CommandRegistrationCallback.EVENT.register(CMD_killitems::registerCommand); };
         }});
         add(new ModCommand(){{
             name="lightning";
             category=ModCommandCategory.World;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_lightning.init(this); CommandRegistrationCallback.EVENT.register(CMD_lightning::registerCommand); };
         }});
         add(new ModCommand(){{
             name="extinguish";
             category=ModCommandCategory.Entities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_extinguish.init(this); CommandRegistrationCallback.EVENT.register(CMD_extinguish::registerCommand); };
         }});
         add(new ModCommand(){{
             name="feed";
             category=ModCommandCategory.Entities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_feed.init(this); CommandRegistrationCallback.EVENT.register(CMD_feed::registerCommand); };
         }});
         add(new ModCommand(){{
             name="gm";
             category=ModCommandCategory.Entities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_gm.init(this); CommandRegistrationCallback.EVENT.register(CMD_gm::registerCommand); };
         }});
         add(new ModCommand(){{
             name="heal";
             category=ModCommandCategory.Entities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_heal.init(this); CommandRegistrationCallback.EVENT.register(CMD_heal::registerCommand); };
         }});
         add(new ModCommand(){{
             name="ignite";
             category=ModCommandCategory.Entities;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_ignite.init(this); CommandRegistrationCallback.EVENT.register(CMD_ignite::registerCommand); };
         }});
         add(new ModCommand(){{
             name="rename";
             category=ModCommandCategory.Utility;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_rename.init(this); CommandRegistrationCallback.EVENT.register(CMD_rename::registerCommand); };
         }});
         add(new ModCommand(){{
             name="repair";
             category=ModCommandCategory.Utility;
-            defaultRequiredLevel=HelpfulCommands.defaultCommandLevel;
             register=()-> { CMD_repair.init(this); CommandRegistrationCallback.EVENT.register(CMD_repair::registerCommand); };
         }});
     }};
@@ -190,10 +175,43 @@ public class ModCommandManager{
     public static Boolean checkBeforeExecuting(CommandContext<ServerCommandSource> ctx, ModCommand cmd){
         ServerCommandSource src=ctx.getSource();
         Map<String, ConfigManager.ModConfigCommandEntry> cmdProperties=ConfigManager.loadConfig(src.getServer()).commands;
-        if(!cmdProperties.get(cmd.name).enabled){
+        if(!cmdProperties.get(cmd.name).isEnabled){
             src.sendError(Text.translatable("error.commandDisabled",Text.literal("/"+cmd.name).setStyle(HelpfulCommands.style.primary)));
             return false;
         }
         return true;
+    }
+
+    public static Boolean canUseCommand(ServerCommandSource src, ModCommand cmd){
+        return getCantUseCommandReason(src,cmd)==null;
+    }
+    public static MutableText getCantUseCommandReason(ServerCommandSource src, ModCommand cmd){
+        Map<String, ConfigManager.ModConfigCommandEntry> cmdProperties=ConfigManager.loadConfig(src.getServer()).commands;
+
+        if(cmd.category!=ModCommandCategory.Main){
+            if(!cmdProperties.get(cmd.name).isPublic){
+                // Command is not public, check player's permissions
+                if(!Permissions.check(src,HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,HelpfulCommands.defaultCommandLevel)){
+                    return Text.translatable("error.notAllowedToUseCommand",Text.literal("/"+cmd.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error);
+                }
+            }
+        }
+
+        // Check if command is disabled
+        if(cmd.category!=ModCommandCategory.Main){
+
+            if(!cmdProperties.get(cmd.name).isEnabled){
+                return Text.translatable("error.commandDisabled",Text.literal("/"+cmd.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error);
+            }
+        }
+
+        return null;
+    }
+
+    public static void sendCommandTreeToEveryone(ServerCommandSource src){
+        MinecraftServer server=src.getServer();
+        for(ServerPlayerEntity i : server.getPlayerManager().getPlayerList()){
+            server.getCommandManager().sendCommandTree(i);
+        }
     }
 }
