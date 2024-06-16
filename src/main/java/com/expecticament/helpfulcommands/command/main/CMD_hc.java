@@ -18,7 +18,6 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Objects;
 
 public class CMD_hc implements IHelpfulCommandsCommand {
 
@@ -46,18 +45,13 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         }
         cmdManagement.requires(Permissions.require(HelpfulCommands.modID+".config.manageCommand",HelpfulCommands.defaultConfigEditLevel));
 
-        LiteralArgumentBuilder<ServerCommandSource> configFieldsGet=CommandManager.literal("get");
+        LiteralArgumentBuilder<ServerCommandSource> fieldManagement=CommandManager.literal("manageField");
         for(Map.Entry<String, ConfigManager.ModConfigFieldEntry> i : ConfigManager.defaultConfigFieldEntries.entrySet()){
-            configFieldsGet
-                    .then(CommandManager.literal(i.getKey())
-                            .executes(ctx->printConfigValue(ctx,i.getKey()))
-                    );
-        }
-        configFieldsGet.requires(Permissions.require(HelpfulCommands.modID+".config.get",HelpfulCommands.defaultConfigEditLevel));
-        LiteralArgumentBuilder<ServerCommandSource> configFieldsSet=CommandManager.literal("set");
-        for(Map.Entry<String, ConfigManager.ModConfigFieldEntry> i : ConfigManager.defaultConfigFieldEntries.entrySet()){
-            configFieldsSet
-                    .then(CommandManager.literal(i.getKey())
+            LiteralArgumentBuilder<ServerCommandSource> literalField=CommandManager.literal(i.getKey())
+                    .then(CommandManager.literal("query")
+                            .executes(ctx-> queryConfigField(ctx,i.getKey()))
+                    )
+                    .then(CommandManager.literal("set")
                             .then(i.getValue().configCommandArgument
                                     .executes(ctx->{
                                         i.getValue().context=ctx;
@@ -70,8 +64,9 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                                     })
                             )
                     );
+            fieldManagement.then(literalField);
         }
-        configFieldsSet.requires(Permissions.require(HelpfulCommands.modID+".config.set",HelpfulCommands.defaultConfigEditLevel));
+        fieldManagement.requires(Permissions.require(HelpfulCommands.modID+".config.manageField",HelpfulCommands.defaultConfigEditLevel));
 
         dispatcher.register(CommandManager.literal(cmd.name)
                 .then(CommandManager.literal("about")
@@ -82,13 +77,11 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 )
                 .then(CommandManager.literal("config")
                         .then(cmdManagement)
-                        .then(configFieldsSet)
-                        .then(configFieldsGet)
+                        .then(fieldManagement)
                         .executes(CMD_hc::printModConfig)
                         .requires(Permissions.require(HelpfulCommands.modID+".config",HelpfulCommands.defaultConfigEditLevel))
                 )
                 .executes(CMD_hc::printModInfo)
-//                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
     }
 
@@ -323,7 +316,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
         return Command.SINGLE_SUCCESS;
     }
-    private static int printConfigValue(CommandContext<ServerCommandSource> ctx, String entry){
+    private static int queryConfigField(CommandContext<ServerCommandSource> ctx, String entry){
         ServerCommandSource src=ctx.getSource();
 
         ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
@@ -384,7 +377,8 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
         Style messageStyle=HelpfulCommands.style.success;
         Style commandNameStyle=HelpfulCommands.style.primary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd.name));
-        src.sendFeedback(()->Text.translatable("commands.hc.config.manageCommand.togglePublic.success."+String.valueOf(value).toLowerCase(),Text.literal("/"+cmd.name).setStyle(commandNameStyle)).setStyle(messageStyle),true);
+        src.sendFeedback(()->Text.translatable("commands.hc.config.manageCommand.togglePublic.success."+String.valueOf(value).toLowerCase(),Text.literal("/"+cmd.name
+        ).setStyle(commandNameStyle)).setStyle(messageStyle),true);
 
         ModCommandManager.sendCommandTreeToEveryone(src);
 

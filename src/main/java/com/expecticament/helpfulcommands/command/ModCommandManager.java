@@ -149,6 +149,7 @@ public class ModCommandManager{
             commandListByCategory.put(i.category,list);
         }
 
+        HelpfulCommands.LOGGER.info("");
         HelpfulCommands.LOGGER.info("H   H  CCCCC  | ");
         HelpfulCommands.LOGGER.info("H   H  C      |  Thank you for using");
         HelpfulCommands.LOGGER.info("HHHHH  C      |  "+HelpfulCommands.modName);
@@ -170,6 +171,7 @@ public class ModCommandManager{
             HelpfulCommands.LOGGER.info(str);
             ++count;
         }
+        HelpfulCommands.LOGGER.info("");
     }
 
     public static Boolean checkBeforeExecuting(CommandContext<ServerCommandSource> ctx, ModCommand cmd){
