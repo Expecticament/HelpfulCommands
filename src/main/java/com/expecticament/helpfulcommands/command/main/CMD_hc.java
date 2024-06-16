@@ -56,11 +56,11 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                                     .executes(ctx->{
                                         i.getValue().context=ctx;
                                         try {
-                                            editConfigEntry(ctx,i.getKey(),i.getValue().getValue.call());
+                                            return editConfigEntry(ctx,i.getKey(),i.getValue().getValue.call());
                                         } catch (Exception e) {
                                             ctx.getSource().sendError(Text.literal("Error"));
+                                            return 0;
                                         }
-                                        return Command.SINGLE_SUCCESS;
                                     })
                             )
                     );
@@ -78,7 +78,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 .then(CommandManager.literal("config")
                         .then(cmdManagement)
                         .then(fieldManagement)
-                        .executes(CMD_hc::printModConfig)
+                        .executes(CMD_hc::printModConfigHelp)
                         .requires(Permissions.require(HelpfulCommands.modID+".config",HelpfulCommands.defaultConfigEditLevel))
                 )
                 .executes(CMD_hc::printModInfo)
@@ -168,8 +168,12 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.literal(": /hc config\n"))
                     .append(buttonGitHub)
                     .append(Text.literal(": https://github.com/Expecticament/HelpfulCommands \n"))
+                    .append(buttonDocumentation)
+                    .append(Text.literal(": https://expecticament.github.io/HelpfulCommands \n"))
                     .append(buttonModrinth)
                     .append(Text.literal(": https://modrinth.com/mod/helpfulcommands \n"))
+                    .append(buttonDiscord)
+                    .append(Text.literal(": https://discord.gg/RHd8P5hps4 \n"))
             ;
         }
 
@@ -193,8 +197,16 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         if(executedByPlayer) header.append(Text.literal("[• "));
         boolean hasPerms=Permissions.check(source,HelpfulCommands.modID+".config.manageCommand",HelpfulCommands.defaultConfigEditLevel); // Determine whether we should print "Enabled/Disabled"(true) or "You can/can't use"(false)
         if(hasPerms){
+            MutableText pub=Text.translatable("commandList.command.public").setStyle(HelpfulCommands.style.secondary);
+            MutableText res=Text.translatable("commandList.command.restricted").setStyle(HelpfulCommands.style.inactive);
             MutableText enabled=Text.translatable("commandList.command.enabled").setStyle(HelpfulCommands.style.enabled);
             MutableText disabled=Text.translatable("commandList.command.disabled").setStyle(HelpfulCommands.style.disabled);
+            header
+                    .append(pub)
+                    .append(Text.literal("/"))
+                    .append(res)
+                    .append(Text.literal(" | "))
+            ;
             if(executedByPlayer){
                 header
                         .append(enabled)
@@ -241,8 +253,17 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
                 String chars="┠";
                 if(j==i.getValue().getLast()) chars="┗";
+                commandList.append(Text.literal("\n"+chars+"› ").setStyle(charsStyle));
+                if(hasPerms && j.category!=ModCommandManager.ModCommandCategory.Main){ // If source has permissions, then display command public state
+                    HoverEvent he=new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommandPublicState",Text.literal("/"+j.name).setStyle(HelpfulCommands.style.tertiary)));
+                    ClickEvent ce=new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config manageCommand "+j.name+" togglePublic");
+                    commandList.append(cfg.commands.get(j.name).isPublic ? Text.translatable("commandList.command.public.abbreviation").setStyle(HelpfulCommands.style.secondary.withClickEvent(ce).withHoverEvent(he)) : Text.translatable("commandList.command.restricted.abbreviation").setStyle(HelpfulCommands.style.inactive.withClickEvent(ce).withHoverEvent(he)));
+                    commandList.append(Text.literal(" "));
+                }
+                if(!ctx.getSource().isExecutedByPlayer() && j.category!=ModCommandManager.ModCommandCategory.Main){
+                    commandList.append(cfg.commands.getOrDefault(j.name,new ConfigManager.ModConfigCommandEntry()).isEnabled ? Text.literal("[+] ") : Text.literal("[-] "));
+                }
                 commandList
-                        .append(Text.literal("\n"+chars+"› ").setStyle(charsStyle))
                         .append(Text.literal(j.name).setStyle(getCommandNameStyle(j,source,cfg,hasPerms)))
                         .append(Text.literal(": ").append(Text.translatable("commands."+j.name+".description").setStyle(descriptionStyle)))
                 ;
@@ -294,7 +315,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         ;
     }
 
-    private static int printModConfig(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+    private static int printModConfigHelp(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
 
         return Command.SINGLE_SUCCESS;
     }

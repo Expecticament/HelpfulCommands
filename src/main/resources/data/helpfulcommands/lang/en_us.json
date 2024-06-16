@@ -33,6 +33,10 @@
   "commandList.command.usage.can": "can",
   "commandList.command.usage.cant": "can't",
   "commandList.command.usage.use": "use",
+  "commandList.command.public": "[P]ublic",
+  "commandList.command.public.abbreviation": "[P]",
+  "commandList.command.restricted": "[R]estricted",
+  "commandList.command.restricted.abbreviation": "[R]",
 
   "commands.hc.description": "Main command used to view information and mod configuration",
   "commands.day.description": "Set the time to Day",
@@ -133,6 +137,7 @@
   "tooltips.clickToSuggestCommand": "Click to suggest %d command",
   "tooltips.clickToSuggestThisCommand": "Click to suggest this command",
   "tooltips.clickToToggleCommand": "Click to toggle %d command",
+  "tooltips.clickToToggleCommandPublicState": "Click to toggle %d command public state",
   "tooltips.clickToTeleport": "Click to teleport",
   "tooltips.clickToTeleportToCoordinates": "Click to teleport to these coordinates",
   "tooltips.clickToTeleportToDimension": "Click to teleport to this dimension",
