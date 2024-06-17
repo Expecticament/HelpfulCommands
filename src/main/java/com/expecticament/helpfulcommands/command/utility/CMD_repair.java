@@ -7,7 +7,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.component.DataComponentTypes;
@@ -39,8 +38,6 @@ public class CMD_repair implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource source=ctx.getSource();
         if(!source.isExecutedByPlayer()){
             source.sendError(Text.translatable("error.specifyTargets"));
@@ -71,8 +68,6 @@ public class CMD_repair implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource source=ctx.getSource();
 
         int count=0;

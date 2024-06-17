@@ -21,7 +21,7 @@
   "about.github.tooltip": "Mod's GitHub repository and source code",
 
   "config.title": "Config",
-  "config.topNotice": "Below are all the configuration fields and their values. Use %d for command management.",
+  "config.topNotice": "Below are all the configuration fields and their values. Use %d for command management (if you have permissions).",
   "config.field.explosionPowerLimit.description": "Maximum power limit for /explosion command. Be careful: strong explosions are destructive and can cause lag.",
 
   "deathPosition.title": "Death position",
@@ -153,6 +153,7 @@
   "error.unknownDimension": "Unknown dimension!",
   "error.nothingInMainHand": "There is nothing in your main hand!",
   "error.notAllowedToConfigureFields": "You are not allowed to view or change configuration fields!",
+  "error.cantEditConfigOnIntergratedIfNotHost": "For security reasons, only the host can configure Helpful Commands on integrated servers!",
 
   "phrase.dimension": "Dimension",
   "phrase.teleport": "Teleport",

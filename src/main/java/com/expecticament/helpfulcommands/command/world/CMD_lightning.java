@@ -39,8 +39,6 @@ public class CMD_lightning implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -61,8 +59,6 @@ public class CMD_lightning implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx,double distance) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()) {

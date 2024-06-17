@@ -62,8 +62,6 @@ public class CMD_gm implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gm) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         src.getPlayer().setCustomName(Text.literal("gameModer").setStyle(HelpfulCommands.style.error));
@@ -82,8 +80,6 @@ public class CMD_gm implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gm, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(changeGameMode(src, gm, targets));

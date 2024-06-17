@@ -41,8 +41,6 @@ public class CMD_explosion implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx,int power) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         int configValue=(Double.valueOf(ConfigManager.loadConfig(src.getServer()).fields.get("explosionPowerLimit").toString())).intValue();
@@ -70,8 +68,6 @@ public class CMD_explosion implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx,int power,double distance) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         int configValue=(Double.valueOf(ConfigManager.loadConfig(src.getServer()).fields.get("explosionPowerLimit").toString())).intValue();

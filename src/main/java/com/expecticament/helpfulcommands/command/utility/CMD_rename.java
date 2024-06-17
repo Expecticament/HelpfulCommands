@@ -8,7 +8,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
@@ -37,8 +36,6 @@ public class CMD_rename implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, String newName) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource source=ctx.getSource();
         if(!source.isExecutedByPlayer()){
             source.sendError(Text.translatable("error.inGameOnly"));
@@ -71,8 +68,6 @@ public class CMD_rename implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource source=ctx.getSource();
         if(!source.isExecutedByPlayer()){
             source.sendError(Text.translatable("error.inGameOnly"));

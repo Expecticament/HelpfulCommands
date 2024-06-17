@@ -174,34 +174,30 @@ public class ModCommandManager{
         HelpfulCommands.LOGGER.info("");
     }
 
-    public static Boolean checkBeforeExecuting(CommandContext<ServerCommandSource> ctx, ModCommand cmd){
-        ServerCommandSource src=ctx.getSource();
-        Map<String, ConfigManager.ModConfigCommandEntry> cmdProperties=ConfigManager.loadConfig(src.getServer()).commands;
-        if(!cmdProperties.get(cmd.name).isEnabled){
-            src.sendError(Text.translatable("error.commandDisabled",Text.literal("/"+cmd.name).setStyle(HelpfulCommands.style.primary)));
-            return false;
-        }
-        return true;
-    }
-
     public static Boolean canUseCommand(ServerCommandSource src, ModCommand cmd){
         return getCantUseCommandReason(src,cmd)==null;
     }
     public static MutableText getCantUseCommandReason(ServerCommandSource src, ModCommand cmd){
         Map<String, ConfigManager.ModConfigCommandEntry> cmdProperties=ConfigManager.loadConfig(src.getServer()).commands;
 
-        if(cmd.category!=ModCommandCategory.Main){
+        if(Permissions.check(src,HelpfulCommands.modID + ".command." + cmd.category.toString().toLowerCase() + "." + cmd.name, HelpfulCommands.defaultCommandLevel)){
+            // LuckPerms will not detect mod's command permissions without this empty check. I don't know any better workaround :)
+        }
+        // Same goes for the next 2 empty checks. Under certain circumstances LuckPerms won't register ".config.*" without this (manageCommand should actually be fine because of the real check below, but better be safe than sorry)
+        if(Permissions.check(src,HelpfulCommands.modID + ".config.manageCommand")){}
+        if(Permissions.check(src,HelpfulCommands.modID + ".config.manageField")){}
+
+        if(cmd.category!=ModCommandCategory.Main && !Permissions.check(src,HelpfulCommands.modID+".config.manageCommand")){ // Anyone can always use commands from the Main category. Players who have permissions to manage commands should also be able to use all of them.
             if(!cmdProperties.get(cmd.name).isPublic){
                 // Command is not public, check player's permissions
-                if(!Permissions.check(src,HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,HelpfulCommands.defaultCommandLevel)){
-                    return Text.translatable("error.notAllowedToUseCommand",Text.literal("/"+cmd.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error);
+                if(!Permissions.check(src, HelpfulCommands.modID + ".command." + cmd.category.toString().toLowerCase() + "." + cmd.name, HelpfulCommands.defaultCommandLevel)) {
+                    return Text.translatable("error.notAllowedToUseCommand", Text.literal("/" + cmd.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error);
                 }
             }
         }
 
         // Check if command is disabled
         if(cmd.category!=ModCommandCategory.Main){
-
             if(!cmdProperties.get(cmd.name).isEnabled){
                 return Text.translatable("error.commandDisabled",Text.literal("/"+cmd.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error);
             }

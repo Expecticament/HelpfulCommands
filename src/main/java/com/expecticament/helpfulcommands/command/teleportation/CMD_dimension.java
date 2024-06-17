@@ -83,8 +83,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -106,8 +104,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, ServerWorld dimension, Collection<? extends Entity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(switchDimension(src, dimension, targets));
@@ -159,8 +155,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
     }
 
     private static int getDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -178,8 +172,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
     private static int getDimension(CommandContext<ServerCommandSource> ctx, Entity target) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(src.isExecutedByPlayer()) if(target==src.getEntity()){

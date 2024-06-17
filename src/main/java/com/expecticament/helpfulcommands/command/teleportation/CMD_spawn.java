@@ -50,8 +50,6 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
     }
 
     private static int teleportPlayer(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.inGameOnly"));
@@ -77,8 +75,6 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
     }
 
     private static int teleportWorld(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.inGameOnly"));
@@ -99,8 +95,6 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
     }
 
     private static int get(CommandContext<ServerCommandSource> ctx,int n) throws CommandSyntaxException { // 0 - player, 1 - world
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.inGameOnly"));

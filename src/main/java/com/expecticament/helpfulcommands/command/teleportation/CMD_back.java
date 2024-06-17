@@ -42,8 +42,6 @@ public class CMD_back implements IHelpfulCommandsCommand {
     }
 
     private static int teleport(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.inGameOnly"));
@@ -81,8 +79,6 @@ public class CMD_back implements IHelpfulCommandsCommand {
     }
 
     private static int get(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.inGameOnly"));
