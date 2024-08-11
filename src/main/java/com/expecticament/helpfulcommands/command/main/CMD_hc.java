@@ -114,7 +114,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 .append(Text.literal(" "))
                 .append(Text.translatable("mod.description"))
                 .append(Text.literal("\n "))
-                .append(Text.translatable("mod.version",HelpfulCommands.modVersion,"Expected Predicament").setStyle(HelpfulCommands.style.inactive))
+                .append(Text.translatable("mod.version",HelpfulCommands.modVersion,"Expecticament").setStyle(HelpfulCommands.style.inactive))
                 .append(Text.literal("\n\n"))
         ;
 
