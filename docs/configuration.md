@@ -79,3 +79,8 @@ Use this command to set the new value of the field:<br>
 > Default value: `15`
 
 Maximum power limit for /explosion command. Be careful: strong explosions are destructive and can cause lag.
+
+#### jumpDistanceLimit
+> Default value: `0`
+
+Maximum distance for the /jump command. Players will not be able to teleport further than this value. If set to 0, there is no limit for the 'distance' argument, and the default formula will be used if the 'distance' argument is empty.

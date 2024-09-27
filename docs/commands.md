@@ -26,7 +26,7 @@ Browse all the commands by categories:material-information:{ title="Categories w
 
     ??? abstract "Parameters"
         `target(s)`: player(s)
-        <br>
+        
         `state`: boolean(true/false). If not specified, flying will be toggled for each target (can fly -> can't fly; can't fly -> can fly)
 
 #### /god
@@ -47,7 +47,7 @@ Browse all the commands by categories:material-information:{ title="Categories w
 
     ??? abstract "Parameters"
         `target(s)`: player(s)
-        <br>
+        
         `state`: boolean(true/false). If not specified, invulnerability will be toggled for each target (invulnerable -> vulnerable; vulnerable -> invulnerable)
 
 ### Entities and Players
@@ -152,7 +152,7 @@ Browse all the commands by categories:material-information:{ title="Categories w
 
     ??? abstract "Parameters"
         `target(s)`: entity(-ies)
-        <br>
+        
         `duration`: time to burn (in seconds)
 
 ### Teleportation
@@ -197,7 +197,7 @@ Browse all the commands by categories:material-information:{ title="Categories w
 
     ??? abstract "Parameters"
         `newDimension`: dimension to teleport to
-        <br>
+        
         `target(s)`: entity(-ies)
 
 #### /home
@@ -236,11 +236,13 @@ Browse all the commands by categories:material-information:{ title="Categories w
     > Teleport to the block you are looking at, or in the direction of your cursor at a given distance
 
     ``` { .yaml .no-copy }
-    /jump [distance]
+    /jump [distance] [checkForBlocks]
     ```
 
     ??? abstract "Parameters"
         `distance`: how far you will be teleported. If not specified, you will be teleported to the block you are looking at.
+
+        `checkForBlocks`: boolean(true/false). If `true` and `distance` is given, it will check for blocks in the way; if there are, it will teleport you to the block, even if the given `distance` is greater than the final teleport distance. The default is `false`, which means it will just teleport you forward at the specified distance.
 
 #### /spawn
 <div class="hc-mic-holder">
@@ -355,10 +357,12 @@ Browse all the commands by categories:material-information:{ title="Categories w
     > Create an explosion at the block you are looking at, or in the direction of your cursor at a given distance with a given power
 
     ``` { .yaml .no-copy }
-    /explosion [distance]
+    /explosion <power> [distance]
     ```
 
     ??? abstract "Parameters"
+        `power`: how powerful the explosion will be
+
         `distance`: how far away from you the explosion will be created. If not specified, it will be created near the block you are looking at.
 
 #### /killitems
