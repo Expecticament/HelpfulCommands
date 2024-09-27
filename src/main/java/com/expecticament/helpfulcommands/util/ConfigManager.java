@@ -40,14 +40,19 @@ public class ConfigManager{
         //public String[] aliases=new String[]{};
     }
     public static class ModConfig{
-        public Map<String,Object> fields=new HashMap<>();
-        public Map<String, ModConfigCommandEntry> commands=new HashMap<>();
+        public Map<String,Object> fields = new HashMap<>();
+        public Map<String, ModConfigCommandEntry> commands = new HashMap<>();
     }
-    public static final Map<String, ModConfigFieldEntry> defaultConfigFieldEntries=new HashMap<>(){{
-        put("explosionPowerLimit",new ModConfigFieldEntry(){{
-            defaultValue=15;
-            configCommandArgument=CommandManager.argument("value",IntegerArgumentType.integer(1));
-            getValue=()-> IntegerArgumentType.getInteger(context,"value");
+    public static final Map<String, ModConfigFieldEntry> defaultConfigFieldEntries = new HashMap<>(){{
+        put("explosionPowerLimit", new ModConfigFieldEntry(){{
+            defaultValue = 15;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
+            getValue = ()-> IntegerArgumentType.getInteger(context, "value");
+        }});
+        put("jumpDistanceLimit", new ModConfigFieldEntry(){{
+            defaultValue = 0.0;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(0));
+            getValue = ()-> IntegerArgumentType.getInteger(context, "value");
         }});
     }};
 

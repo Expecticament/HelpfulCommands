@@ -23,6 +23,7 @@
   "config.title": "Config",
   "config.topNotice": "Below are all the configuration fields and their values. Use %d for command management (if you have permissions).",
   "config.field.explosionPowerLimit.description": "Maximum power limit for /explosion command. Be careful: strong explosions are destructive and can cause lag.",
+  "config.field.jumpDistanceLimit.description": "Maximum distance for the /jump command. Players will not be able to teleport further than this value. If set to 0, there is no limit for the 'distance' argument, and the default formula will be used if the 'distance' argument is empty.",
 
   "deathPosition.title": "Death position",
   "homePosition.title": "Home position",
@@ -116,6 +117,7 @@
   "commands.ignite.success.other": "Set on fire %d target(s) for %d seconds",
 
   "commands.jump.success": "Teleported to x: %d, y: %d, z: %d",
+  "commands.jump.error.distanceLimitExceeded": "Specified distance (%d) exceeds the set limit of %d",
 
   "commands.killitems.success": "Killed %d item(s) lying on the ground",
   "commands.killitems.error.nothingFound": "No items found on the ground nearby!",
