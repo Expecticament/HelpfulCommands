@@ -84,3 +84,8 @@ Maximum power limit for /explosion command. Be careful: strong explosions are de
 > Default value: `0`
 
 Maximum distance for the /jump command. Players will not be able to teleport further than this value. If set to 0, there is no limit for the 'distance' argument, and the default formula will be used if the 'distance' argument is empty.
+
+#### killitemsRangeLimit
+> Default value: `250`
+
+Maximum range limit for /killitems command.

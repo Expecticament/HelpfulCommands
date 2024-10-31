@@ -128,11 +128,13 @@ Browse all the commands by categories:material-information:{ title="Categories w
     > Restore health for target(s)
 
     ``` { .yaml .no-copy }
-    /heal [target(s)]
+    /heal [target(s)] [amount]
     ```
 
     ??? abstract "Parameters"
         `target(s)`: player(s)
+
+        `amount`: how many half-hearts will be healed (so the final number of healed hearts is `amount` divided by 2). If 0, the target will be healed completely
 
 #### /ignite
 <div class="hc-mic-holder">
@@ -240,9 +242,9 @@ Browse all the commands by categories:material-information:{ title="Categories w
     ```
 
     ??? abstract "Parameters"
-        `distance`: how far you will be teleported. If not specified, you will be teleported to the block you are looking at.
+        `distance`: how far you will be teleported. If not specified, you will be teleported to the block you are looking at
 
-        `checkForBlocks`: boolean(true/false). If `true` and `distance` is given, it will check for blocks in the way; if there are, it will teleport you to the block, even if the given `distance` is greater than the final teleport distance. The default is `false`, which means it will just teleport you forward at the specified distance.
+        `checkForBlocks`: boolean(true/false). If `true` and `distance` is given, it will check for blocks in the way; if there are, it will teleport you to the block, even if the given `distance` is greater than the final teleport distance. The default is `false`, which means it will just teleport you forward at the specified distance
 
 #### /spawn
 <div class="hc-mic-holder">
@@ -322,7 +324,7 @@ Browse all the commands by categories:material-information:{ title="Categories w
     ```
 
     ??? abstract "Parameters"
-        `newName`: new name for the item. If not specified, a set custom name will be removed.
+        `newName`: new name for the item. If not specified, a set custom name will be removed
 
 #### /repair
 <div class="hc-mic-holder">
@@ -363,7 +365,7 @@ Browse all the commands by categories:material-information:{ title="Categories w
     ??? abstract "Parameters"
         `power`: how powerful the explosion will be
 
-        `distance`: how far away from you the explosion will be created. If not specified, it will be created near the block you are looking at.
+        `distance`: how far away from you the explosion will be created. If not specified, it will be created near the block you are looking at
 
 #### /killitems
 <div class="hc-mic-holder">
@@ -378,8 +380,12 @@ Browse all the commands by categories:material-information:{ title="Categories w
     > Kill all the items lying on the ground nearby
 
     ``` { .yaml .no-copy }
-    /killitems
+    /killitems [range]
     ```
+
+    ??? abstract "Parameters"
+        `range`: range in blocks within which items will be detected and removed. If not specified, the value defaults to the `killitemsRangeLimit` [config value](http://expecticament.github.io/HelpfulCommands/configuration/#killitemsrangelimit) divided by 2 (but it will never be less than 1)
+
 #### /lightning
 <div class="hc-mic-holder">
     <div class="hc-mic-entry hc-mic-version">
@@ -397,4 +403,4 @@ Browse all the commands by categories:material-information:{ title="Categories w
     ```
 
     ??? abstract "Parameters"
-        `distance`: how far away from you the lightning will spawn. If not specified, it will spawn near the block you are looking at.
+        `distance`: how far away from you the lightning will spawn. If not specified, it will spawn near the block you are looking at
