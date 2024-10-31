@@ -24,6 +24,7 @@
   "config.topNotice": "Below are all the configuration fields and their values. Use %d for command management (if you have permissions).",
   "config.field.explosionPowerLimit.description": "Maximum power limit for /explosion command. Be careful: strong explosions are destructive and can cause lag.",
   "config.field.jumpDistanceLimit.description": "Maximum distance for the /jump command. Players will not be able to teleport further than this value. If set to 0, there is no limit for the 'distance' argument, and the default formula will be used if the 'distance' argument is empty.",
+  "config.field.killitemsRangeLimit.description": "Maximum range limit for /killitems command.",
 
   "deathPosition.title": "Death position",
   "homePosition.title": "Home position",
@@ -56,7 +57,7 @@
   "commands.home.description": "Set, get or teleport to your home position",
   "commands.ignite.description": "Set target(s) on fire for a specified number of seconds",
   "commands.jump.description": "Teleport to the block you are looking at, or in the direction of your cursor at a given distance",
-  "commands.killitems.description": "Kill all the items lying on the ground nearby",
+  "commands.killitems.description": "Kill all items on the ground within the specified range",
   "commands.lightning.description": "Strike a lightning bolt at the block you are looking at, or in the direction of your cursor at a given distance",
   "commands.rename.description": "Rename an item in your main hand",
   "commands.repair.description": "Repair an item in the main hand of the target(s)",
@@ -79,7 +80,7 @@
   "commands.dimension.success.self": "Switched dimension to %d",
   "commands.dimension.success.other": "Switched dimension to %d for %d targets",
   "commands.dimension.get.success.self": "Your current dimension is %d",
-  "commands.dimension.get.success.other": "%s's current dimension is %d",
+  "commands.dimension.get.success.other": "%d's current dimension is %d",
   "commands.dimension.error.alreadyInDimension": "You are already in this dimension!",
 
   "commands.explosion.success": "Created explosion with the power of %d at x: %d, y: %d, z: %d",
@@ -108,6 +109,8 @@
 
   "commands.heal.success.self": "You were healed",
   "commands.heal.success.other": "Healed %d target(s)",
+  "commands.heal.success.hearts.self": "You were healed for %d heart(s)",
+  "commands.heal.success.hearts.other": "Healed %d target(s) for %d heart(s)",
 
   "commands.home.teleport.success": "Teleported to your home position",
   "commands.home.set.success": "Updated home position",
@@ -119,8 +122,9 @@
   "commands.jump.success": "Teleported to x: %d, y: %d, z: %d",
   "commands.jump.error.distanceLimitExceeded": "Specified distance (%d) exceeds the set limit of %d",
 
-  "commands.killitems.success": "Killed %d item(s) lying on the ground",
-  "commands.killitems.error.nothingFound": "No items found on the ground nearby!",
+  "commands.killitems.success": "Killed %d item(s) lying on the ground withing the range of %d block(s)",
+  "commands.killitems.error.nothingFound": "No items found within the range of %d block(s)",
+  "commands.killitems.error.rangeLimitExceeded": "Specified range (%d) exceeds the set limit of %d block(s)",
 
   "commands.lightning.success": "Struck a lightning bolt at x: %d, y: %d, z: %d",
 

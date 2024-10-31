@@ -36,6 +36,8 @@ public class CMD_rename implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, String newName) throws CommandSyntaxException{
+        if(newName.isEmpty()) return execute(ctx);
+
         ServerCommandSource source=ctx.getSource();
         if(!source.isExecutedByPlayer()){
             source.sendError(Text.translatable("error.inGameOnly"));
@@ -50,19 +52,13 @@ public class CMD_rename implements IHelpfulCommandsCommand {
                 return -1;
             }
 
-            if(newName.isEmpty()){
-                itemStack.set(DataComponentTypes.CUSTOM_NAME,null);
-                source.sendFeedback(()-> Text.translatable("commands.rename.success.customNameRemoved").setStyle(HelpfulCommands.style.success),true);
-            } else{
-                MutableText oldName=((MutableText) itemStack.getName()).setStyle(HelpfulCommands.style.primary);
-                if(oldName.getString().equals(newName)){
-                    source.sendError(Text.translatable("commands.rename.error.sameName"));
-                    return -1;
-                }
-                itemStack.set(DataComponentTypes.CUSTOM_NAME,Text.literal(newName));
-                Text newNameText=Text.literal(newName).setStyle(HelpfulCommands.style.primary);
-                source.sendFeedback(()-> Text.translatable("commands.rename.success",oldName,newNameText).setStyle(HelpfulCommands.style.success),true);
+            String oldName = itemStack.getName().getString();
+            if(oldName.equals(newName)){
+                source.sendError(Text.translatable("commands.rename.error.sameName"));
+                return -1;
             }
+            itemStack.set(DataComponentTypes.CUSTOM_NAME, Text.literal(newName));
+            source.sendFeedback(()-> Text.translatable("commands.rename.success", (Text.literal(oldName)).setStyle(HelpfulCommands.style.primary), Text.literal(newName).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
         }
         return Command.SINGLE_SUCCESS;
     }
@@ -87,7 +83,7 @@ public class CMD_rename implements IHelpfulCommandsCommand {
                 return -1;
             }
 
-            itemStack.set(DataComponentTypes.CUSTOM_NAME,null);
+            itemStack.remove(DataComponentTypes.CUSTOM_NAME);
             source.sendFeedback(()-> Text.translatable("commands.rename.success.customNameRemoved").setStyle(HelpfulCommands.style.success),true);
         }
         return Command.SINGLE_SUCCESS;

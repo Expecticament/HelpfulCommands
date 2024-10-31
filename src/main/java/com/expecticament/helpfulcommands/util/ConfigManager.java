@@ -54,6 +54,11 @@ public class ConfigManager{
             configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(0));
             getValue = ()-> IntegerArgumentType.getInteger(context, "value");
         }});
+        put("killitemsRangeLimit", new ModConfigFieldEntry(){{
+            defaultValue = 250;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
+            getValue = ()-> Math.max(IntegerArgumentType.getInteger(context, "value"), 1);
+        }});
     }};
 
     public static ModConfig loadConfig(MinecraftServer server){

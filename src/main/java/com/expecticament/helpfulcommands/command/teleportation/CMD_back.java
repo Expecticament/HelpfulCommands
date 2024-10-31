@@ -21,6 +21,8 @@ import com.expecticament.helpfulcommands.util.IEntityDataSaver;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
+import java.util.HashSet;
+
 public class CMD_back implements IHelpfulCommandsCommand {
     public static ModCommandManager.ModCommand cmd;
 
@@ -65,7 +67,7 @@ public class CMD_back implements IHelpfulCommandsCommand {
                 plr.sendMessage(Text.translatable("error.unknownDimension").setStyle(HelpfulCommands.style.error));
                 return -1;
             }
-            plr.teleport(dimension,deathPos[0],deathPos[1],deathPos[2],plr.getYaw(),plr.getPitch());
+            plr.teleport(dimension, deathPos[0], deathPos[1], deathPos[2], new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
             src.sendFeedback(()-> Text.translatable("commands.back.success").setStyle(HelpfulCommands.style.secondary
                     .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+deathPos[0]+" "+deathPos[1]+" "+deathPos[2]))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+deathPos[0]+"\ny: "+deathPos[1]+"\nz: "+deathPos[2])))

@@ -49,13 +49,12 @@ public class CMD_feed implements IHelpfulCommandsCommand {
             return -1;
         }
 
-        ServerPlayerEntity plr=src.getPlayer();
-        HungerManager hm=plr.getHungerManager();
+        ServerPlayerEntity plr = src.getPlayer();
+        HungerManager hm = plr.getHungerManager();
         if(!hm.isNotFull()) return Command.SINGLE_SUCCESS;
 
         hm.setFoodLevel(20);
         hm.setSaturationLevel(5);
-        hm.setExhaustion(0);
 
         src.sendFeedback(()->Text.translatable("commands.feed.success.self").setStyle(HelpfulCommands.style.success),true);
 
@@ -102,7 +101,6 @@ public class CMD_feed implements IHelpfulCommandsCommand {
             if(!hm.isNotFull()) continue;
             hm.setFoodLevel(20);
             hm.setSaturationLevel(5);
-            hm.setExhaustion(0);
 
             int diff=1;
             diff=-1;

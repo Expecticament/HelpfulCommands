@@ -18,6 +18,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.HashSet;
+
 public class CMD_spawn implements IHelpfulCommandsCommand {
     public static ModCommandManager.ModCommand cmd;
 
@@ -65,7 +67,7 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
             return -1;
         }
 
-        plr.teleport(world,pos.getX(),pos.getY(),pos.getZ(),plr.getYaw(),plr.getPitch());
+        plr.teleport(world, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
         src.sendFeedback(()-> Text.translatable("commands.spawn.player.self.success").setStyle(HelpfulCommands.style.secondary
                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
@@ -85,7 +87,7 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
         ServerWorld world=src.getServer().getWorld(World.OVERWORLD);
         BlockPos pos=world.getSpawnPos();
 
-        plr.teleport(world,pos.getX(),pos.getY(),pos.getZ(),plr.getYaw(),plr.getPitch());
+        plr.teleport(world, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
         src.sendFeedback(()-> Text.translatable("commands.spawn.world.success").setStyle(HelpfulCommands.style.secondary
                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))

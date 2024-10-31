@@ -87,7 +87,7 @@ public class CMD_ignite implements IHelpfulCommandsCommand {
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
+                    if(src.getEntity()!=i && i.isPlayer()) ((ServerPlayerEntity) i).sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
                 }
             }
             String name=i.getName().getString();
