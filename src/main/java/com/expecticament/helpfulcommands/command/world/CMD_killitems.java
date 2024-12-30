@@ -38,7 +38,7 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
                         .executes(ctx -> execute(ctx, IntegerArgumentType.getInteger(ctx, "range")))
                 )
                 .executes(CMD_killitems::execute)
-                .requires(src->ModCommandManager.canUseCommand(src,cmd))
+                .requires(src->ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
@@ -46,34 +46,40 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
         return execute(ctx, 0);
     }
     private static int execute(CommandContext<ServerCommandSource> ctx, int range) throws CommandSyntaxException{
-        ServerCommandSource src=ctx.getSource();
+        ServerCommandSource src = ctx.getSource();
 
         int rangeConfigValue = (int) Double.parseDouble(ConfigManager.loadConfig(src.getServer()).fields.get("killitemsRangeLimit").toString());
         if(range > rangeConfigValue){
             src.sendError(Text.translatable("commands.killitems.error.rangeLimitExceeded", Text.literal(String.valueOf(range)).setStyle(HelpfulCommands.style.primary), Text.literal(String.valueOf(rangeConfigValue)).setStyle(HelpfulCommands.style.primary)));
             return -1;
         }
-        if(range <= 0) range = Math.max((rangeConfigValue / 2), 1);
+        if(range <= 0){
+            range = Math.max((rangeConfigValue / 2), 1);
+        }
 
         Map<String, Integer> entries = new HashMap<>();
         if(src.getServer().getPlayerManager().getCurrentPlayerCount() > 0) {
-            for (ServerPlayerEntity i : src.getServer().getPlayerManager().getPlayerList()) entries.putAll(killItems(src, i.getBoundingBox().expand(range)));
+            for (ServerPlayerEntity i : src.getServer().getPlayerManager().getPlayerList()){
+                entries.putAll(killItems(src, i.getBoundingBox().expand(range)));
+            }
         } else{
-            entries.putAll(killItems(src,new Box(src.getWorld().getSpawnPos()).expand(range)));
+            entries.putAll(killItems(src, new Box(src.getWorld().getSpawnPos()).expand(range)));
         }
 
         int count=0;
 
-        String entryList="";
+        String entryList = "";
         for(Map.Entry<String, Integer> i : entries.entrySet()){
-            entryList+=i.getValue()+"x "+i.getKey()+"\n";
-            count+=i.getValue();
+            entryList += i.getValue() + "x " + i.getKey() + "\n";
+            count += i.getValue();
         }
-        if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
+        if(!entryList.isEmpty()){
+            entryList = entryList.substring(0, entryList.length() - 1);
+        }
 
-        if(count>0) {
+        if(count > 0) {
             MutableText finalCount = Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(entryList)))
             );
             int finalRange = range;
             src.sendFeedback(() -> Text.translatable("commands.killitems.success", finalCount, Text.literal(String.valueOf(finalRange)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
@@ -85,14 +91,14 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
     }
 
     private static Map<String, Integer> killItems(ServerCommandSource src, Box b){
-        Map<String, Integer> entries=new HashMap<>();
+        Map<String, Integer> entries = new HashMap<>();
 
         ServerWorld world = src.getWorld();
 
-        for(ItemEntity i : world.getEntitiesByType(EntityType.ITEM, b, entity->true)){
+        for(ItemEntity i : world.getEntitiesByType(EntityType.ITEM, b, entity -> true)){
             i.kill(world);
-            String name=i.getName().getString();
-            entries.put(name,entries.getOrDefault(name,0)+1);
+            String name = i.getName().getString();
+            entries.put(name, entries.getOrDefault(name,0) + 1);
         }
 
         return entries;

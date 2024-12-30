@@ -8,10 +8,12 @@ import org.apache.commons.lang3.NotImplementedException;
 
 public interface IHelpfulCommandsCommand{
 
-    ModCommandManager.ModCommand cmd=null;
+    ModCommandManager.ModCommand cmd = null;
 
     static void init(ModCommandManager.ModCommand newData){
         throw new NotImplementedException();
     }
-    static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){ throw new NotImplementedException(); }
+    static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
+        throw new NotImplementedException();
+    }
 }
