@@ -1,10 +1,8 @@
 package com.expecticament.helpfulcommands.command.time;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.expecticament.helpfulcommands.command.ModCommandManager;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

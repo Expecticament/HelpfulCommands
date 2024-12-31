@@ -8,7 +8,6 @@ import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.expecticament.helpfulcommands.command.ModCommandManager;
 import com.expecticament.helpfulcommands.util.IEntityDataSaver;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;

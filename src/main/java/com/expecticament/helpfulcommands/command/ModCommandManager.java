@@ -3,11 +3,11 @@ package com.expecticament.helpfulcommands.command;
 import com.expecticament.helpfulcommands.command.main.*;
 import com.expecticament.helpfulcommands.command.abilities.*;
 import com.expecticament.helpfulcommands.command.entities.*;
+import com.expecticament.helpfulcommands.command.social.CMD_coinflip;
 import com.expecticament.helpfulcommands.command.teleportation.*;
 import com.expecticament.helpfulcommands.command.time.*;
 import com.expecticament.helpfulcommands.command.utility.*;
 import com.expecticament.helpfulcommands.command.world.*;
-import com.mojang.brigadier.context.CommandContext;
 import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.util.ConfigManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
@@ -23,7 +23,7 @@ import java.util.*;
 
 public class ModCommandManager{
 
-    public enum ModCommandCategory { Main, Abilities, Entities, Time, Teleportation, Utility, World, Uncategorized }
+    public enum ModCommandCategory { Main, Abilities, Entities, Teleportation, Time, World, Utility , Social, Uncategorized }
     public static Map<ModCommandCategory, LinkedList<ModCommand>> commandListByCategory = new LinkedHashMap<>();
 
     public static class ModCommand {
@@ -40,6 +40,7 @@ public class ModCommandManager{
             defaultPublic = true;
             register = ()-> { CMD_hc.init(this); CommandRegistrationCallback.EVENT.register(CMD_hc::registerCommand); };
         }});
+
         add(new ModCommand(){{
             name = "fly";
             category = ModCommandCategory.Abilities;
@@ -50,6 +51,43 @@ public class ModCommandManager{
             category = ModCommandCategory.Abilities;
             register = ()-> { CMD_god.init(this); CommandRegistrationCallback.EVENT.register(CMD_god::registerCommand); };
         }});
+
+        add(new ModCommand(){{
+            name = "extinguish";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_extinguish.init(this); CommandRegistrationCallback.EVENT.register(CMD_extinguish::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name = "feed";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_feed.init(this); CommandRegistrationCallback.EVENT.register(CMD_feed::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name = "gm";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_gm.init(this); CommandRegistrationCallback.EVENT.register(CMD_gm::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name = "hat";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_hat.init(this); CommandRegistrationCallback.EVENT.register(CMD_hat::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name = "heal";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_heal.init(this); CommandRegistrationCallback.EVENT.register(CMD_heal::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name = "ignite";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_ignite.init(this); CommandRegistrationCallback.EVENT.register(CMD_ignite::registerCommand); };
+        }});
+        add(new ModCommand(){{
+            name = "invsee";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_invsee.init(this); CommandRegistrationCallback.EVENT.register(CMD_invsee::registerCommand); };
+        }});
+
         add(new ModCommand(){{
             name = "back";
             category = ModCommandCategory.Teleportation;
@@ -70,12 +108,12 @@ public class ModCommandManager{
             category = ModCommandCategory.Teleportation;
             register = ()-> { CMD_jump.init(this); CommandRegistrationCallback.EVENT.register(CMD_jump::registerCommand); };
         }});
-
         add(new ModCommand(){{
             name = "spawn";
             category = ModCommandCategory.Teleportation;
             register = ()-> { CMD_spawn.init(this); CommandRegistrationCallback.EVENT.register(CMD_spawn::registerCommand); };
         }});
+
         add(new ModCommand(){{
             name = "day";
             category = ModCommandCategory.Time;
@@ -103,31 +141,7 @@ public class ModCommandManager{
             category = ModCommandCategory.World;
             register = ()-> { CMD_lightning.init(this); CommandRegistrationCallback.EVENT.register(CMD_lightning::registerCommand); };
         }});
-        add(new ModCommand(){{
-            name = "extinguish";
-            category = ModCommandCategory.Entities;
-            register = ()-> { CMD_extinguish.init(this); CommandRegistrationCallback.EVENT.register(CMD_extinguish::registerCommand); };
-        }});
-        add(new ModCommand(){{
-            name = "feed";
-            category = ModCommandCategory.Entities;
-            register = ()-> { CMD_feed.init(this); CommandRegistrationCallback.EVENT.register(CMD_feed::registerCommand); };
-        }});
-        add(new ModCommand(){{
-            name = "gm";
-            category = ModCommandCategory.Entities;
-            register = ()-> { CMD_gm.init(this); CommandRegistrationCallback.EVENT.register(CMD_gm::registerCommand); };
-        }});
-        add(new ModCommand(){{
-            name = "heal";
-            category = ModCommandCategory.Entities;
-            register = ()-> { CMD_heal.init(this); CommandRegistrationCallback.EVENT.register(CMD_heal::registerCommand); };
-        }});
-        add(new ModCommand(){{
-            name = "ignite";
-            category = ModCommandCategory.Entities;
-            register = ()-> { CMD_ignite.init(this); CommandRegistrationCallback.EVENT.register(CMD_ignite::registerCommand); };
-        }});
+
         add(new ModCommand(){{
             name = "rename";
             category = ModCommandCategory.Utility;
@@ -137,6 +151,13 @@ public class ModCommandManager{
             name = "repair";
             category = ModCommandCategory.Utility;
             register = ()-> { CMD_repair.init(this); CommandRegistrationCallback.EVENT.register(CMD_repair::registerCommand); };
+        }});
+
+        add(new ModCommand(){{
+            name = "coinflip";
+            category = ModCommandCategory.Social;
+            defaultPublic = true;
+            register = ()-> { CMD_coinflip.init(this); CommandRegistrationCallback.EVENT.register(CMD_coinflip::registerCommand); };
         }});
     }};
 
