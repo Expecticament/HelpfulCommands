@@ -1,8 +1,8 @@
-# 💻║ Source code for 1.21
+# 💻║ Source code for 1.20
 
 ***
 
-**This branch contains:** `Helpful Commands 3.3.0` for `Minecraft 1.21.4`
+**This branch contains:** `Helpful Commands 3.3.0` for `Minecraft 1.20.6`
 
 ***
 
