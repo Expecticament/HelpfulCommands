@@ -179,7 +179,7 @@
   "error.unknownDimension": "Unknown dimension!",
   "error.nothingInMainHand": "There is nothing in your main hand!",
   "error.notAllowedToConfigureFields": "You are not allowed to view or change configuration fields!",
-  "error.cantEditConfigOnIntergratedIfNotHost": "For security reasons, only the host can configure Helpful Commands on integrated servers!",
+  "error.cantEditConfigOnIntegratedIfNotHost": "For security reasons, only the host can configure Helpful Commands on integrated servers!",
 
   "phrase.dimension": "Dimension",
   "phrase.teleport": "Teleport",

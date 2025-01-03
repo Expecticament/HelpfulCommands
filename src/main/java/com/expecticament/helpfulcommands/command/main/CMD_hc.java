@@ -473,7 +473,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
     private static boolean integratedServerHostCheck(ServerCommandSource src){
         if(_environment==CommandManager.RegistrationEnvironment.INTEGRATED) if(src.getPlayer()!=null) if(src.getPlayer().getGameProfile()!=src.getServer().getHostProfile()){
-            src.sendError(Text.translatable("error.cantEditConfigOnIntergratedIfNotHost"));
+            src.sendError(Text.translatable("error.cantEditConfigOnIntegratedIfNotHost"));
             return false;
         }
         return true;
