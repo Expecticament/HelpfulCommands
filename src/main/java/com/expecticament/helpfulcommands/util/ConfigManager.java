@@ -58,6 +58,11 @@ public class ConfigManager{
             configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
             getValue = ()-> Math.max(IntegerArgumentType.getInteger(context, "value"), 1);
         }});
+        put("explosionPowerLimit", new ModConfigFieldEntry(){{
+            defaultValue = 15;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
+            getValue=()-> IntegerArgumentType.getInteger(context, "value");
+        }});
     }};
 
     public static ModConfig loadConfig(MinecraftServer server){
