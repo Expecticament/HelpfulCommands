@@ -4,10 +4,10 @@ import com.expecticament.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.expecticament.helpfulcommands.command.ModCommandManager;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -36,15 +36,16 @@ public class CMD_heal implements IHelpfulCommandsCommand {
         dispatcher.register(CommandManager.literal(cmd.name)
                 .then(CommandManager.argument("target(s)",EntityArgumentType.entities())
                         .executes(ctx->execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)")))
+                        .then(CommandManager.argument("amount", FloatArgumentType.floatArg(0.5f))
+                                .executes(ctx->execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)"), FloatArgumentType.getFloat(ctx, "amount")))
+                        )
                 )
                 .executes(CMD_heal::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -63,55 +64,72 @@ public class CMD_heal implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
+        return execute(ctx, targets, 0);
+    }
 
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets, float amount) throws CommandSyntaxException{
         ServerCommandSource src=ctx.getSource();
 
-        Map<String, Integer> entries=new HashMap<>(heal(src, targets));
+        Map<String, Integer> entries = new HashMap<>(heal(src, targets, amount));
 
-        int count=0;
-        String entryList="";
+        int count = 0;
+        String entryList = "";
         for(Map.Entry<String, Integer> i : entries.entrySet()){
             if(i.getValue()<0){
-                entryList+=i.getKey()+"\n";
-                count+=1;
+                entryList += i.getKey() + "\n";
+                count += 1;
             } else{
-                entryList+=i.getValue()+"x "+i.getKey()+"\n";
-                count+=i.getValue();
+                entryList += i.getValue() + "x "+i.getKey() + "\n";
+                count += i.getValue();
             }
         }
-        if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
+        if(!entryList.isEmpty()) entryList = entryList.substring(0, entryList.length()-1);
 
         if(count>0) {
             MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
             );
-            src.sendFeedback(() -> Text.translatable("commands.heal.success.other", finalCount).setStyle(HelpfulCommands.style.success), true);
+            MutableText msg;
+            if(amount>0){
+                msg = Text.translatable("commands.heal.success.hearts.other", finalCount, Text.literal(String.valueOf(amount/2)).setStyle(HelpfulCommands.style.primary));
+            } else {
+                msg = Text.translatable("commands.heal.success.other", finalCount);
+            }
+            msg.setStyle(HelpfulCommands.style.success);
+            src.sendFeedback(() -> msg, true);
         } else{
             src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
         }
 
         return Command.SINGLE_SUCCESS;
     }
-    private static Map<String,Integer> heal(ServerCommandSource src, Collection<? extends Entity> targets){
-        Map<String, Integer> entries=new HashMap<>();
-        boolean feedback=src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+
+    private static Map<String,Integer> heal(ServerCommandSource src, Collection<? extends Entity> targets, float amount){
+        Map<String, Integer> entries = new HashMap<>();
+        boolean feedback = src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
 
         for(Entity i : targets){
             try {
                 LivingEntity le = (LivingEntity) i;
                 if (le.getHealth() == le.getMaxHealth()) continue;
-                le.setHealth(le.getMaxHealth());
+                le.setHealth(amount==0 ? le.getMaxHealth() : le.getHealth() + amount);
             } catch(Exception e){ continue; }
-            int diff=1;
+            int diff = 1;
             if(i.isPlayer()){
-                diff=-1;
+                diff = -1;
                 if(feedback){
-                    if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.heal.success.self").setStyle(HelpfulCommands.style.success));
+                    if(src.getEntity()!=i && i.isPlayer()){
+                        MutableText msg = Text.translatable("commands.heal.success.self");
+                        if(amount>0){
+                            msg = Text.translatable("commands.heal.success.hearts.self", Text.literal(String.valueOf(amount/2)).setStyle(HelpfulCommands.style.primary));
+                        }
+                        msg.setStyle(HelpfulCommands.style.success);
+                        ((ServerPlayerEntity) i).sendMessage(msg);
+                    }
                 }
             }
             String name=i.getName().getString();
-            entries.put(name,entries.getOrDefault(name,0)+diff);
+            entries.put(name,entries.getOrDefault(name,0) + diff);
         }
 
         return entries;

@@ -8,7 +8,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -39,13 +38,11 @@ public class CMD_ignite implements IHelpfulCommandsCommand {
                                 .executes(ctx->execute(ctx,EntityArgumentType.getEntities(ctx,"target(s)"), IntegerArgumentType.getInteger(ctx,"duration")))
                         )
                 )
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets, int duration) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(ignite(src, targets, duration));
@@ -89,7 +86,7 @@ public class CMD_ignite implements IHelpfulCommandsCommand {
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
+                    if(src.getEntity()!=i && i.isPlayer()) ((ServerPlayerEntity) i).sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
                 }
             }
             String name=i.getName().getString();

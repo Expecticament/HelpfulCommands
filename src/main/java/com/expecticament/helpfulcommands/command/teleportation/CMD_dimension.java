@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.expecticament.helpfulcommands.command.ModCommandManager;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -29,6 +28,7 @@ import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class CMD_dimension implements IHelpfulCommandsCommand {
@@ -73,7 +73,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
                         .executes(CMD_dimension::getDimension)
                 )
                 .executes(null)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
@@ -83,8 +83,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -98,7 +96,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
             return -1;
         }
         BlockPos plrPos=plr.getBlockPos();
-        plr.teleport(dimension,plrPos.getX(),plrPos.getY(),plrPos.getZ(),plr.getYaw(),plr.getPitch());
+        plr.teleport(dimension, plrPos.getX(), plrPos.getY(), plrPos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
 
         src.sendFeedback(()->Text.translatable("commands.dimension.success.self",Text.literal(dimension.getRegistryKey().getValue().toString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
 
@@ -106,8 +104,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, ServerWorld dimension, Collection<? extends Entity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(switchDimension(src, dimension, targets));
@@ -143,12 +139,12 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         for(Entity i : targets){
             if(i.getWorld()==dimension) continue;
             BlockPos pos=i.getBlockPos();
-            if(!i.teleport(dimension,pos.getX(),pos.getY(),pos.getZ(),null,i.getYaw(),i.getPitch())) continue;
+            if(!i.teleport(dimension, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), i.getYaw(), i.getPitch(), false)) continue;
             int diff=1;
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getEntity()!=i) i.sendMessage(Text.translatable("commands.dimension.success.self").setStyle(HelpfulCommands.style.tertiary));
+                    if(src.getEntity()!=i && i.isPlayer()) ((ServerPlayerEntity) i).sendMessage(Text.translatable("commands.dimension.success.self", Text.literal(dimension.getRegistryKey().getValue().toString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.tertiary));
                 }
             }
             String name=i.getName().getString();
@@ -159,8 +155,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
     }
 
     private static int getDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -178,8 +172,6 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
     private static int getDimension(CommandContext<ServerCommandSource> ctx, Entity target) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(src.isExecutedByPlayer()) if(target==src.getEntity()){

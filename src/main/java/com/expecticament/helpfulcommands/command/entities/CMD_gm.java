@@ -7,7 +7,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
@@ -57,14 +56,14 @@ public class CMD_gm implements IHelpfulCommandsCommand {
                         )
                         .executes(ctx->execute(ctx,GameMode.SPECTATOR))
                 )
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gm) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
+
+        src.getPlayer().setCustomName(Text.literal("gameModer").setStyle(HelpfulCommands.style.error));
 
         if(!src.isExecutedByPlayer()){
             src.sendError(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
@@ -80,8 +79,6 @@ public class CMD_gm implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gm, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(changeGameMode(src, gm, targets));

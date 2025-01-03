@@ -16,17 +16,24 @@ public abstract class ModEntityDataSaver implements IEntityDataSaver {
 
     @Override
     public NbtCompound getPersistentData() {
-        if(this.persistentData==null) this.persistentData=new NbtCompound();
+        if(this.persistentData == null){
+            this.persistentData = new NbtCompound();
+        }
+
         return persistentData;
     }
 
     @Inject(method="writeNbt", at=@At("HEAD"))
     protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable info) {
-        if(persistentData!=null) nbt.put(HelpfulCommands.modID+".data", persistentData);
+        if(persistentData != null){
+            nbt.put(HelpfulCommands.modID + ".data", persistentData);
+        }
     }
 
-    @Inject(method="readNbt", at=@At("HEAD"))
+    @Inject(method = "readNbt", at = @At("HEAD"))
     protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
-        if(nbt.contains(HelpfulCommands.modID+".data", 10)) persistentData=nbt.getCompound(HelpfulCommands.modID+".data");
+        if(nbt.contains(HelpfulCommands.modID + ".data", 10)){
+            persistentData = nbt.getCompound(HelpfulCommands.modID + ".data");
+        }
     }
 }

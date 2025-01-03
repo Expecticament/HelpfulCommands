@@ -18,53 +18,56 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Objects;
 
 public class CMD_hc implements IHelpfulCommandsCommand {
 
     public static ModCommandManager.ModCommand cmd;
+    static CommandManager.RegistrationEnvironment _environment;
 
     public static void init(ModCommandManager.ModCommand newData){
         cmd=newData;
     }
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
-        LiteralArgumentBuilder<ServerCommandSource> cmdsToToggle=CommandManager.literal("toggleCommand");
+        LiteralArgumentBuilder<ServerCommandSource> cmdManagement=CommandManager.literal("manageCommand");
         for(ModCommandManager.ModCommand i : ModCommandManager.commands){
-            if(Objects.equals(i.name, "hc")) continue;
+            if(i.category==ModCommandManager.ModCommandCategory.Main) continue;
             LiteralArgumentBuilder<ServerCommandSource> literalCommand=CommandManager.literal(i.name)
-                    .executes(ctx->toggleCommand(ctx,i))
-                    .then(CommandManager.argument("state", BoolArgumentType.bool())
-                            .executes(ctx -> toggleCommand(ctx, i, BoolArgumentType.getBool(ctx, "state"))));
-            cmdsToToggle.then(literalCommand);
-        }
-        cmdsToToggle.requires(Permissions.require(HelpfulCommands.modID+".config.toggleCommand",HelpfulCommands.defaultConfigEditLevel));
-
-        LiteralArgumentBuilder<ServerCommandSource> configFieldsGet=CommandManager.literal("get");
-        for(Map.Entry<String, ConfigManager.ModConfigFieldEntry> i : ConfigManager.defaultConfigFieldEntries.entrySet()){
-            configFieldsGet
-                    .then(CommandManager.literal(i.getKey())
-                            .executes(ctx->printConfigValue(ctx,i.getKey()))
+                    .then(CommandManager.literal("toggleEnabled")
+                            .executes(ctx-> toggleCommandState(ctx,i))
+                            .then(CommandManager.argument("state", BoolArgumentType.bool())
+                                    .executes(ctx -> toggleCommandState(ctx, i, BoolArgumentType.getBool(ctx, "state"))))
+                    )
+                    .then(CommandManager.literal("togglePublic")
+                            .executes(ctx-> toggleCommandPublicState(ctx,i))
+                            .then(CommandManager.argument("state", BoolArgumentType.bool())
+                                    .executes(ctx -> toggleCommandPublicState(ctx, i, BoolArgumentType.getBool(ctx, "state"))))
                     );
+            cmdManagement.then(literalCommand);
         }
-        configFieldsGet.requires(Permissions.require(HelpfulCommands.modID+".config.get",HelpfulCommands.defaultConfigEditLevel));
-        LiteralArgumentBuilder<ServerCommandSource> configFieldsSet=CommandManager.literal("set");
+        cmdManagement.requires(Permissions.require(HelpfulCommands.modID+".config.manageCommand",HelpfulCommands.defaultConfigEditLevel));
+
+        LiteralArgumentBuilder<ServerCommandSource> fieldManagement=CommandManager.literal("manageField");
         for(Map.Entry<String, ConfigManager.ModConfigFieldEntry> i : ConfigManager.defaultConfigFieldEntries.entrySet()){
-            configFieldsSet
-                    .then(CommandManager.literal(i.getKey())
+            LiteralArgumentBuilder<ServerCommandSource> literalField=CommandManager.literal(i.getKey())
+                    .then(CommandManager.literal("query")
+                            .executes(ctx-> queryConfigField(ctx,i.getKey()))
+                    )
+                    .then(CommandManager.literal("set")
                             .then(i.getValue().configCommandArgument
                                     .executes(ctx->{
                                         i.getValue().context=ctx;
                                         try {
-                                            editConfigEntry(ctx,i.getKey(),i.getValue().getValue.call());
+                                            return editConfigEntry(ctx,i.getKey(),i.getValue().getValue.call());
                                         } catch (Exception e) {
                                             ctx.getSource().sendError(Text.literal("Error"));
+                                            return 0;
                                         }
-                                        return Command.SINGLE_SUCCESS;
                                     })
                             )
                     );
+            fieldManagement.then(literalField);
         }
-        configFieldsSet.requires(Permissions.require(HelpfulCommands.modID+".config.set",HelpfulCommands.defaultConfigEditLevel));
+        fieldManagement.requires(Permissions.require(HelpfulCommands.modID+".config.manageField",HelpfulCommands.defaultConfigEditLevel));
 
         dispatcher.register(CommandManager.literal(cmd.name)
                 .then(CommandManager.literal("about")
@@ -74,15 +77,15 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                         .executes(CMD_hc::printCommandList)
                 )
                 .then(CommandManager.literal("config")
-                        .then(cmdsToToggle)
-                        .then(configFieldsSet)
-                        .then(configFieldsGet)
+                        .then(cmdManagement)
+                        .then(fieldManagement)
                         .executes(CMD_hc::printModConfig)
-                        .requires(Permissions.require(HelpfulCommands.modID+".config",HelpfulCommands.defaultConfigEditLevel))
+                        .requires(src-> Permissions.check(src,HelpfulCommands.modID+".config",HelpfulCommands.defaultConfigEditLevel) || Permissions.check(src,HelpfulCommands.modID+".config.manageCommand",HelpfulCommands.defaultConfigEditLevel) || Permissions.check(src,HelpfulCommands.modID+".config.manageField",HelpfulCommands.defaultConfigEditLevel))
                 )
                 .executes(CMD_hc::printModInfo)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
         );
+
+        _environment=environment;
     }
 
     private static MutableText getHeader(String translationKey,boolean isPlayer){
@@ -103,6 +106,8 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
     private static int printModInfo(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
         ServerCommandSource source=ctx.getSource();
+
+        boolean hasConfigFieldPermissions=Permissions.check(source,HelpfulCommands.modID+".config.manageField",HelpfulCommands.defaultConfigEditLevel);
 
         MutableText mainBlock=Text.empty().setStyle(HelpfulCommands.style.simpleText);
         mainBlock
@@ -146,9 +151,14 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         if(ctx.getSource().isExecutedByPlayer()) {
             buttons
                     .append(Text.literal("〚"))
-                    .append(buttonCommandList)
-                    .append(Text.literal(" • "))
-                    .append(buttonConfig)
+                    .append(buttonCommandList);
+            if(hasConfigFieldPermissions){
+                buttons
+                        .append(Text.literal(" • "))
+                        .append(buttonConfig)
+                ;
+            }
+            buttons
                     .append(Text.literal("〛"))
                     .append(Text.literal("\n〚"))
                     .append(buttonDocumentation)
@@ -168,8 +178,12 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.literal(": /hc config\n"))
                     .append(buttonGitHub)
                     .append(Text.literal(": https://github.com/Expecticament/HelpfulCommands \n"))
+                    .append(buttonDocumentation)
+                    .append(Text.literal(": https://expecticament.github.io/HelpfulCommands \n"))
                     .append(buttonModrinth)
                     .append(Text.literal(": https://modrinth.com/mod/helpfulcommands \n"))
+                    .append(buttonDiscord)
+                    .append(Text.literal(": https://discord.gg/RHd8P5hps4 \n"))
             ;
         }
 
@@ -191,10 +205,18 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
         MutableText header=Text.empty().setStyle(HelpfulCommands.style.simpleText);
         if(executedByPlayer) header.append(Text.literal("[• "));
-        boolean hasPerms=Permissions.check(source,HelpfulCommands.modID+".config.toggleCommand",HelpfulCommands.defaultConfigEditLevel); // Determine whether we should print "Enabled/Disabled"(true) or "You can/can't use"(false)
+        boolean hasPerms=Permissions.check(source,HelpfulCommands.modID+".config.manageCommand",HelpfulCommands.defaultConfigEditLevel); // Determine whether we should print "Enabled/Disabled"(true) or "You can/can't use"(false)
         if(hasPerms){
+            MutableText pub=Text.translatable("commandList.command.public").setStyle(HelpfulCommands.style.secondary);
+            MutableText res=Text.translatable("commandList.command.restricted").setStyle(HelpfulCommands.style.inactive);
             MutableText enabled=Text.translatable("commandList.command.enabled").setStyle(HelpfulCommands.style.enabled);
             MutableText disabled=Text.translatable("commandList.command.disabled").setStyle(HelpfulCommands.style.disabled);
+            header
+                    .append(pub)
+                    .append(Text.literal("/"))
+                    .append(res)
+                    .append(Text.literal(" | "))
+            ;
             if(executedByPlayer){
                 header
                         .append(enabled)
@@ -241,8 +263,17 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
                 String chars="┠";
                 if(j==i.getValue().getLast()) chars="┗";
+                commandList.append(Text.literal("\n"+chars+"› ").setStyle(charsStyle));
+                if(hasPerms && j.category!=ModCommandManager.ModCommandCategory.Main){ // If source has permissions, then display command public state
+                    HoverEvent he=new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommandPublicState",Text.literal("/"+j.name).setStyle(HelpfulCommands.style.tertiary)));
+                    ClickEvent ce=new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config manageCommand "+j.name+" togglePublic");
+                    commandList.append(cfg.commands.get(j.name).isPublic ? Text.translatable("commandList.command.public.abbreviation").setStyle(HelpfulCommands.style.secondary.withClickEvent(ce).withHoverEvent(he)) : Text.translatable("commandList.command.restricted.abbreviation").setStyle(HelpfulCommands.style.inactive.withClickEvent(ce).withHoverEvent(he)));
+                    commandList.append(Text.literal(" "));
+                }
+                if(!ctx.getSource().isExecutedByPlayer() && j.category!=ModCommandManager.ModCommandCategory.Main){
+                    commandList.append(cfg.commands.getOrDefault(j.name,new ConfigManager.ModConfigCommandEntry()).isEnabled ? Text.literal("[+] ") : Text.literal("[-] "));
+                }
                 commandList
-                        .append(Text.literal("\n"+chars+"› ").setStyle(charsStyle))
                         .append(Text.literal(j.name).setStyle(getCommandNameStyle(j,source,cfg,hasPerms)))
                         .append(Text.literal(": ").append(Text.translatable("commands."+j.name+".description").setStyle(descriptionStyle)))
                 ;
@@ -264,25 +295,24 @@ public class CMD_hc implements IHelpfulCommandsCommand {
     private static Style getCommandNameStyle(ModCommandManager.ModCommand command, ServerCommandSource src, ConfigManager.ModConfig cfg, boolean hasConfigPerms){
         Style ret;
 
-        Style suggestCommand=getSuggestCommandStyle(command.name);
-
-        boolean commandState=cfg.commands.getOrDefault(command.name,new ConfigManager.ModConfigCommandEntry()).enabled;
+        boolean commandState=true;
+        if(command.category!=ModCommandManager.ModCommandCategory.Main){
+            commandState=cfg.commands.getOrDefault(command.name,new ConfigManager.ModConfigCommandEntry()).isEnabled;
+        }
 
         if(hasConfigPerms){
             ret = commandState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
             if(command.category!=ModCommandManager.ModCommandCategory.Main){
                 ret=ret
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommand",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary))))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config toggleCommand "+command.name));
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config manageCommand "+command.name+" toggleEnabled"));
             }
         } else{
+            Style suggestCommand=getSuggestCommandStyle(command.name);
             ret=suggestCommand.withColor(HelpfulCommands.style.enabled.getColor());
-            boolean hasPermsToUseCommand=Permissions.check(src,HelpfulCommands.modID+".command."+command.category.toString().toLowerCase()+"."+command.name, command.defaultRequiredLevel);
-            if(!commandState && hasPermsToUseCommand){
-                ret=HelpfulCommands.style.disabled.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("error.commandDisabled",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error)));
-            }
-            if(!hasPermsToUseCommand){
-                ret=HelpfulCommands.style.disabled.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("error.notAllowed",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary)).setStyle(HelpfulCommands.style.error)));
+            MutableText txt=ModCommandManager.getCantUseCommandReason(src,command);
+            if(txt!=null){
+                ret=HelpfulCommands.style.error.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,txt));
             }
         }
         return ret;
@@ -296,12 +326,47 @@ public class CMD_hc implements IHelpfulCommandsCommand {
     }
 
     private static int printModConfig(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
+        ServerCommandSource src=ctx.getSource();
 
+        if(!integratedServerHostCheck(src)){
+            return -1;
+        }
+
+        if(!Permissions.check(src,HelpfulCommands.modID+".config.manageField",HelpfulCommands.defaultConfigEditLevel)){
+            src.sendError(Text.translatable("error.notAllowedToConfigureFields"));
+            return -1;
+        }
+        boolean isPlayer=src.isExecutedByPlayer();
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+
+        MutableText msg=Text.literal("\n");
+        msg
+                .append(getHeader("config.title",isPlayer))
+                .append(Text.literal(" "))
+                .append(Text.translatable("config.topNotice",Text.empty().append(isPlayer ? Text.empty().append(Text.literal("[").append(Text.translatable("commandList.title").append("]")).setStyle(HelpfulCommands.style.secondary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.commandList.tooltip"))).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc commandList")))) : Text.literal("(/hc commandList)")              )))
+        ;
+        for(Map.Entry<String, Object> e : cfg.fields.entrySet()){
+            msg
+                    .append(Text.literal("\n"))
+                    .append(Text.literal("\n"))
+                    .append(Text.literal("- ").append(Text.literal(e.getKey()).setStyle(HelpfulCommands.style.primary)))
+                    .append(Text.literal(" | "))
+                    .append(Text.literal(e.getValue().toString()).setStyle(HelpfulCommands.style.tertiary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToEditConfigValue"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/hc config manageField "+e.getKey()+" set "))))
+                    .append(Text.literal("\n "))
+                    .append(Text.translatable("config.field."+e.getKey()+".description").setStyle(HelpfulCommands.style.inactive))
+            ;
+        }
+
+        src.sendMessage(msg);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int editConfigEntry(CommandContext<ServerCommandSource> ctx, String entry, Object value) throws CommandSyntaxException{
         ServerCommandSource src=ctx.getSource();
+
+        if(!integratedServerHostCheck(src)){
+            return -1;
+        }
 
         ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
         if(!cfg.fields.containsKey(entry)){
@@ -313,10 +378,16 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
         src.sendFeedback(()->Text.translatable("commands.hc.config.setValue.success",Text.literal(entry).setStyle(HelpfulCommands.style.primary),Text.literal(String.valueOf(value)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
 
+        ModCommandManager.sendCommandTreeToEveryone(src);
+
         return Command.SINGLE_SUCCESS;
     }
-    private static int printConfigValue(CommandContext<ServerCommandSource> ctx, String entry){
+    private static int queryConfigField(CommandContext<ServerCommandSource> ctx, String entry){
         ServerCommandSource src=ctx.getSource();
+
+        if(!integratedServerHostCheck(src)){
+            return -1;
+        }
 
         ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
         if(!cfg.fields.containsKey(entry)){
@@ -329,28 +400,82 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int toggleCommand(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd){
+    private static int toggleCommandState(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd){
         ServerCommandSource src=ctx.getSource();
 
-        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
-        return toggleCommand(ctx,cmd,!cfg.commands.getOrDefault(cmd.name,new ConfigManager.ModConfigCommandEntry()).enabled);
-    }
-    private static int toggleCommand(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd, Boolean value){
-        ServerCommandSource src=ctx.getSource();
-
-        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
-        if(cmd==null){
-            src.sendError(Text.translatable("commands.hc.config.toggleCommand.error.unknownCommand"));
+        if(!integratedServerHostCheck(src)){
             return -1;
         }
 
-        cfg.commands.get(cmd.name).enabled=value;
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+        return toggleCommandState(ctx,cmd,!cfg.commands.getOrDefault(cmd.name,new ConfigManager.ModConfigCommandEntry()).isEnabled);
+    }
+    private static int toggleCommandState(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd, Boolean value){
+        ServerCommandSource src=ctx.getSource();
+
+        if(!integratedServerHostCheck(src)){
+            return -1;
+        }
+
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+        if(cmd==null){
+            src.sendError(Text.translatable("commands.hc.config.manageCommand.toggleEnabled.error.unknownCommand"));
+            return -1;
+        }
+
+        cfg.commands.get(cmd.name).isEnabled=value;
         ConfigManager.saveConfig(cfg,src.getServer());
 
         Style messageStyle=value ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
         Style commandNameStyle=value ? HelpfulCommands.style.primary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd.name)) : HelpfulCommands.style.primary;
-        src.sendFeedback(()->Text.translatable("commands.hc.config.toggleCommand.success."+String.valueOf(value).toLowerCase(),Text.literal(cmd.name).setStyle(commandNameStyle)).setStyle(messageStyle),true);
+        src.sendFeedback(()->Text.translatable("commands.hc.config.manageCommand.toggleEnabled.success."+String.valueOf(value).toLowerCase(),Text.literal("/"+cmd.name).setStyle(commandNameStyle)).setStyle(messageStyle),true);
+
+        ModCommandManager.sendCommandTreeToEveryone(src);
 
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static int toggleCommandPublicState(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd){
+        ServerCommandSource src=ctx.getSource();
+
+        if(!integratedServerHostCheck(src)){
+            return -1;
+        }
+
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+        return toggleCommandPublicState(ctx,cmd,!cfg.commands.getOrDefault(cmd.name,new ConfigManager.ModConfigCommandEntry()).isPublic);
+    }
+    private static int toggleCommandPublicState(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd, Boolean value){
+        ServerCommandSource src=ctx.getSource();
+
+        if(!integratedServerHostCheck(src)){
+            return -1;
+        }
+
+        ConfigManager.ModConfig cfg=ConfigManager.loadConfig(src.getServer());
+        if(cmd==null){
+            src.sendError(Text.translatable("commands.hc.config.manageCommand.togglePublic.error.unknownCommand"));
+            return -1;
+        }
+
+        cfg.commands.get(cmd.name).isPublic=value;
+        ConfigManager.saveConfig(cfg,src.getServer());
+
+        Style messageStyle=HelpfulCommands.style.success;
+        Style commandNameStyle=HelpfulCommands.style.primary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd.name));
+        src.sendFeedback(()->Text.translatable("commands.hc.config.manageCommand.togglePublic.success."+String.valueOf(value).toLowerCase(),Text.literal("/"+cmd.name
+        ).setStyle(commandNameStyle)).setStyle(messageStyle),true);
+
+        ModCommandManager.sendCommandTreeToEveryone(src);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static boolean integratedServerHostCheck(ServerCommandSource src){
+        if(_environment==CommandManager.RegistrationEnvironment.INTEGRATED) if(src.getPlayer()!=null) if(src.getPlayer().getGameProfile()!=src.getServer().getHostProfile()){
+            src.sendError(Text.translatable("error.cantEditConfigOnIntegratedIfNotHost"));
+            return false;
+        }
+        return true;
     }
 }

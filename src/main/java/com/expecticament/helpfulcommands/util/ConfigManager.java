@@ -19,61 +19,80 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 public class ConfigManager{
 
-    private static final Gson GSON=new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    static final String CONFIG_FILE_NAME="helpfulcommands3.json";
-    static final String CONFIG_FILE_FOLDER="config";
+    static final String CONFIG_FILE_NAME = "helpfulcommands3.json";
+    static final String CONFIG_FILE_FOLDER = "config";
 
     public static class ModConfigFieldEntry {
         public Object defaultValue;
         public ArgumentBuilder<ServerCommandSource, ?> configCommandArgument;
-        public Callable<Object> getValue=()->{ throw new NotImplementedException(); };
-        public CommandContext<ServerCommandSource> context=null;
+        public Callable<Object> getValue = ()->{ throw new NotImplementedException(); };
+        public CommandContext<ServerCommandSource> context = null;
     }
     public static class ModConfigCommandEntry {
-        public Boolean enabled=true;
-        //public String[] aliases=new String[]{};
+        public boolean isEnabled = true;
+        public boolean isPublic = false;
     }
     public static class ModConfig{
-        public Map<String,Object> fields=new HashMap<>();
-        public Map<String, ModConfigCommandEntry> commands=new HashMap<>();
+        public Map<String,Object> fields = new HashMap<>();
+        public Map<String, ModConfigCommandEntry> commands = new HashMap<>();
     }
-    public static final Map<String, ModConfigFieldEntry> defaultConfigFieldEntries=new HashMap<>(){{
-        put("explosionPowerLimit",new ModConfigFieldEntry(){{
-            defaultValue=15;
-            configCommandArgument=CommandManager.argument("value",IntegerArgumentType.integer(1));
-            getValue=()-> IntegerArgumentType.getInteger(context,"value");
+    public static final Map<String, ModConfigFieldEntry> defaultConfigFieldEntries = new HashMap<>(){{
+        put("explosionPowerLimit", new ModConfigFieldEntry(){{
+            defaultValue = 15;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
+            getValue = ()-> IntegerArgumentType.getInteger(context, "value");
+        }});
+        put("jumpDistanceLimit", new ModConfigFieldEntry(){{
+            defaultValue = 0.0;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(0));
+            getValue = ()-> IntegerArgumentType.getInteger(context, "value");
+        }});
+        put("killitemsRangeLimit", new ModConfigFieldEntry(){{
+            defaultValue = 250;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
+            getValue = ()-> Math.max(IntegerArgumentType.getInteger(context, "value"), 1);
+        }});
+        put("explosionPowerLimit", new ModConfigFieldEntry(){{
+            defaultValue = 15;
+            configCommandArgument = CommandManager.argument("value", IntegerArgumentType.integer(1));
+            getValue=()-> IntegerArgumentType.getInteger(context, "value");
         }});
     }};
 
     public static ModConfig loadConfig(MinecraftServer server){
-        ModConfig ret=null;
+        ModConfig ret = null;
 
-        Path folder=server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
-        Path filePath=folder.resolve(CONFIG_FILE_NAME);
-        String file=server.getSavePath(WorldSavePath.ROOT).normalize() + "/" + CONFIG_FILE_FOLDER + "/" + CONFIG_FILE_NAME;
+        Path folder = server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
+        Path filePath = folder.resolve(CONFIG_FILE_NAME);
+        String file = server.getSavePath(WorldSavePath.ROOT).normalize() + "/" + CONFIG_FILE_FOLDER + "/" + CONFIG_FILE_NAME;
 
         if(Files.exists(filePath)){
             try{
-                FileReader reader=new FileReader(file);
-                ret=GSON.fromJson(reader, ModConfig.class);
+                FileReader reader = new FileReader(file);
+                ret = GSON.fromJson(reader, ModConfig.class);
                 reader.close();
             } catch (IOException e) {
                 throwIOException(e);
             }
         }
 
-        if(ret==null) ret=new ModConfig();
+        if(ret == null){
+            ret = new ModConfig();
+        }
         for(ModCommandManager.ModCommand i : ModCommandManager.commands) {
-            if(i.category==ModCommandManager.ModCommandCategory.Main) continue;
-            ModConfigCommandEntry newEntry=new ModConfigCommandEntry();
-            newEntry.enabled=i.defaultState;
-            ret.commands.putIfAbsent(i.name,newEntry);
+            if(i.category == ModCommandManager.ModCommandCategory.Main){
+                continue;
+            }
+            ModConfigCommandEntry newEntry = new ModConfigCommandEntry();
+            newEntry.isEnabled = i.defaultState;
+            newEntry.isPublic = i.defaultPublic;
+            ret.commands.putIfAbsent(i.name, newEntry);
         }
         for(Map.Entry<String, ModConfigFieldEntry> e : defaultConfigFieldEntries.entrySet()){
             ret.fields.putIfAbsent(e.getKey(),e.getValue().defaultValue);
@@ -83,8 +102,8 @@ public class ConfigManager{
     }
 
     public static void saveConfig(ModConfig newCfg,MinecraftServer server){
-        Path folder=server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
-        Path file=folder.resolve(CONFIG_FILE_NAME);
+        Path folder = server.getSavePath(WorldSavePath.ROOT).resolve(CONFIG_FILE_FOLDER);
+        Path file = folder.resolve(CONFIG_FILE_NAME);
 
         if(Files.notExists(folder)) {
             try {
@@ -96,7 +115,7 @@ public class ConfigManager{
         }
 
         try{
-            FileWriter writer=new FileWriter(file.normalize().toString());
+            FileWriter writer = new FileWriter(file.normalize().toString());
             writer.write(GSON.toJson(newCfg));
             writer.flush();
             writer.close();

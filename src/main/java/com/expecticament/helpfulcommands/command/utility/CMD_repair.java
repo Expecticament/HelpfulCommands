@@ -7,7 +7,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.component.DataComponentTypes;
@@ -34,13 +33,11 @@ public class CMD_repair implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
                 )
                 .executes(CMD_repair::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource source=ctx.getSource();
         if(!source.isExecutedByPlayer()){
             source.sendError(Text.translatable("error.specifyTargets"));
@@ -64,15 +61,13 @@ public class CMD_repair implements IHelpfulCommandsCommand {
             return -1;
         }
 
-        itemStack.set(DataComponentTypes.DAMAGE,itemStack.getMaxUseTime());
+        itemStack.set(DataComponentTypes.DAMAGE,itemStack.getMaxUseTime(player));
         source.sendFeedback(()-> Text.translatable("commands.repair.success.self", itemStack.getName().copy().setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
 
         return Command.SINGLE_SUCCESS;
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource source=ctx.getSource();
 
         int count=0;
@@ -82,7 +77,7 @@ public class CMD_repair implements IHelpfulCommandsCommand {
             if(itemStack==null || itemStack.isEmpty() || !itemStack.isDamageable() || itemStack.getDamage()==0){
                 continue;
             }
-            itemStack.set(DataComponentTypes.DAMAGE,itemStack.getMaxUseTime());
+            itemStack.set(DataComponentTypes.DAMAGE,itemStack.getMaxUseTime(i));
             s=s+i.getName().getString()+" - "+itemStack.getName().getString()+"\n";
             count++;
         }

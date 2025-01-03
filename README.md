@@ -1,6 +1,9 @@
-# 💻║ Source code for 1.20
-You are viewing the source code for the latest mod version that supports this Minecraft version.
+# 💻║ Source code for 1.21
 
-> **This branch contains:** Helpful Commands 3.0.0a-preview5 for Minecraft 1.20.6
+***
 
-[Click here to see main info on default branch](https://github.com/ThatsNotM3/HelpfulCommands)
+**This branch contains:** `Helpful Commands 3.3.0` for `Minecraft 1.21.4`
+
+***
+
+[ℹ️ Learn more about the mod on the default branch](https://github.com/Expecticament/HelpfulCommands)

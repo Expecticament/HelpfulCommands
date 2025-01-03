@@ -7,7 +7,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.player.HungerManager;
@@ -37,13 +36,11 @@ public class CMD_feed implements IHelpfulCommandsCommand {
                         .executes(ctx->execute(ctx,EntityArgumentType.getPlayers(ctx,"target(s)")))
                 )
                 .executes(CMD_feed::execute)
-                .requires(Permissions.require(HelpfulCommands.modID+".command."+cmd.category.toString().toLowerCase()+"."+cmd.name,cmd.defaultRequiredLevel))
+                .requires(src->ModCommandManager.canUseCommand(src,cmd))
         );
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         if(!src.isExecutedByPlayer()){
@@ -51,13 +48,12 @@ public class CMD_feed implements IHelpfulCommandsCommand {
             return -1;
         }
 
-        ServerPlayerEntity plr=src.getPlayer();
-        HungerManager hm=plr.getHungerManager();
+        ServerPlayerEntity plr = src.getPlayer();
+        HungerManager hm = plr.getHungerManager();
         if(!hm.isNotFull()) return Command.SINGLE_SUCCESS;
 
         hm.setFoodLevel(20);
         hm.setSaturationLevel(5);
-        hm.setExhaustion(0);
 
         src.sendFeedback(()->Text.translatable("commands.feed.success.self").setStyle(HelpfulCommands.style.success),true);
 
@@ -65,8 +61,6 @@ public class CMD_feed implements IHelpfulCommandsCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException{
-        if(!ModCommandManager.checkBeforeExecuting(ctx,cmd)) return -1;
-
         ServerCommandSource src=ctx.getSource();
 
         Map<String, Integer> entries=new HashMap<>(feed(src, targets));
@@ -106,7 +100,6 @@ public class CMD_feed implements IHelpfulCommandsCommand {
             if(!hm.isNotFull()) continue;
             hm.setFoodLevel(20);
             hm.setSaturationLevel(5);
-            hm.setExhaustion(0);
 
             int diff=1;
             diff=-1;
