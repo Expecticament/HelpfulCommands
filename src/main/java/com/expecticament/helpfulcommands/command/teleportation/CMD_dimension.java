@@ -96,7 +96,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
             return -1;
         }
         BlockPos plrPos=plr.getBlockPos();
-        plr.teleport(dimension, plrPos.getX(), plrPos.getY(), plrPos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
+        plr.teleport(dimension, plrPos.getX(), plrPos.getY(), plrPos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch());
 
         src.sendFeedback(()->Text.translatable("commands.dimension.success.self",Text.literal(dimension.getRegistryKey().getValue().toString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
 
@@ -139,7 +139,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         for(Entity i : targets){
             if(i.getWorld()==dimension) continue;
             BlockPos pos=i.getBlockPos();
-            if(!i.teleport(dimension, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), i.getYaw(), i.getPitch(), false)) continue;
+            if(!i.teleport(dimension, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), i.getYaw(), i.getPitch())) continue;
             int diff=1;
             if(i.isPlayer()){
                 diff=-1;

@@ -68,7 +68,7 @@ public class CMD_home implements IHelpfulCommandsCommand {
                 plr.sendMessage(Text.translatable("error.unknownDimension").setStyle(HelpfulCommands.style.error));
                 return -1;
             }
-            plr.teleport(dimension, pos[0], pos[1], pos[2], new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
+            plr.teleport(dimension, pos[0], pos[1], pos[2], new HashSet<>(), plr.getYaw(), plr.getPitch());
             src.sendFeedback(()-> Text.translatable("commands.home.teleport.success").setStyle(HelpfulCommands.style.secondary
                     .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos[0]+" "+pos[1]+" "+pos[2]))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+pos[0]+"\ny: "+pos[1]+"\nz: "+pos[2])))

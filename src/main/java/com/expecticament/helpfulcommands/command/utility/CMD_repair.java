@@ -61,7 +61,7 @@ public class CMD_repair implements IHelpfulCommandsCommand {
             return -1;
         }
 
-        itemStack.set(DataComponentTypes.DAMAGE,itemStack.getMaxUseTime(player));
+        itemStack.set(DataComponentTypes.DAMAGE, itemStack.getMaxUseTime());
         source.sendFeedback(()-> Text.translatable("commands.repair.success.self", itemStack.getName().copy().setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
 
         return Command.SINGLE_SUCCESS;
@@ -77,7 +77,7 @@ public class CMD_repair implements IHelpfulCommandsCommand {
             if(itemStack==null || itemStack.isEmpty() || !itemStack.isDamageable() || itemStack.getDamage()==0){
                 continue;
             }
-            itemStack.set(DataComponentTypes.DAMAGE,itemStack.getMaxUseTime(i));
+            itemStack.set(DataComponentTypes.DAMAGE, itemStack.getMaxUseTime());
             s=s+i.getName().getString()+" - "+itemStack.getName().getString()+"\n";
             count++;
         }

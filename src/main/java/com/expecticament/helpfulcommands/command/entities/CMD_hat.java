@@ -78,7 +78,7 @@ public class CMD_hat implements IHelpfulCommandsCommand {
         boolean isSelfOnly = (targets.size() == 1 && targets.contains(plr));
         boolean isAir = (itemStack.getItem() == Items.AIR);
 
-        final String itemName = (itemStack.get(DataComponentTypes.CUSTOM_NAME) == null) ? itemStack.getItemName().getString() : itemStack.getCustomName().getString();
+        final String itemName = (itemStack.get(DataComponentTypes.CUSTOM_NAME) == null) ? itemStack.getName().getString() : itemStack.getName().getString();
         final Text targetAmountText = getTargetAmountText(new ArrayList<>(targets));
 
         for(ServerPlayerEntity i : targets) {

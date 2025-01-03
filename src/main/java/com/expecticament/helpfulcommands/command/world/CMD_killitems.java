@@ -96,7 +96,7 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
         ServerWorld world = src.getWorld();
 
         for(ItemEntity i : world.getEntitiesByType(EntityType.ITEM, b, entity -> true)){
-            i.kill(world);
+            i.kill();
             String name = i.getName().getString();
             entries.put(name, entries.getOrDefault(name,0) + 1);
         }

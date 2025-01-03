@@ -113,7 +113,7 @@ public class CMD_jump implements IHelpfulCommandsCommand {
         ServerPlayerEntity plr=src.getPlayer();
         if(plr==null) return;
 
-        plr.teleport(plr.getServerWorld(), posX, posY, posZ, new HashSet<>(),plr.getYaw(), plr.getPitch(), false);
+        plr.teleport(plr.getServerWorld(), posX, posY, posZ, new HashSet<>(), plr.getYaw(), plr.getPitch());
         src.sendFeedback(()->Text.translatable("commands.jump.success",Text.literal(String.format("%.2f",posX)).setStyle(HelpfulCommands.style.primary),Text.literal(String.format("%.2f",posY)).setStyle(HelpfulCommands.style.primary),Text.literal(String.format("%.2f",posZ)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.secondary
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/tp @s "+posX+" "+posY+" "+posZ))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleportToCoordinates")))

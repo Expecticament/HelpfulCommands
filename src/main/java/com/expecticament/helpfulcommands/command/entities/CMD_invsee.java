@@ -67,17 +67,49 @@ public class CMD_invsee implements IHelpfulCommandsCommand {
             super(ScreenHandlerType.GENERIC_9X5, syncId);
 
             PlayerInventory targetInventory = target.getInventory();
-            this.addPlayerSlots(targetInventory, 0, 0);
+
+            // Target's main inventory
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 9; col++) {
+                    int x = 8 + col * 18;
+                    int y = 18 + row * 18;
+                    this.addSlot(new Slot(targetInventory, col + row * 9 + 9, x, y));
+                }
+            }
+            // Target's hotbar
+            for (int slot = 0; slot < 9; slot++) {
+                int x = 8 + slot * 18;
+                int y = 76;
+                this.addSlot(new Slot(targetInventory, slot, x, y));
+            }
+
             for(int i = 0; i < 2; i++) {
                 this.addSlot(new EmptySlot(new PlayerInventory(target), 0, 0, 0));
             }
+
+            // Armor and offhand
             for(int i = 0; i < 5; i++) {
                 this.addSlot(new Slot(targetInventory, 36 + i, 0, 0));
             }
+
             for(int i = 0; i < 2; i++) {
                 this.addSlot(new EmptySlot(new PlayerInventory(target), 0, 0, 0));
             }
-            this.addPlayerSlots(sourceInventory, 0, 0);
+
+            // Source's main inventory
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 9; col++) {
+                    int x = 8 + col * 18;
+                    int y = 140 + row * 18;
+                    this.addSlot(new Slot(sourceInventory, col + row * 9 + 9, x, y));
+                }
+            }
+            // Source's hotbar
+            for (int slot = 0; slot < 9; slot++) {
+                int x = 8 + slot * 18;
+                int y = 198;
+                this.addSlot(new Slot(sourceInventory, slot, x, y));
+            }
         }
 
         @Override
