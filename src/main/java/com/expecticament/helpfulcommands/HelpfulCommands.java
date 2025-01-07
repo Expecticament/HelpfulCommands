@@ -18,7 +18,6 @@ public class HelpfulCommands implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(modID);
 
 	public static final String modName = FabricLoader.getInstance().getModContainer(HelpfulCommands.modID).get().getMetadata().getName();
-	public static final String modDescription = FabricLoader.getInstance().getModContainer(HelpfulCommands.modID).get().getMetadata().getDescription();
 	public static final String modVersion = FabricLoader.getInstance().getModContainer(HelpfulCommands.modID).get().getMetadata().getVersion().toString();
 
 	public static class style {

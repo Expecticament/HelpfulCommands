@@ -55,22 +55,35 @@ public class CMD_hat implements IHelpfulCommandsCommand {
         return execute(ctx, targets, null);
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets, ItemStack itemStack) {
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets, ItemStack specifiedItemStack) {
         ServerCommandSource src = ctx.getSource();
 
         ServerPlayerEntity plr = src.getPlayer();
 
-        if(itemStack == null) {
+        ItemStack itemStack = specifiedItemStack;
+
+        final Text targetAmountText = getTargetAmountText(new ArrayList<>(targets));
+
+        if(specifiedItemStack == null) {
             if(!src.isExecutedByPlayer()){
                 src.sendError(Text.translatable("error.inGameOnly"));
                 return -1;
             }
-            ItemStack playerItemStack = plr.getMainHandStack();
-            if(playerItemStack == null || playerItemStack == ItemStack.EMPTY) {
+            ItemStack handItemStack = plr.getMainHandStack();
+            if(handItemStack == null || handItemStack == ItemStack.EMPTY) {
                 src.sendError(Text.translatable("error.nothingInMainHand"));
                 return -1;
             }
-            itemStack = new ItemStack(playerItemStack.getItem());
+            itemStack = handItemStack.copy();
+
+            if (!plr.isCreative() && !plr.hasPermissionLevel(HelpfulCommands.defaultCommandLevel)) {
+                if(targets.size() > itemStack.getCount()) {
+                    src.sendError(Text.translatable("commands.hat.error.notEnough", getItemNameText(handItemStack), targetAmountText));
+                    return -1;
+                }
+
+                handItemStack.setCount(handItemStack.getCount() - targets.size());
+            }
         }
 
         itemStack.setCount(1);
@@ -78,17 +91,16 @@ public class CMD_hat implements IHelpfulCommandsCommand {
         boolean isSelfOnly = (targets.size() == 1 && targets.contains(plr));
         boolean isAir = (itemStack.getItem() == Items.AIR);
 
-        final String itemName = (itemStack.get(DataComponentTypes.CUSTOM_NAME) == null) ? itemStack.getName().getString() : itemStack.getName().getString();
-        final Text targetAmountText = getTargetAmountText(new ArrayList<>(targets));
+        final Text itemNameText = getItemNameText(itemStack);
 
         for(ServerPlayerEntity i : targets) {
-            i.getInventory().setStack(39, itemStack);
+            i.getInventory().setStack(39, itemStack.copy());
             i.playSoundToPlayer(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), SoundCategory.PLAYERS, 1, 1);
             if(i != plr) {
                 if(isAir)
                     i.sendMessage(Text.translatable("commands.hat.removed.self").setStyle(HelpfulCommands.style.tertiary));
                 else {
-                    i.sendMessage(Text.translatable("commands.hat.success.self", Text.literal(itemName).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.tertiary));
+                    i.sendMessage(Text.translatable("commands.hat.success.self", itemNameText).setStyle(HelpfulCommands.style.tertiary));
                 }
             }
         }
@@ -97,13 +109,13 @@ public class CMD_hat implements IHelpfulCommandsCommand {
             if(isAir) {
                 src.sendFeedback(()-> Text.translatable("commands.hat.removed.other", targetAmountText).setStyle(HelpfulCommands.style.success), true);
             } else {
-                src.sendFeedback(()-> Text.translatable("commands.hat.success.other", Text.literal(itemName).setStyle(HelpfulCommands.style.primary), targetAmountText).setStyle(HelpfulCommands.style.success), true);
+                src.sendFeedback(()-> Text.translatable("commands.hat.success.other", itemNameText, targetAmountText).setStyle(HelpfulCommands.style.success), true);
             }
         } else{
             if(isAir) {
                 plr.sendMessage(Text.translatable("commands.hat.removed.self").setStyle(HelpfulCommands.style.success));
             }  else {
-                plr.sendMessage(Text.translatable("commands.hat.success.self", Text.literal(itemName).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success));
+                plr.sendMessage(Text.translatable("commands.hat.success.self", itemNameText).setStyle(HelpfulCommands.style.success));
             }
         }
 
@@ -122,5 +134,10 @@ public class CMD_hat implements IHelpfulCommandsCommand {
         return Text.literal(String.valueOf(targets.size())).setStyle(HelpfulCommands.style.primary.withHoverEvent(
                 new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(names.toString()))
         ));
+    }
+
+    private static Text getItemNameText(ItemStack itemStack) {
+        String name = (itemStack.get(DataComponentTypes.CUSTOM_NAME) == null) ? itemStack.getName().getString() : itemStack.get(DataComponentTypes.CUSTOM_NAME).getString();
+        return Text.literal(name).setStyle(HelpfulCommands.style.primary);
     }
 }
