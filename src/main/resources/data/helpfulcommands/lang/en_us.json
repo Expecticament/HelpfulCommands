@@ -109,6 +109,7 @@
   "commands.hat.success.other": "%d has been put on the head(s) of %d player(s)",
   "commands.hat.removed.self": "Removed a hat from your head",
   "commands.hat.removed.other": "Removed hats from the head(s) of %d player(s)",
+  "commands.hat.error.notEnough": "You don't have enough %d for %d players!",
 
   "commands.god.success.self.true": "Enabled invulnerability",
   "commands.god.success.self.false": "Disabled invulnerability",
