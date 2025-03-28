@@ -22,7 +22,7 @@ public class ModPlayerEventCopyFrom implements ServerPlayerEvents.CopyFrom{
         player.getPersistentData().putString("deathDimension", dimensionName);
 
         // Home Position for /home
-        player.getPersistentData().putIntArray("homePosition", original.getPersistentData().getIntArray("homePosition"));
-        player.getPersistentData().putString("homeDimension", original.getPersistentData().getString("homeDimension"));
+        player.getPersistentData().putIntArray("homePosition", (original.getPersistentData().getIntArray("homePosition").orElse(new int[0])));
+        player.getPersistentData().putString("homeDimension", original.getPersistentData().getString("homeDimension").orElse(""));
     }
 }

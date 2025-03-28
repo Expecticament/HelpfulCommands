@@ -54,8 +54,8 @@ public class CMD_home implements IHelpfulCommandsCommand {
         ServerPlayerEntity plr=src.getPlayer();
         IEntityDataSaver playerData=(IEntityDataSaver) plr;
 
-        int[] pos=playerData.getPersistentData().getIntArray("homePosition");
-        String dimensionName=playerData.getPersistentData().getString("homeDimension");
+        int[] pos = (playerData.getPersistentData().getIntArray("homePosition")).orElse(new int[0]);
+        String dimensionName = (playerData.getPersistentData().getString("homeDimension")).orElse("");
         if(pos.length!=0){
             ServerWorld dimension=null;
             for(RegistryKey<World> i : src.getWorldKeys()){
@@ -70,13 +70,13 @@ public class CMD_home implements IHelpfulCommandsCommand {
             }
             plr.teleport(dimension, pos[0], pos[1], pos[2], new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
             src.sendFeedback(()-> Text.translatable("commands.home.teleport.success").setStyle(HelpfulCommands.style.secondary
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos[0]+" "+pos[1]+" "+pos[2]))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+pos[0]+"\ny: "+pos[1]+"\nz: "+pos[2])))
+                    .withClickEvent(new ClickEvent.SuggestCommand("/tp "+pos[0]+" "+pos[1]+" "+pos[2]))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: "+pos[0]+"\ny: "+pos[1]+"\nz: "+pos[2])))
             ),true);
         } else{
             src.sendError(Text.translatable("commands.home.error.noHomePos",Text.literal("/home set").setStyle(HelpfulCommands.style.primary
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/home set"))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand")))
+                    .withClickEvent(new ClickEvent.SuggestCommand("/home set"))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToSuggestThisCommand")))
             )).setStyle(HelpfulCommands.style.error));
             return -1;
         }
@@ -115,15 +115,15 @@ public class CMD_home implements IHelpfulCommandsCommand {
         ServerPlayerEntity plr=src.getPlayer();
         IEntityDataSaver playerData=(IEntityDataSaver) plr;
 
-        int[] pos=playerData.getPersistentData().getIntArray("homePosition");
+        int[] pos = (playerData.getPersistentData().getIntArray("homePosition")).orElse(new int[0]);
         if(pos.length==0){
             src.sendError(Text.translatable("commands.home.error.noHomePos",Text.literal("/home set").setStyle(HelpfulCommands.style.primary
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/home set"))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand")))
+                    .withClickEvent(new ClickEvent.SuggestCommand("/home set"))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToSuggestThisCommand")))
             )).setStyle(HelpfulCommands.style.error));
             return -1;
         }
-        String dimensionName=playerData.getPersistentData().getString("homeDimension");
+        String dimensionName = (playerData.getPersistentData().getString("homeDimension")).orElse("");
         Style valueStyle=HelpfulCommands.style.tertiary;
 
         MutableText msg=Text.empty().setStyle(HelpfulCommands.style.primary);
@@ -149,8 +149,8 @@ public class CMD_home implements IHelpfulCommandsCommand {
                 .append("\n")
                 .append(Text.literal("〚").setStyle(HelpfulCommands.style.secondary))
                 .append(Text.translatable("phrase.teleport").setStyle(HelpfulCommands.style.secondary
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/home"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleport")))
+                        .withClickEvent(new ClickEvent.RunCommand("/home"))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleport")))
                 ))
                 .append(Text.literal("〛").setStyle(HelpfulCommands.style.secondary))
         ;

@@ -52,8 +52,8 @@ public class CMD_back implements IHelpfulCommandsCommand {
         ServerPlayerEntity plr=src.getPlayer();
         IEntityDataSaver playerData=(IEntityDataSaver) plr;
 
-        int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
-        String dimensionName=playerData.getPersistentData().getString("deathDimension");
+        int[] deathPos = (playerData.getPersistentData().getIntArray("deathPosition")).orElse(new int[0]);
+        String dimensionName = (playerData.getPersistentData().getString("deathDimension")).orElse("");
         if(deathPos.length!=0){
             ServerWorld dimension=null;
             for(RegistryKey<World> i : src.getWorldKeys()){
@@ -68,8 +68,8 @@ public class CMD_back implements IHelpfulCommandsCommand {
             }
             plr.teleport(dimension, deathPos[0], deathPos[1], deathPos[2], new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
             src.sendFeedback(()-> Text.translatable("commands.back.success").setStyle(HelpfulCommands.style.secondary
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+deathPos[0]+" "+deathPos[1]+" "+deathPos[2]))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+deathPos[0]+"\ny: "+deathPos[1]+"\nz: "+deathPos[2])))
+                    .withClickEvent(new ClickEvent.SuggestCommand("/tp "+deathPos[0]+" "+deathPos[1]+" "+deathPos[2]))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: "+deathPos[0]+"\ny: "+deathPos[1]+"\nz: "+deathPos[2])))
             ),true);
         } else{
             src.sendError(Text.translatable("commands.back.error.noDeathPos").setStyle(HelpfulCommands.style.error));
@@ -89,12 +89,12 @@ public class CMD_back implements IHelpfulCommandsCommand {
         ServerPlayerEntity plr=src.getPlayer();
         IEntityDataSaver playerData=(IEntityDataSaver) plr;
 
-        int[] deathPos=playerData.getPersistentData().getIntArray("deathPosition");
+        int[] deathPos = (playerData.getPersistentData().getIntArray("deathPosition")).orElse(new int[0]);
         if(deathPos.length==0){
             src.sendError(Text.translatable("commands.back.error.noDeathPos").setStyle(HelpfulCommands.style.error));
             return -1;
         }
-        String dimensionName=playerData.getPersistentData().getString("deathDimension");
+        String dimensionName = (playerData.getPersistentData().getString("deathDimension")).orElse("");
         Style valueStyle=HelpfulCommands.style.tertiary;
 
         MutableText msg=Text.empty().setStyle(HelpfulCommands.style.primary);
@@ -120,8 +120,8 @@ public class CMD_back implements IHelpfulCommandsCommand {
                 .append("\n")
                 .append(Text.literal("〚").setStyle(HelpfulCommands.style.secondary))
                 .append(Text.translatable("phrase.teleport").setStyle(HelpfulCommands.style.secondary
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/back"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleport")))
+                        .withClickEvent(new ClickEvent.RunCommand("/back"))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleport")))
                 ))
                 .append(Text.literal("〛").setStyle(HelpfulCommands.style.secondary))
         ;

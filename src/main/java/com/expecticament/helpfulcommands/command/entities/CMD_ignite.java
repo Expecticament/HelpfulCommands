@@ -63,7 +63,7 @@ public class CMD_ignite implements IHelpfulCommandsCommand {
 
         if(count>0) {
             MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
             );
             src.sendFeedback(() -> Text.translatable("commands.ignite.success.other", finalCount, Text.literal(String.valueOf(duration)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
         } else{

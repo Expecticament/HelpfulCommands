@@ -73,7 +73,7 @@ public class CMD_gm implements IHelpfulCommandsCommand {
         ServerPlayerEntity plr=src.getPlayer();
         if(!plr.changeGameMode(gm)) return Command.SINGLE_SUCCESS;
 
-        src.sendFeedback(()->Text.translatable("commands.gm.success.self", Text.translatable("gameMode."+gm.getName()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
+        src.sendFeedback(()->Text.translatable("commands.gm.success.self", Text.translatable("gameMode."+gm.getId()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success),true);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -99,9 +99,9 @@ public class CMD_gm implements IHelpfulCommandsCommand {
 
         if(count>0) {
             MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
             );
-            src.sendFeedback(() -> Text.translatable("commands.gm.success.other", Text.translatable("gameMode."+gm.getName()).setStyle(HelpfulCommands.style.primary), finalCount).setStyle(HelpfulCommands.style.success), true);
+            src.sendFeedback(() -> Text.translatable("commands.gm.success.other", Text.translatable("gameMode."+gm.getId()).setStyle(HelpfulCommands.style.primary), finalCount).setStyle(HelpfulCommands.style.success), true);
         } else{
             src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
         }
@@ -119,7 +119,7 @@ public class CMD_gm implements IHelpfulCommandsCommand {
             if(i.isPlayer()){
                 diff=-1;
                 if(feedback){
-                    if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.gm.success.self",Text.translatable("gameMode."+gm.getName()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.tertiary));
+                    if(src.getPlayer()!=i) i.sendMessage(Text.translatable("commands.gm.success.self",Text.translatable("gameMode."+gm.getId()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.tertiary));
                 }
             }
             String name=i.getName().getString();

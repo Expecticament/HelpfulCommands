@@ -57,19 +57,19 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
             return -1;
         }
 
-        ServerPlayerEntity plr=src.getPlayer();
-        ServerWorld world=src.getServer().getWorld(plr.getSpawnPointDimension());
-        BlockPos pos=plr.getSpawnPointPosition();
-
-        if(pos==null){
+        ServerPlayerEntity plr = src.getPlayer();
+        ServerPlayerEntity.Respawn respawn = plr.getRespawn();
+        if(respawn == null){
             src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
             return -1;
         }
+        ServerWorld world = src.getServer().getWorld(respawn.dimension());
+        BlockPos pos = respawn.pos();
 
         plr.teleport(world, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
         src.sendFeedback(()-> Text.translatable("commands.spawn.player.self.success").setStyle(HelpfulCommands.style.secondary
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
+                .withClickEvent(new ClickEvent.SuggestCommand("/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
+                .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
         ),true);
 
         return Command.SINGLE_SUCCESS;
@@ -88,8 +88,8 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
 
         plr.teleport(world, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
         src.sendFeedback(()-> Text.translatable("commands.spawn.world.success").setStyle(HelpfulCommands.style.secondary
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
+                .withClickEvent(new ClickEvent.SuggestCommand("/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
+                .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
         ),true);
 
         return Command.SINGLE_SUCCESS;
@@ -110,8 +110,17 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
         String runCmd="";
         switch(n){
             case 0:
-                world=src.getServer().getWorld(plr.getSpawnPointDimension());
-                pos=plr.getSpawnPointPosition();
+                ServerPlayerEntity.Respawn respawn = plr.getRespawn();
+                if(respawn == null){
+                    src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
+                    return -1;
+                }
+                world = src.getServer().getWorld(respawn.dimension());
+                pos = respawn.pos();
+                if(pos == null){
+                    src.sendError(Text.translatable("commands.spawn.world.error.notSet").setStyle(HelpfulCommands.style.error));
+                    return -1;
+                }
                 targetTitle=Text.literal(src.getName());
                 runCmd="player";
                 break;
@@ -121,11 +130,6 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
                 targetTitle=Text.translatable("phrase.world");
                 runCmd="world";
                 break;
-        }
-
-        if(world==null || pos==null){
-            src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
-            return -1;
         }
 
         Style valueStyle=HelpfulCommands.style.tertiary;
@@ -153,8 +157,8 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
                 .append("\n")
                 .append(Text.literal("〚").setStyle(HelpfulCommands.style.secondary))
                 .append(Text.translatable("phrase.teleport").setStyle(HelpfulCommands.style.secondary
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/spawn "+runCmd))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleport")))
+                        .withClickEvent(new ClickEvent.RunCommand("/spawn "+runCmd))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleport")))
                 ))
                 .append(Text.literal("〛").setStyle(HelpfulCommands.style.secondary))
         ;

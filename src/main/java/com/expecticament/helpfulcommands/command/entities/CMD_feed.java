@@ -81,7 +81,7 @@ public class CMD_feed implements IHelpfulCommandsCommand {
 
         if(count>0) {
             MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
             );
             src.sendFeedback(() -> Text.translatable("commands.feed.success.other", finalCount).setStyle(HelpfulCommands.style.success), true);
         } else{

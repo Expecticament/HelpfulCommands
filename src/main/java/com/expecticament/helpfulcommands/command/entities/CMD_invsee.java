@@ -69,13 +69,13 @@ public class CMD_invsee implements IHelpfulCommandsCommand {
             PlayerInventory targetInventory = target.getInventory();
             this.addPlayerSlots(targetInventory, 0, 0);
             for(int i = 0; i < 2; i++) {
-                this.addSlot(new EmptySlot(new PlayerInventory(target), 0, 0, 0));
+                this.addSlot(new EmptySlot(new PlayerInventory(target, null), 0, 0, 0));
             }
             for(int i = 0; i < 5; i++) {
                 this.addSlot(new Slot(targetInventory, 36 + i, 0, 0));
             }
             for(int i = 0; i < 2; i++) {
-                this.addSlot(new EmptySlot(new PlayerInventory(target), 0, 0, 0));
+                this.addSlot(new EmptySlot(new PlayerInventory(target, null), 0, 0, 0));
             }
             this.addPlayerSlots(sourceInventory, 0, 0);
         }

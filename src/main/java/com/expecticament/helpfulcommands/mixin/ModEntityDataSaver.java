@@ -32,8 +32,8 @@ public abstract class ModEntityDataSaver implements IEntityDataSaver {
 
     @Inject(method = "readNbt", at = @At("HEAD"))
     protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
-        if(nbt.contains(HelpfulCommands.modID + ".data", 10)){
-            persistentData = nbt.getCompound(HelpfulCommands.modID + ".data");
+        if(nbt.contains(HelpfulCommands.modID + ".data")){
+            persistentData = (nbt.getCompound(HelpfulCommands.modID + ".data")).orElse(null);
         }
     }
 }

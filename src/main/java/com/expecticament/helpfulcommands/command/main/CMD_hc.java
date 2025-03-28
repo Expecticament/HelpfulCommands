@@ -16,6 +16,8 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -122,30 +124,30 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         MutableText buttonCommandList=Text.empty()
                 .append(Text.translatable("commandList.title"))
                 .setStyle(buttonStyle
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc commandList"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.commandList.tooltip")))
+                        .withClickEvent(new ClickEvent.RunCommand("/hc commandList"))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.commandList.tooltip")))
                 );
         MutableText buttonConfig=Text.empty()
                 .append(Text.translatable("config.title"))
                 .setStyle(buttonStyle
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.config.tooltip")))
+                        .withClickEvent(new ClickEvent.RunCommand("/hc config"))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.config.tooltip")))
                 );
         MutableText buttonDocumentation=Text.translatable("about.documentation").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://expecticament.github.io/HelpfulCommands/"))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.documentation.tooltip")))
+                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://expecticament.github.io/HelpfulCommands/")))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.documentation.tooltip")))
         );
         MutableText buttonGitHub=Text.literal("GitHub").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Expecticament/HelpfulCommands"))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.github.tooltip")))
+                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://github.com/Expecticament/HelpfulCommands")))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.github.tooltip")))
         );
         MutableText buttonModrinth=Text.literal("Modrinth").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/helpfulcommands"))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.modrinth.tooltip")))
+                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/helpfulcommands")))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.modrinth.tooltip")))
         );
         MutableText buttonDiscord=Text.literal("Discord").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/RHd8P5hps4"))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.discord.tooltip")))
+                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://discord.gg/RHd8P5hps4")))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.discord.tooltip")))
         );
         MutableText buttons=Text.empty();
         if(ctx.getSource().isExecutedByPlayer()) {
@@ -265,8 +267,8 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 if(j==i.getValue().getLast()) chars="┗";
                 commandList.append(Text.literal("\n"+chars+"› ").setStyle(charsStyle));
                 if(hasPerms && j.category!=ModCommandManager.ModCommandCategory.Main){ // If source has permissions, then display command public state
-                    HoverEvent he=new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommandPublicState",Text.literal("/"+j.name).setStyle(HelpfulCommands.style.tertiary)));
-                    ClickEvent ce=new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config manageCommand "+j.name+" togglePublic");
+                    HoverEvent he=new HoverEvent.ShowText(Text.translatable("tooltips.clickToToggleCommandPublicState",Text.literal("/"+j.name).setStyle(HelpfulCommands.style.tertiary)));
+                    ClickEvent ce=new ClickEvent.RunCommand("/hc config manageCommand "+j.name+" togglePublic");
                     commandList.append(cfg.commands.get(j.name).isPublic ? Text.translatable("commandList.command.public.abbreviation").setStyle(HelpfulCommands.style.secondary.withClickEvent(ce).withHoverEvent(he)) : Text.translatable("commandList.command.restricted.abbreviation").setStyle(HelpfulCommands.style.inactive.withClickEvent(ce).withHoverEvent(he)));
                     commandList.append(Text.literal(" "));
                 }
@@ -304,15 +306,15 @@ public class CMD_hc implements IHelpfulCommandsCommand {
             ret = commandState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
             if(command.category!=ModCommandManager.ModCommandCategory.Main){
                 ret=ret
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToToggleCommand",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary))))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc config manageCommand "+command.name+" toggleEnabled"));
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToToggleCommand",Text.literal("/"+command.name).setStyle(HelpfulCommands.style.tertiary))))
+                        .withClickEvent(new ClickEvent.RunCommand("/hc config manageCommand "+command.name+" toggleEnabled"));
             }
         } else{
             Style suggestCommand=getSuggestCommandStyle(command.name);
             ret=suggestCommand.withColor(HelpfulCommands.style.enabled.getColor());
             MutableText txt=ModCommandManager.getCantUseCommandReason(src,command);
             if(txt!=null){
-                ret=HelpfulCommands.style.error.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,txt));
+                ret=HelpfulCommands.style.error.withHoverEvent(new HoverEvent.ShowText(txt));
             }
         }
         return ret;
@@ -320,8 +322,8 @@ public class CMD_hc implements IHelpfulCommandsCommand {
 
     private static Style getSuggestCommandStyle(String commandName){
         return Style.EMPTY
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+commandName+" "))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestCommand",Text.literal("/"+commandName).setStyle(HelpfulCommands.style.tertiary))))
+                .withClickEvent(new ClickEvent.SuggestCommand("/"+commandName+" "))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToSuggestCommand",Text.literal("/"+commandName).setStyle(HelpfulCommands.style.tertiary))))
         ;
     }
 
@@ -343,7 +345,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         msg
                 .append(getHeader("config.title",isPlayer))
                 .append(Text.literal(" "))
-                .append(Text.translatable("config.topNotice",Text.empty().append(isPlayer ? Text.empty().append(Text.literal("[").append(Text.translatable("commandList.title").append("]")).setStyle(HelpfulCommands.style.secondary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("about.commandList.tooltip"))).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/hc commandList")))) : Text.literal("(/hc commandList)")              )))
+                .append(Text.translatable("config.topNotice",Text.empty().append(isPlayer ? Text.empty().append(Text.literal("[").append(Text.translatable("commandList.title").append("]")).setStyle(HelpfulCommands.style.secondary.withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.commandList.tooltip"))).withClickEvent(new ClickEvent.RunCommand("/hc commandList")))) : Text.literal("(/hc commandList)")              )))
         ;
         for(Map.Entry<String, Object> e : cfg.fields.entrySet()){
             msg
@@ -351,7 +353,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.literal("\n"))
                     .append(Text.literal("- ").append(Text.literal(e.getKey()).setStyle(HelpfulCommands.style.primary)))
                     .append(Text.literal(" | "))
-                    .append(Text.literal(e.getValue().toString()).setStyle(HelpfulCommands.style.tertiary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToEditConfigValue"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/hc config manageField "+e.getKey()+" set "))))
+                    .append(Text.literal(e.getValue().toString()).setStyle(HelpfulCommands.style.tertiary.withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToEditConfigValue"))).withClickEvent(new ClickEvent.SuggestCommand("/hc config manageField "+e.getKey()+" set "))))
                     .append(Text.literal("\n "))
                     .append(Text.translatable("config.field."+e.getKey()+".description").setStyle(HelpfulCommands.style.inactive))
             ;
@@ -427,7 +429,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         ConfigManager.saveConfig(cfg,src.getServer());
 
         Style messageStyle=value ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
-        Style commandNameStyle=value ? HelpfulCommands.style.primary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd.name)) : HelpfulCommands.style.primary;
+        Style commandNameStyle=value ? HelpfulCommands.style.primary.withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent.SuggestCommand("/"+cmd.name)) : HelpfulCommands.style.primary;
         src.sendFeedback(()->Text.translatable("commands.hc.config.manageCommand.toggleEnabled.success."+String.valueOf(value).toLowerCase(),Text.literal("/"+cmd.name).setStyle(commandNameStyle)).setStyle(messageStyle),true);
 
         ModCommandManager.sendCommandTreeToEveryone(src);
@@ -462,7 +464,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
         ConfigManager.saveConfig(cfg,src.getServer());
 
         Style messageStyle=HelpfulCommands.style.success;
-        Style commandNameStyle=HelpfulCommands.style.primary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/"+cmd.name));
+        Style commandNameStyle=HelpfulCommands.style.primary.withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToSuggestThisCommand"))).withClickEvent(new ClickEvent.SuggestCommand("/"+cmd.name));
         src.sendFeedback(()->Text.translatable("commands.hc.config.manageCommand.togglePublic.success."+String.valueOf(value).toLowerCase(),Text.literal("/"+cmd.name
         ).setStyle(commandNameStyle)).setStyle(messageStyle),true);
 

@@ -132,7 +132,7 @@ public class CMD_hat implements IHelpfulCommandsCommand {
         }
 
         return Text.literal(String.valueOf(targets.size())).setStyle(HelpfulCommands.style.primary.withHoverEvent(
-                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(names.toString()))
+                new HoverEvent.ShowText(Text.literal(names.toString()))
         ));
     }
 

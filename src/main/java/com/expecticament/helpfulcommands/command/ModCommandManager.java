@@ -13,10 +13,13 @@ import com.expecticament.helpfulcommands.util.ConfigManager;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import java.util.*;
@@ -209,7 +212,7 @@ public class ModCommandManager{
         return getCantUseCommandReason(src, cmd) == null;
     }
     public static MutableText getCantUseCommandReason(ServerCommandSource src, ModCommand cmd){
-        Map<String, ConfigManager.ModConfigCommandEntry> cmdProperties=ConfigManager.loadConfig(src.getServer()).commands;
+        Map<String, ConfigManager.ModConfigCommandEntry> cmdProperties = ConfigManager.loadConfig(src.getServer()).commands;
 
         if(Permissions.check(src,HelpfulCommands.modID + ".command." + cmd.category.toString().toLowerCase() + "." + cmd.name, HelpfulCommands.defaultCommandLevel)){
             // LuckPerms will not detect mod's command permissions without this empty check. I don't know any better workaround :)
@@ -242,5 +245,46 @@ public class ModCommandManager{
         for(ServerPlayerEntity i : server.getPlayerManager().getPlayerList()){
             server.getCommandManager().sendCommandTree(i);
         }
+    }
+
+    public static HoverEvent targetMapToHoverEvent(Map<Entity, Boolean> map) {
+        MutableText text = Text.empty();
+
+        int count = 0;
+        for(Map.Entry<Entity, Boolean> i : map.entrySet()) {
+            String name = i.getKey().getDisplayName().getString();
+            Style entryStyle = i.getValue() ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
+
+            text.append(Text.literal(name).setStyle(entryStyle));
+
+            if(count != map.size() - 1) {
+                text.append("\n");
+            }
+
+            count++;
+        }
+
+        return new HoverEvent.ShowText(text);
+
+    }
+
+    public static HoverEvent targetListToHoverEvent(List<Entity> list) {
+        MutableText text = Text.empty();
+
+        int count = 0;
+        for(Entity i : list) {
+            String name = i.getDisplayName().getString();
+            Style entryStyle = HelpfulCommands.style.simpleText;
+
+            text.append(Text.literal(name).setStyle(entryStyle));
+
+            if(count != list.size() - 1) {
+                text.append("\n");
+            }
+
+            count++;
+        }
+
+        return new HoverEvent.ShowText(text);
     }
 }

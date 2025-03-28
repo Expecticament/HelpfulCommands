@@ -89,7 +89,7 @@ public class CMD_repair implements IHelpfulCommandsCommand {
             source.sendError(Text.translatable("error.didntFindTargets"));
         } else {
             int finalCount=count;
-            source.sendFeedback(() -> Text.translatable("commands.repair.success.other", Text.literal(String.valueOf(finalCount)).setStyle(HelpfulCommands.style.primary.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText)))).setStyle(HelpfulCommands.style.success), true);
+            source.sendFeedback(() -> Text.translatable("commands.repair.success.other", Text.literal(String.valueOf(finalCount)).setStyle(HelpfulCommands.style.primary.withHoverEvent(new HoverEvent.ShowText(hoverText)))).setStyle(HelpfulCommands.style.success), true);
         }
 
         return Command.SINGLE_SUCCESS;

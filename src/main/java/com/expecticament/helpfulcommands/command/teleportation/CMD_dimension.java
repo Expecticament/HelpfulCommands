@@ -123,7 +123,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
 
         if(count>0) {
             MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.literal(entryList)))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
             );
             src.sendFeedback(() -> Text.translatable("commands.dimension.success.other", Text.literal(dimension.getRegistryKey().getValue().toString()).setStyle(HelpfulCommands.style.primary), finalCount).setStyle(HelpfulCommands.style.success), true);
         } else{
@@ -165,8 +165,8 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         String dimensionName=src.getPlayer().getWorld().getRegistryKey().getValue().toString();
 
         src.sendMessage(Text.translatable("commands.dimension.get.success.self",Text.literal(dimensionName).setStyle(HelpfulCommands.style.primary
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleportToDimension")))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/dimension switch "+dimensionName))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleportToDimension")))
+                .withClickEvent(new ClickEvent.RunCommand("/dimension switch "+dimensionName))
         )).setStyle(HelpfulCommands.style.secondary));
 
         return Command.SINGLE_SUCCESS;
@@ -182,8 +182,8 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         String dimensionName=target.getWorld().getRegistryKey().getValue().toString();
 
         src.sendMessage(Text.translatable("commands.dimension.get.success.other",Text.literal(target.getName().getString()).setStyle(HelpfulCommands.style.primary),Text.literal(dimensionName).setStyle(HelpfulCommands.style.primary
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleportToDimension")))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/dimension switch "+dimensionName))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleportToDimension")))
+                .withClickEvent(new ClickEvent.RunCommand("/dimension switch "+dimensionName))
         )).setStyle(HelpfulCommands.style.secondary));
 
         return Command.SINGLE_SUCCESS;

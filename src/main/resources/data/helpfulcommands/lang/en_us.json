@@ -181,6 +181,7 @@
   "error.nothingInMainHand": "There is nothing in your main hand!",
   "error.notAllowedToConfigureFields": "You are not allowed to view or change configuration fields!",
   "error.cantEditConfigOnIntegratedIfNotHost": "For security reasons, only the host can configure Helpful Commands on integrated servers!",
+  "error.nothingChanged": "Nothing has changed!",
 
   "phrase.dimension": "Dimension",
   "phrase.teleport": "Teleport",

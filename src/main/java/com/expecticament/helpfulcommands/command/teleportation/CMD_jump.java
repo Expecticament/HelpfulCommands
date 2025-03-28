@@ -115,8 +115,8 @@ public class CMD_jump implements IHelpfulCommandsCommand {
 
         plr.teleport(plr.getServerWorld(), posX, posY, posZ, new HashSet<>(),plr.getYaw(), plr.getPitch(), false);
         src.sendFeedback(()->Text.translatable("commands.jump.success",Text.literal(String.format("%.2f",posX)).setStyle(HelpfulCommands.style.primary),Text.literal(String.format("%.2f",posY)).setStyle(HelpfulCommands.style.primary),Text.literal(String.format("%.2f",posZ)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.secondary
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/tp @s "+posX+" "+posY+" "+posZ))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Text.translatable("tooltips.clickToTeleportToCoordinates")))
+                .withClickEvent(new ClickEvent.RunCommand("/tp @s "+posX+" "+posY+" "+posZ))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleportToCoordinates")))
         ),true);
     }
 }

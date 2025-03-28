@@ -79,7 +79,7 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
 
         if(count > 0) {
             MutableText finalCount = Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(entryList)))
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
             );
             int finalRange = range;
             src.sendFeedback(() -> Text.translatable("commands.killitems.success", finalCount, Text.literal(String.valueOf(finalRange)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
