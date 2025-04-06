@@ -10,8 +10,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.expecticament.helpfulcommands.HelpfulCommands;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +22,7 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Box;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,23 +32,29 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
     public static ModCommandManager.ModCommand cmd;
 
     public static void init(ModCommandManager.ModCommand newData){
-        cmd=newData;
+        cmd = newData;
     }
 
-    public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
+    public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal(cmd.name)
                 .then(CommandManager.argument("range", IntegerArgumentType.integer(0))
                         .executes(ctx -> execute(ctx, IntegerArgumentType.getInteger(ctx, "range")))
+                        .then(CommandManager.argument("filter", ItemStackArgumentType.itemStack(registryAccess))
+                                .executes(ctx -> execute(ctx, IntegerArgumentType.getInteger(ctx, "range"), ItemStackArgumentType.getItemStackArgument(ctx, "filter").getItem().getDefaultStack()))
+                        )
                 )
                 .executes(CMD_killitems::execute)
                 .requires(src->ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        return execute(ctx, 0);
+    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        return execute(ctx, 0, null);
     }
-    private static int execute(CommandContext<ServerCommandSource> ctx, int range) throws CommandSyntaxException{
+    private static int execute(CommandContext<ServerCommandSource> ctx, int range) throws CommandSyntaxException {
+        return execute(ctx, range, null);
+    }
+    private static int execute(CommandContext<ServerCommandSource> ctx, int range, @Nullable ItemStack filter) throws CommandSyntaxException {
         ServerCommandSource src = ctx.getSource();
 
         int rangeConfigValue = (int) Double.parseDouble(ConfigManager.loadConfig(src.getServer()).fields.get("killitemsRangeLimit").toString());
@@ -60,10 +69,10 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
         Map<String, Integer> entries = new HashMap<>();
         if(src.getServer().getPlayerManager().getCurrentPlayerCount() > 0) {
             for (ServerPlayerEntity i : src.getServer().getPlayerManager().getPlayerList()){
-                entries.putAll(killItems(src, i.getBoundingBox().expand(range)));
+                entries.putAll(killItems(src, i.getBoundingBox().expand(range), filter));
             }
         } else{
-            entries.putAll(killItems(src, new Box(src.getWorld().getSpawnPos()).expand(range)));
+            entries.putAll(killItems(src, new Box(src.getWorld().getSpawnPos()).expand(range), filter));
         }
 
         int count=0;
@@ -90,12 +99,12 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static Map<String, Integer> killItems(ServerCommandSource src, Box b){
+    private static Map<String, Integer> killItems(ServerCommandSource src, Box b, @Nullable ItemStack filter) {
         Map<String, Integer> entries = new HashMap<>();
 
         ServerWorld world = src.getWorld();
 
-        for(ItemEntity i : world.getEntitiesByType(EntityType.ITEM, b, entity -> true)){
+        for(ItemEntity i : world.getEntitiesByType(EntityType.ITEM, b, entity -> (filter == null || entity.getStack().isOf(filter.getItem())))) {
             i.kill(world);
             String name = i.getName().getString();
             entries.put(name, entries.getOrDefault(name,0) + 1);

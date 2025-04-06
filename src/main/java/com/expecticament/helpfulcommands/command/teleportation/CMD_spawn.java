@@ -58,27 +58,6 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
         );
     }
 
-    private static TeleportationCommands.TeleportationPosition getTeleportationPosition(ServerPlayerEntity player, SpawnType spawnType) {
-        BlockPos pos = null;
-        ServerWorld world = null;
-
-        switch(spawnType) {
-            case Player:
-                ServerPlayerEntity.Respawn respawn = player.getRespawn();
-                if(respawn != null) {
-                    world = player.getServer().getWorld(respawn.dimension());
-                    pos = respawn.pos();
-                }
-                break;
-            case World:
-                world = player.getServer().getWorld(World.OVERWORLD);
-                pos = world.getSpawnPos();
-                break;
-        }
-
-        return (pos != null && world != null) ? new TeleportationCommands.TeleportationPosition(world, pos) : null;
-    }
-
     private static int teleport(CommandContext<ServerCommandSource> ctx, SpawnType spawnType, @Nullable ServerPlayerEntity targetPlayer) throws CommandSyntaxException {
         ServerCommandSource src = ctx.getSource();
         if(!src.isExecutedByPlayer()) {
@@ -98,8 +77,13 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
 
         TeleportationCommands.TeleportationPosition tpos = getTeleportationPosition(targetPlayer, spawnType);
 
-        if(tpos == null) {
+        if(tpos.pos() == null) {
             src.sendError(Text.translatable(String.format("commands.spawn.%s%serror.notSet", spawnType.name().toLowerCase(), plrTrKey), Text.literal(targetPlayer.getName().getString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.error));
+            return 0;
+        }
+
+        if(tpos.world() == null){
+            src.sendError(Text.translatable("error.unknownDimension"));
             return 0;
         }
 
@@ -129,8 +113,13 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
 
         TeleportationCommands.TeleportationPosition tpos = getTeleportationPosition(targetPlayer, spawnType);
 
-        if(tpos == null) {
+        if(tpos.pos() == null) {
             src.sendError(Text.translatable(String.format("commands.spawn.%s%serror.notSet", spawnType.name().toLowerCase(), plrTrKey), Text.literal(targetPlayer.getName().getString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.error));
+            return 0;
+        }
+
+        if(tpos.world() == null){
+            src.sendError(Text.translatable("error.unknownDimension"));
             return 0;
         }
 
@@ -178,5 +167,26 @@ public class CMD_spawn implements IHelpfulCommandsCommand {
         src.sendMessage(msg);
 
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static TeleportationCommands.TeleportationPosition getTeleportationPosition(ServerPlayerEntity player, SpawnType spawnType) {
+        BlockPos pos = null;
+        ServerWorld world = null;
+
+        switch(spawnType) {
+            case Player:
+                ServerPlayerEntity.Respawn respawn = player.getRespawn();
+                if(respawn != null) {
+                    world = player.getServer().getWorld(respawn.dimension());
+                    pos = respawn.pos();
+                }
+                break;
+            case World:
+                world = player.getServer().getWorld(World.OVERWORLD);
+                pos = world.getSpawnPos();
+                break;
+        }
+
+        return new TeleportationCommands.TeleportationPosition(world, pos);
     }
 }
