@@ -85,7 +85,7 @@ public class CMD_god implements IHelpfulCommandsCommand {
 
                 map.put(i, newState);
 
-                if(commandFeedback) {
+                if(commandFeedback && i != plr) {
                     Style style = newState ? HelpfulCommands.style.enabled : HelpfulCommands.style.disabled;
                     i.sendMessage(Text.translatable("commands.god.success.self." + newState).setStyle(style));
                 }
@@ -95,7 +95,7 @@ public class CMD_god implements IHelpfulCommandsCommand {
         int affectedCount = map.size();
 
         if(affectedCount < 1) {
-            src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
+            src.sendError(Text.translatable("error.didntFindTargets"));
             return 0;
         }
 
