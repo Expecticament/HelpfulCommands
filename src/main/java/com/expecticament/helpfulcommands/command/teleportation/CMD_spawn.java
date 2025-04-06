@@ -8,6 +8,7 @@ import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.command.IHelpfulCommandsCommand;
 import com.expecticament.helpfulcommands.command.ModCommandManager;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,148 +17,159 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 
 public class CMD_spawn implements IHelpfulCommandsCommand {
+
     public static ModCommandManager.ModCommand cmd;
 
     public static void init(ModCommandManager.ModCommand newData){
-        cmd=newData;
+        cmd = newData;
     }
+
+    private enum SpawnType { Player, World };
 
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmd.name)
                         .then(CommandManager.literal("player")
-                                .then(CommandManager.literal("get")
-                                        .executes(ctx->get(ctx,0))
+                                .then(CommandManager.argument("target", EntityArgumentType.player())
+                                        .then(CommandManager.literal("get")
+                                                .executes(ctx-> get(ctx,SpawnType.Player, EntityArgumentType.getPlayer(ctx, "target")))
+                                        )
+                                        .then(CommandManager.literal("tp")
+                                                .executes(ctx -> teleport(ctx, SpawnType.Player, EntityArgumentType.getPlayer(ctx, "target")))
+                                        )
+                                        .executes(ctx -> teleport(ctx, SpawnType.Player, EntityArgumentType.getPlayer(ctx, "target")))
                                 )
-                                .then(CommandManager.literal("tp")
-                                        .executes(CMD_spawn::teleportPlayer)
-                                )
-                                .executes(CMD_spawn::teleportPlayer)
+                                .executes(ctx -> teleport(ctx, SpawnType.Player, null))
                         )
                         .then(CommandManager.literal("world")
                                 .then(CommandManager.literal("get")
-                                        .executes(ctx->get(ctx,1))
+                                        .executes(ctx-> get(ctx,SpawnType.World, null))
                                 )
                                 .then(CommandManager.literal("tp")
-                                        .executes(CMD_spawn::teleportWorld)
+                                        .executes(ctx -> teleport(ctx, SpawnType.World, null))
                                 )
-                                .executes(CMD_spawn::teleportWorld)
+                                .executes(ctx -> teleport(ctx, SpawnType.World, null))
                         )
-                .requires(src->ModCommandManager.canUseCommand(src,cmd))
+                .requires(src-> ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
-    private static int teleportPlayer(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerCommandSource src=ctx.getSource();
-        if(!src.isExecutedByPlayer()){
+    private static TeleportationCommands.TeleportationPosition getTeleportationPosition(ServerPlayerEntity player, SpawnType spawnType) {
+        BlockPos pos = null;
+        ServerWorld world = null;
+
+        switch(spawnType) {
+            case Player:
+                ServerPlayerEntity.Respawn respawn = player.getRespawn();
+                if(respawn != null) {
+                    world = player.getServer().getWorld(respawn.dimension());
+                    pos = respawn.pos();
+                }
+                break;
+            case World:
+                world = player.getServer().getWorld(World.OVERWORLD);
+                pos = world.getSpawnPos();
+                break;
+        }
+
+        return (pos != null && world != null) ? new TeleportationCommands.TeleportationPosition(world, pos) : null;
+    }
+
+    private static int teleport(CommandContext<ServerCommandSource> ctx, SpawnType spawnType, @Nullable ServerPlayerEntity targetPlayer) throws CommandSyntaxException {
+        ServerCommandSource src = ctx.getSource();
+        if(!src.isExecutedByPlayer()) {
             src.sendError(Text.translatable("error.inGameOnly"));
-            return -1;
+            return 0;
         }
 
-        ServerPlayerEntity plr = src.getPlayer();
-        ServerPlayerEntity.Respawn respawn = plr.getRespawn();
-        if(respawn == null){
-            src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
-            return -1;
+        ServerPlayerEntity player = src.getPlayer();
+        if(targetPlayer == null) {
+            targetPlayer = player;
         }
-        ServerWorld world = src.getServer().getWorld(respawn.dimension());
-        BlockPos pos = respawn.pos();
 
-        plr.teleport(world, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
-        src.sendFeedback(()-> Text.translatable("commands.spawn.player.self.success").setStyle(HelpfulCommands.style.secondary
-                .withClickEvent(new ClickEvent.SuggestCommand("/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
-                .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
+        String plrTrKey = ".";
+        if(spawnType == SpawnType.Player) {
+            plrTrKey = (targetPlayer == player) ? ".self." : ".other.";
+        }
+
+        TeleportationCommands.TeleportationPosition tpos = getTeleportationPosition(targetPlayer, spawnType);
+
+        if(tpos == null) {
+            src.sendError(Text.translatable(String.format("commands.spawn.%s%serror.notSet", spawnType.name().toLowerCase(), plrTrKey), Text.literal(targetPlayer.getName().getString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.error));
+            return 0;
+        }
+
+        player.teleport(tpos.world(), tpos.pos().getX(), tpos.pos().getY(), tpos.pos().getZ(), new HashSet<>(), player.getYaw(), player.getPitch(), false);
+        final ServerPlayerEntity finalTarget = targetPlayer;
+        final String finalPlrTrKey = plrTrKey;
+        src.sendFeedback(()-> Text.translatable(String.format("commands.spawn.%s%ssuccess", spawnType.name().toLowerCase(), finalPlrTrKey), Text.literal(finalTarget.getName().getString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.secondary
+                .withClickEvent(new ClickEvent.SuggestCommand("/tp " + tpos.pos().getX() + " " + tpos.pos().getY() + " " + tpos.pos().getZ()))
+                .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: " + tpos.pos().getX() + "\ny: " + tpos.pos().getY() + "\nz: " + tpos.pos().getZ())))
         ),true);
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int teleportWorld(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerCommandSource src=ctx.getSource();
-        if(!src.isExecutedByPlayer()){
-            src.sendError(Text.translatable("error.inGameOnly"));
-            return -1;
+    private static int get(CommandContext<ServerCommandSource> ctx, SpawnType spawnType, @Nullable ServerPlayerEntity targetPlayer) throws CommandSyntaxException {
+        ServerCommandSource src = ctx.getSource();
+        ServerPlayerEntity player = src.getPlayer();
+
+        if(targetPlayer == null) {
+            targetPlayer = player;
         }
 
-        ServerPlayerEntity plr=src.getPlayer();
-        ServerWorld world=src.getServer().getWorld(World.OVERWORLD);
-        BlockPos pos=world.getSpawnPos();
-
-        plr.teleport(world, pos.getX(), pos.getY(), pos.getZ(), new HashSet<>(), plr.getYaw(), plr.getPitch(), false);
-        src.sendFeedback(()-> Text.translatable("commands.spawn.world.success").setStyle(HelpfulCommands.style.secondary
-                .withClickEvent(new ClickEvent.SuggestCommand("/tp "+pos.getX()+" "+pos.getY()+" "+pos.getZ()))
-                .withHoverEvent(new HoverEvent.ShowText(Text.literal("x: "+pos.getX()+"\ny: "+pos.getY()+"\nz: "+pos.getZ())))
-        ),true);
-
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private static int get(CommandContext<ServerCommandSource> ctx,int n) throws CommandSyntaxException { // 0 - player, 1 - world
-        ServerCommandSource src=ctx.getSource();
-        if(!src.isExecutedByPlayer()){
-            src.sendError(Text.translatable("error.inGameOnly"));
-            return -1;
+        String plrTrKey = ".";
+        if(spawnType == SpawnType.Player) {
+            plrTrKey = (targetPlayer == player) ? ".self." : ".other.";
         }
 
-        ServerPlayerEntity plr=src.getPlayer();
+        TeleportationCommands.TeleportationPosition tpos = getTeleportationPosition(targetPlayer, spawnType);
 
-        ServerWorld world=null;
-        BlockPos pos=null;
-        MutableText targetTitle=Text.empty();
-        String runCmd="";
-        switch(n){
-            case 0:
-                ServerPlayerEntity.Respawn respawn = plr.getRespawn();
-                if(respawn == null){
-                    src.sendError(Text.translatable("commands.spawn.player.error.notSet").setStyle(HelpfulCommands.style.error));
-                    return -1;
-                }
-                world = src.getServer().getWorld(respawn.dimension());
-                pos = respawn.pos();
-                if(pos == null){
-                    src.sendError(Text.translatable("commands.spawn.world.error.notSet").setStyle(HelpfulCommands.style.error));
-                    return -1;
-                }
-                targetTitle=Text.literal(src.getName());
-                runCmd="player";
-                break;
-            case 1:
-                world=src.getServer().getOverworld();
-                pos=world.getSpawnPos();
-                targetTitle=Text.translatable("phrase.world");
-                runCmd="world";
-                break;
+        if(tpos == null) {
+            src.sendError(Text.translatable(String.format("commands.spawn.%s%serror.notSet", spawnType.name().toLowerCase(), plrTrKey), Text.literal(targetPlayer.getName().getString()).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.error));
+            return 0;
         }
 
-        Style valueStyle=HelpfulCommands.style.tertiary;
+        Style valueStyle = HelpfulCommands.style.tertiary;
+        MutableText targetName = switch (spawnType) {
+            case Player -> Text.literal(targetPlayer.getName().getString());
+            case World -> Text.translatable("phrase.world");
+        };
+        String runCmd = "/spawn " + spawnType.name().toLowerCase();
+        if(spawnType == SpawnType.Player) {
+            if(targetPlayer != player) {
+                runCmd += " " + targetPlayer.getName().getString();
+            }
+        }
 
-        MutableText msg=Text.empty().setStyle(HelpfulCommands.style.primary);
-        msg.append(Text.literal("« ").formatted(Formatting.BOLD));
+        MutableText msg = Text.empty().setStyle(HelpfulCommands.style.primary);
         msg
-                .append(targetTitle.formatted(Formatting.BOLD))
+                .append(Text.literal("« ").formatted(Formatting.BOLD))
+                .append(targetName.formatted(Formatting.BOLD))
                 .append(Text.literal(" || ").setStyle(HelpfulCommands.style.secondary))
                 .append(Text.translatable("spawnPoint.title").setStyle(HelpfulCommands.style.secondary))
                 .append(Text.literal(" »").formatted(Formatting.BOLD))
                 .append("\n")
                 .append(Text.literal("x: ").setStyle(HelpfulCommands.style.simpleText))
-                .append(Text.literal(String.valueOf(pos.getX())).setStyle(valueStyle))
+                .append(Text.literal(String.valueOf(tpos.pos().getX())).setStyle(valueStyle))
                 .append("\n")
                 .append(Text.literal("y: ").setStyle(HelpfulCommands.style.simpleText))
-                .append(Text.literal(String.valueOf(pos.getY())).setStyle(valueStyle))
+                .append(Text.literal(String.valueOf(tpos.pos().getY())).setStyle(valueStyle))
                 .append("\n")
                 .append(Text.literal("z: ").setStyle(HelpfulCommands.style.simpleText))
-                .append(Text.literal(String.valueOf(pos.getZ())).setStyle(valueStyle))
+                .append(Text.literal(String.valueOf(tpos.pos().getZ())).setStyle(valueStyle))
                 .append("\n")
                 .append(Text.translatable("phrase.dimension").append(Text.literal(": ")).setStyle(HelpfulCommands.style.simpleText))
-                .append(Text.literal(world.getRegistryKey().getValue().toString()).setStyle(valueStyle))
+                .append(Text.literal(tpos.world().getRegistryKey().getValue().toString()).setStyle(valueStyle))
                 .append("\n")
                 .append("\n")
                 .append(Text.literal("〚").setStyle(HelpfulCommands.style.secondary))
                 .append(Text.translatable("phrase.teleport").setStyle(HelpfulCommands.style.secondary
-                        .withClickEvent(new ClickEvent.RunCommand("/spawn "+runCmd))
+                        .withClickEvent(new ClickEvent.RunCommand(runCmd))
                         .withHoverEvent(new HoverEvent.ShowText(Text.translatable("tooltips.clickToTeleport")))
                 ))
                 .append(Text.literal("〛").setStyle(HelpfulCommands.style.secondary))
