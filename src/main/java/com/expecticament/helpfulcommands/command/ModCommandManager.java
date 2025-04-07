@@ -56,6 +56,12 @@ public class ModCommandManager{
         }});
 
         add(new ModCommand(){{
+            name = "dmg";
+            category = ModCommandCategory.Entities;
+            register = ()-> { CMD_dmg.init(this); CommandRegistrationCallback.EVENT.register(CMD_dmg::registerCommand); };
+            defaultState = false;
+        }});
+        add(new ModCommand(){{
             name = "extinguish";
             category = ModCommandCategory.Entities;
             register = ()-> { CMD_extinguish.init(this); CommandRegistrationCallback.EVENT.register(CMD_extinguish::registerCommand); };

@@ -2,7 +2,7 @@
 
 ***
 
-**This branch contains:** `Helpful Commands 3.3.2` for `Minecraft 1.21.5`
+**This branch contains:** `Helpful Commands 3.4.0` for `Minecraft 1.21.5`
 
 ***
 

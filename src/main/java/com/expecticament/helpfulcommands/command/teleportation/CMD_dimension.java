@@ -18,7 +18,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -50,7 +49,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         );
     }
 
-    private static int getDimension(CommandContext<ServerCommandSource> ctx, @Nullable ServerPlayerEntity target) throws CommandSyntaxException {
+    private static int getDimension(CommandContext<ServerCommandSource> ctx, ServerPlayerEntity target) throws CommandSyntaxException {
         ServerCommandSource src = ctx.getSource();
 
         if(!src.isExecutedByPlayer() && target == null){
@@ -81,7 +80,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int switchDimension(CommandContext<ServerCommandSource> ctx, ServerWorld dimension, @Nullable Collection<? extends Entity> targets) throws CommandSyntaxException {
+    private static int switchDimension(CommandContext<ServerCommandSource> ctx, ServerWorld dimension, Collection<? extends Entity> targets) throws CommandSyntaxException {
         ServerCommandSource src = ctx.getSource();
 
         if(!src.isExecutedByPlayer() && targets == null) {

@@ -45,6 +45,7 @@
 
   "commands.fly.description": "Toggle flying for target(s)",
   "commands.god.description": "Toggle invulnerability for target(s)",
+  "commands.dmg.description": "An improved version of Minecraft's /damage command. Supports multiple targets, including entities",
   "commands.extinguish.description": "Extinguish target(s)",
   "commands.feed.description": "Feed and saturate target(s)",
   "commands.gm.description": "Change game mode for target(s)",
@@ -81,8 +82,12 @@
   "commands.back.success": "Teleported to your death position",
   "commands.back.error.noDeathPos": "No death position saved yet",
 
+  "commands.dmg.success.self": "Applied %d damage to yourself",
+  "commands.dmg.success.other": "Applied %d damage to %d target(s)",
+  "commands.dmg.error.invulnerable.self": "You are invulnerable to the given damage type!",
+
   "commands.dimension.success.self": "Switched dimension to %s",
-  "commands.dimension.success.other": "Switched dimension to %s for %d targets",
+  "commands.dimension.success.other": "Switched dimension to %s for %d target(s)",
   "commands.dimension.get.success.self": "Your current dimension is %s",
   "commands.dimension.get.success.other": "%s's current dimension is %s",
   "commands.dimension.error.alreadyInDimension": "You are already in this dimension!",

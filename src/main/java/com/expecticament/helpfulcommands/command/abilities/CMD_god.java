@@ -19,7 +19,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,12 +52,12 @@ public class CMD_god implements IHelpfulCommandsCommand {
         return execute(ctx, targets, null);
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets, @Nullable Boolean state) throws CommandSyntaxException {
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends ServerPlayerEntity> targets, Boolean state) throws CommandSyntaxException {
         ServerCommandSource src = ctx.getSource();
 
         if(!src.isExecutedByPlayer() && targets == null){
             src.sendError(Text.translatable("error.specifyTargets"));
-            return -1;
+            return 0;
         }
 
         ServerPlayerEntity plr = src.getPlayer();
@@ -114,7 +113,7 @@ public class CMD_god implements IHelpfulCommandsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static boolean toggleGod(ServerPlayerEntity player, @Nullable Boolean state) {
+    private static boolean toggleGod(ServerPlayerEntity player, Boolean state) {
         PlayerAbilities abilities = player.getAbilities();
         boolean before = abilities.invulnerable;
         abilities.invulnerable = (state != null) ? state : !abilities.invulnerable;
