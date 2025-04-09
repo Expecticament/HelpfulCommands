@@ -15,123 +15,92 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CMD_heal implements IHelpfulCommandsCommand {
 
     public static ModCommandManager.ModCommand cmd;
 
     public static void init(ModCommandManager.ModCommand newData){
-        cmd=newData;
+        cmd = newData;
     }
 
-    public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
+    public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal(cmd.name)
-                .then(CommandManager.argument("target(s)",EntityArgumentType.entities())
-                        .executes(ctx->execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)")))
+                .then(CommandManager.argument("target(s)", EntityArgumentType.entities())
+                        .executes(ctx -> execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)"), 0))
                         .then(CommandManager.argument("amount", FloatArgumentType.floatArg(0.5f))
-                                .executes(ctx->execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)"), FloatArgumentType.getFloat(ctx, "amount")))
+                                .executes(ctx -> execute(ctx, EntityArgumentType.getEntities(ctx,"target(s)"), FloatArgumentType.getFloat(ctx, "amount")))
                         )
                 )
-                .executes(CMD_heal::execute)
-                .requires(src->ModCommandManager.canUseCommand(src,cmd))
+                .executes(ctx -> execute(ctx, null, 0))
+                .requires(src->ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException{
-        ServerCommandSource src=ctx.getSource();
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets, float amount) throws CommandSyntaxException {
+        ServerCommandSource src = ctx.getSource();
 
-        if(!src.isExecutedByPlayer()){
-            src.sendError(Text.translatable("error.specifyTargets").setStyle(HelpfulCommands.style.error));
-            return -1;
+        if(!src.isExecutedByPlayer() && targets == null){
+            src.sendError(Text.translatable("error.specifyTargets"));
+            return 0;
         }
 
-        ServerPlayerEntity plr=src.getPlayer();
-        if(plr.getHealth()==plr.getMaxHealth()) return Command.SINGLE_SUCCESS;
+        ServerPlayerEntity player = src.getPlayer();
 
-        plr.setHealth(plr.getMaxHealth());
-
-        src.sendFeedback(()->Text.translatable("commands.heal.success.self").setStyle(HelpfulCommands.style.success),true);
-
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets) throws CommandSyntaxException{
-        return execute(ctx, targets, 0);
-    }
-
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets, float amount) throws CommandSyntaxException{
-        ServerCommandSource src=ctx.getSource();
-
-        Map<String, Integer> entries = new HashMap<>(heal(src, targets, amount));
-
-        int count = 0;
-        String entryList = "";
-        for(Map.Entry<String, Integer> i : entries.entrySet()){
-            if(i.getValue()<0){
-                entryList += i.getKey() + "\n";
-                count += 1;
-            } else{
-                entryList += i.getValue() + "x "+i.getKey() + "\n";
-                count += i.getValue();
-            }
-        }
-        if(!entryList.isEmpty()) entryList = entryList.substring(0, entryList.length()-1);
-
-        if(count>0) {
-            MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
-            );
-            MutableText msg;
-            if(amount>0){
-                msg = Text.translatable("commands.heal.success.hearts.other", finalCount, Text.literal(String.valueOf(amount/2)).setStyle(HelpfulCommands.style.primary));
+        if(targets == null || (targets.size() == 1 && targets.contains(player))) {
+            if(heal(player, amount)) {
+                src.sendFeedback(() -> Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+                return Command.SINGLE_SUCCESS;
             } else {
-                msg = Text.translatable("commands.heal.success.other", finalCount);
+                src.sendError(Text.translatable("error.nothingChanged"));
+                return 0;
             }
-            msg.setStyle(HelpfulCommands.style.success);
-            src.sendFeedback(() -> msg, true);
-        } else{
-            src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
         }
 
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private static Map<String,Integer> heal(ServerCommandSource src, Collection<? extends Entity> targets, float amount){
-        Map<String, Integer> entries = new HashMap<>();
-        boolean feedback = src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
-
-        for(Entity i : targets){
-            try {
-                LivingEntity le = (LivingEntity) i;
-                if (le.getHealth() == le.getMaxHealth()) continue;
-                le.setHealth(amount==0 ? le.getMaxHealth() : le.getHealth() + amount);
-            } catch(Exception e){ continue; }
-            int diff = 1;
-            if(i.isPlayer()){
-                diff = -1;
-                if(feedback){
-                    if(src.getEntity()!=i && i.isPlayer()){
-                        MutableText msg = Text.translatable("commands.heal.success.self");
-                        if(amount>0){
-                            msg = Text.translatable("commands.heal.success.hearts.self", Text.literal(String.valueOf(amount/2)).setStyle(HelpfulCommands.style.primary));
-                        }
-                        msg.setStyle(HelpfulCommands.style.success);
-                        ((ServerPlayerEntity) i).sendMessage(msg);
-                    }
+        boolean commandFeedback = src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+        ArrayList<Entity> list = new ArrayList<>();
+        for(Entity i : targets) {
+            if(!i.isLiving()) {
+                continue;
+            }
+            LivingEntity livingEntity = (LivingEntity) i;
+            if(heal(livingEntity, amount)) {
+                list.add(i);
+                if(commandFeedback && i.isPlayer()) {
+                    ((ServerPlayerEntity) i).sendMessage(Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success));
                 }
             }
-            String name=i.getName().getString();
-            entries.put(name,entries.getOrDefault(name,0) + diff);
         }
 
-        return entries;
+        int affectedCount = list.size();
+
+        if(affectedCount < 1) {
+            src.sendError(Text.translatable("error.didntFindTargets"));
+            return 0;
+        }
+
+        if(commandFeedback) {
+            MutableText finalCount = Text.literal(String.valueOf(affectedCount)).setStyle(HelpfulCommands.style.primary
+                    .withHoverEvent(ModCommandManager.targetListToHoverEvent(list))
+            );
+            src.sendFeedback(() -> Text.translatable((amount < 0.5f) ? "commands.heal.success.other" : "commands.heal.success.hearts.other", finalCount, Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+        }
+
+        return affectedCount;
+    }
+
+    private static boolean heal(LivingEntity livingEntity, float amount) {
+        if(livingEntity.getHealth() < livingEntity.getMaxHealth()) {
+            livingEntity.setHealth((amount < 0.5f) ? livingEntity.getMaxHealth() : livingEntity.getHealth() + amount);
+            return true;
+        }
+
+        return false;
     }
 }

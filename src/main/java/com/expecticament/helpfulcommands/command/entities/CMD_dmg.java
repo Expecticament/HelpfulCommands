@@ -105,6 +105,6 @@ public class CMD_dmg implements IHelpfulCommandsCommand {
             src.sendFeedback(() -> Text.translatable("commands.dmg.success.other", Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary), finalCount).setStyle(HelpfulCommands.style.success), true);
         }
 
-        return Command.SINGLE_SUCCESS;
+        return affectedCount;
     }
 }

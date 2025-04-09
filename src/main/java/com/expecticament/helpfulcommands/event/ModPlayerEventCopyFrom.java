@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 
-public class ModPlayerEventCopyFrom implements ServerPlayerEvents.CopyFrom{
+public class ModPlayerEventCopyFrom implements ServerPlayerEvents.CopyFrom {
     @Override
     public void copyFromPlayer(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean alive) {
         IEntityDataSaver original = ((IEntityDataSaver) oldPlayer);

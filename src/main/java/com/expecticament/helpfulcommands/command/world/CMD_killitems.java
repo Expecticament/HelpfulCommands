@@ -75,7 +75,7 @@ public class CMD_killitems implements IHelpfulCommandsCommand {
             entries.putAll(killItems(src, new Box(src.getWorld().getSpawnPos()).expand(range), filter));
         }
 
-        int count=0;
+        int count = 0;
 
         String entryList = "";
         for(Map.Entry<String, Integer> i : entries.entrySet()){

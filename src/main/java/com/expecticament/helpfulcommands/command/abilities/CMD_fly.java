@@ -110,7 +110,7 @@ public class CMD_fly implements IHelpfulCommandsCommand {
             src.sendFeedback(() -> Text.translatable(finalTranslationKey, finalCount).setStyle(HelpfulCommands.style.success), true);
         }
 
-        return Command.SINGLE_SUCCESS;
+        return affectedCount;
     }
 
     private static boolean toggleFlying(ServerPlayerEntity player, Boolean state) {

@@ -194,7 +194,7 @@ public class ModCommandManager{
             if(count == 0){
                 character = "/-";
             }
-            if(count == commandListByCategory.size()-1){
+            if(count == commandListByCategory.size() - 1){
                 character = "\\-";
             }
 

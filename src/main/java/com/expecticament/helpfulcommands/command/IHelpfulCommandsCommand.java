@@ -13,7 +13,8 @@ public interface IHelpfulCommandsCommand{
     static void init(ModCommandManager.ModCommand newData){
         throw new NotImplementedException();
     }
-    static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
+
+    static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
         throw new NotImplementedException();
     }
 }

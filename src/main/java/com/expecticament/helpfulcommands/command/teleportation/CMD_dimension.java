@@ -109,7 +109,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
             if(switchDimensionForTarget(i, dimension)) {
                 list.add(i);
 
-                if(commandFeedback && i.isPlayer() && i != (Entity) player) {
+                if(commandFeedback && i.isPlayer() && i != ((Entity) player)) {
                     Style style = HelpfulCommands.style.tertiary;
                     ((ServerPlayerEntity) i).sendMessage(Text.translatable("commands.dimension.success.self", Text.literal(dimensionName).setStyle(HelpfulCommands.style.primary)).setStyle(style));
                 }
@@ -130,7 +130,7 @@ public class CMD_dimension implements IHelpfulCommandsCommand {
             src.sendFeedback(() -> Text.translatable("commands.dimension.success.other", Text.literal(dimensionName).setStyle(HelpfulCommands.style.primary), finalCount).setStyle(HelpfulCommands.style.success), true);
         }
 
-        return Command.SINGLE_SUCCESS;
+        return affectedCount;
     }
 
     private static boolean switchDimensionForTarget(Entity target, ServerWorld dimension) {
