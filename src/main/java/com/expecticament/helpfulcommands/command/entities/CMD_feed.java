@@ -64,7 +64,7 @@ public class CMD_feed implements IHelpfulCommandsCommand {
         for(ServerPlayerEntity i : targets) {
             if(feed(i)) {
                 list.add(i);
-                if(commandFeedback) {
+                if(commandFeedback && i != player) {
                     i.sendMessage(Text.translatable("commands.feed.success.self").setStyle(HelpfulCommands.style.success));
                 }
             }

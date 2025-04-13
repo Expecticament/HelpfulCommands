@@ -72,7 +72,7 @@ public class CMD_heal implements IHelpfulCommandsCommand {
             LivingEntity livingEntity = (LivingEntity) i;
             if(heal(livingEntity, amount)) {
                 list.add(i);
-                if(commandFeedback && i.isPlayer()) {
+                if(commandFeedback && i.isPlayer() && i != player) {
                     ((ServerPlayerEntity) i).sendMessage(Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success));
                 }
             }
