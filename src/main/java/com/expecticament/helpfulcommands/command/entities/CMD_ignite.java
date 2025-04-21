@@ -14,85 +14,93 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CMD_ignite implements IHelpfulCommandsCommand {
 
     public static ModCommandManager.ModCommand cmd;
 
     public static void init(ModCommandManager.ModCommand newData){
-        cmd=newData;
+        cmd = newData;
     }
 
     public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment){
         dispatcher.register(CommandManager.literal(cmd.name)
-                .then(CommandManager.argument("target(s)",EntityArgumentType.entities())
+                .then(CommandManager.argument("target(s)", EntityArgumentType.entities())
                         .then(CommandManager.argument("duration", IntegerArgumentType.integer(0))
-                                .executes(ctx->execute(ctx,EntityArgumentType.getEntities(ctx,"target(s)"), IntegerArgumentType.getInteger(ctx,"duration")))
+                                .executes(ctx -> execute(ctx, EntityArgumentType.getEntities(ctx, "target(s)"), IntegerArgumentType.getInteger(ctx, "duration")))
                         )
                 )
-                .requires(src->ModCommandManager.canUseCommand(src,cmd))
+                .requires(src -> ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
-    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets, int duration) throws CommandSyntaxException{
-        ServerCommandSource src=ctx.getSource();
+    private static int execute(CommandContext<ServerCommandSource> ctx, Collection<? extends Entity> targets, int duration) throws CommandSyntaxException {
+        ServerCommandSource src = ctx.getSource();
 
-        Map<String, Integer> entries=new HashMap<>(ignite(src, targets, duration));
-
-        int count=0;
-        String entryList="";
-        for(Map.Entry<String, Integer> i : entries.entrySet()){
-            if(i.getValue()<0){
-                entryList+=i.getKey()+"\n";
-                count+=1;
-            }
-            else{
-                entryList+=i.getValue()+"x "+i.getKey()+"\n";
-                count+=i.getValue();
-            }
-        }
-        if(!entryList.isEmpty()) entryList=entryList.substring(0, entryList.length()-1);
-
-        if(count>0) {
-            MutableText finalCount=Text.literal(String.valueOf(count)).setStyle(HelpfulCommands.style.primary
-                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(entryList)))
-            );
-            src.sendFeedback(() -> Text.translatable("commands.ignite.success.other", finalCount, Text.literal(String.valueOf(duration)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
-        } else{
-            src.sendError(Text.translatable("error.didntFindTargets").setStyle(HelpfulCommands.style.error));
+        if(!src.isExecutedByPlayer() && targets == null){
+            src.sendError(Text.translatable("error.specifyTargets"));
+            return 0;
         }
 
-        return Command.SINGLE_SUCCESS;
-    }
-    private static Map<String,Integer> ignite(ServerCommandSource src, Collection<? extends Entity> targets, int duration){
-        Map<String, Integer> entries=new HashMap<>();
-        boolean feedback=src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+        ServerPlayerEntity player = src.getPlayer();
 
-        for(Entity i : targets){
-            if(i.isPlayer()){
-                ServerPlayerEntity plr=(ServerPlayerEntity) i;
-                if(plr.getAbilities().invulnerable) continue;
+        if(targets == null || (targets.size() == 1 && targets.contains(player))) {
+            if(ignite(player, duration)) {
+                src.sendFeedback(() -> Text.translatable("commands.ignite.success.self", Text.literal(String.valueOf(duration)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+                return Command.SINGLE_SUCCESS;
+            } else {
+                src.sendError(Text.translatable("error.nothingChanged"));
+                return 0;
             }
-            i.setOnFireFor(duration);
-            int diff=1;
-            if(i.isPlayer()){
-                diff=-1;
-                if(feedback){
-                    if(src.getEntity()!=i && i.isPlayer()) ((ServerPlayerEntity) i).sendMessage(Text.translatable("commands.ignite.success.self").setStyle(HelpfulCommands.style.tertiary));
+        }
+
+        boolean commandFeedback = src.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK);
+        ArrayList<Entity> list = new ArrayList<>();
+        for(Entity i : targets) {
+            if(ignite(i, duration)) {
+                list.add(i);
+                if(commandFeedback && i.isPlayer() && i != player) {
+                    ((ServerPlayerEntity) i).sendMessage(Text.translatable("commands.ignite.success.self", Text.literal(String.valueOf(duration)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.tertiary));
                 }
             }
-            String name=i.getName().getString();
-            entries.put(name,entries.getOrDefault(name,0)+diff);
         }
 
-        return entries;
+        int affectedCount = list.size();
+
+        if(affectedCount < 1) {
+            src.sendError(Text.translatable("error.didntFindTargets"));
+            return 0;
+        }
+
+        if(commandFeedback) {
+            MutableText finalCount = Text.literal(String.valueOf(affectedCount)).setStyle(HelpfulCommands.style.primary
+                    .withHoverEvent(ModCommandManager.targetListToHoverEvent(list))
+            );
+            src.sendFeedback(() -> Text.translatable("commands.ignite.success.other", finalCount, Text.literal(String.valueOf(duration)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+        }
+
+        return affectedCount;
+    }
+
+    private static boolean ignite(Entity entity, int duration) {
+        if(entity.isPlayer()) {
+            if(((ServerPlayerEntity) entity).isInCreativeMode()) {
+                return false;
+            }
+        }
+
+        if(entity.isFireImmune()) {
+            return false;
+        }
+
+        entity.setOnFireFor(duration);
+
+        return true;
     }
 }

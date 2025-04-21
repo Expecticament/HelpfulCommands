@@ -41,7 +41,7 @@ public class CMD_hat implements IHelpfulCommandsCommand {
                                 .executes(ctx -> execute(ctx, EntityArgumentType.getPlayers(ctx, "target"), ItemStackArgumentType.getItemStackArgument(ctx, "item").createStack(1, true)))
                         )
                 )
-                .requires(src-> ModCommandManager.canUseCommand(src, cmd))
+                .requires(src -> ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
@@ -65,7 +65,7 @@ public class CMD_hat implements IHelpfulCommandsCommand {
         final Text targetAmountText = getTargetAmountText(new ArrayList<>(targets));
 
         if(specifiedItemStack == null) {
-            if(!src.isExecutedByPlayer()){
+            if(!src.isExecutedByPlayer()) {
                 src.sendError(Text.translatable("error.inGameOnly"));
                 return -1;
             }
@@ -97,21 +97,22 @@ public class CMD_hat implements IHelpfulCommandsCommand {
             i.getInventory().setStack(39, itemStack.copy());
             i.playSoundToPlayer(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), SoundCategory.PLAYERS, 1, 1);
             if(i != plr) {
-                if(isAir)
+                if(isAir) {
                     i.sendMessage(Text.translatable("commands.hat.removed.self").setStyle(HelpfulCommands.style.tertiary));
+                }
                 else {
                     i.sendMessage(Text.translatable("commands.hat.success.self", itemNameText).setStyle(HelpfulCommands.style.tertiary));
                 }
             }
         }
 
-        if(!isSelfOnly){
+        if(!isSelfOnly) {
             if(isAir) {
                 src.sendFeedback(()-> Text.translatable("commands.hat.removed.other", targetAmountText).setStyle(HelpfulCommands.style.success), true);
             } else {
                 src.sendFeedback(()-> Text.translatable("commands.hat.success.other", itemNameText, targetAmountText).setStyle(HelpfulCommands.style.success), true);
             }
-        } else{
+        } else {
             if(isAir) {
                 plr.sendMessage(Text.translatable("commands.hat.removed.self").setStyle(HelpfulCommands.style.success));
             }  else {

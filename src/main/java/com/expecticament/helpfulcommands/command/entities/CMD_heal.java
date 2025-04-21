@@ -39,7 +39,7 @@ public class CMD_heal implements IHelpfulCommandsCommand {
                         )
                 )
                 .executes(ctx -> execute(ctx, null, 0))
-                .requires(src->ModCommandManager.canUseCommand(src, cmd))
+                .requires(src -> ModCommandManager.canUseCommand(src, cmd))
         );
     }
 
