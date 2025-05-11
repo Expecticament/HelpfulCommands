@@ -62,7 +62,7 @@ public class CMD_gm implements IHelpfulCommandsCommand {
     private static int execute(CommandContext<ServerCommandSource> ctx, GameMode gameMode, Collection<? extends ServerPlayerEntity> targets) throws CommandSyntaxException {
         ServerCommandSource src = ctx.getSource();
 
-        if(!src.isExecutedByPlayer()) {
+        if(!src.isExecutedByPlayer() && targets == null) {
             src.sendError(Text.translatable("error.specifyTargets"));
             return 0;
         }

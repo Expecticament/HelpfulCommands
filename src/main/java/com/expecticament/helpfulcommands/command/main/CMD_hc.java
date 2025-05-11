@@ -145,10 +145,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                 .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/helpfulcommands")))
                 .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.modrinth.tooltip")))
         );
-        MutableText buttonDiscord=Text.literal("Discord").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://discord.gg/RHd8P5hps4")))
-                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.discord.tooltip")))
-        );
         MutableText buttons=Text.empty();
         if(ctx.getSource().isExecutedByPlayer()) {
             buttons
@@ -168,8 +164,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(buttonGitHub)
                     .append(Text.literal(" • "))
                     .append(buttonModrinth)
-                    .append(Text.literal(" • "))
-                    .append(buttonDiscord)
                     .append(Text.literal("〛"))
             ;
         } else{
@@ -184,8 +178,6 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                     .append(Text.literal(": https://expecticament.github.io/HelpfulCommands \n"))
                     .append(buttonModrinth)
                     .append(Text.literal(": https://modrinth.com/mod/helpfulcommands \n"))
-                    .append(buttonDiscord)
-                    .append(Text.literal(": https://discord.gg/RHd8P5hps4 \n"))
             ;
         }
 
