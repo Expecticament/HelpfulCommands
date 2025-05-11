@@ -1,0 +1,85 @@
+:root{
+    /* Admonitions */
+    --md-admonition-icon--hc-command: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="32" height="32"><path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm9.354 5.354-6 6a.5.5 0 0 1-.708-.708l6-6a.5.5 0 0 1 .708.708z"/></svg>');
+    /* hc version */
+    --mda--hc-version-background-color: rgb(54, 40, 69,0.5);
+    --mda--hc-version-border: solid 2px rgb(97, 89, 141,0.5);
+    --mda--hc-version-border-radius: 5px;
+    --mda--hc-permission-background-color: rgb(79, 64, 3, 0.5);
+    --mda--hc-permission-border: solid 2px rgb(120, 97, 5,0.5);
+    --mda--hc-permission-border-radius: 5px;
+}
+
+.md-tabs__link{
+    transition:cubic-bezier(0,0,0,1) 0.25s;
+}
+.md-tabs__link:hover{
+    scale:1.025;
+}
+
+.hc-miniInfoCards{
+    display:flex;
+}
+.hc-mic-holder{
+    display:flex;
+    margin-top:-10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.hc-mic-entry{
+    display:flex;
+    align-items: center;
+    max-height: 30px;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 2px;
+    padding: 0 5px 0 5px;
+}
+.hc-mic-logo{
+    margin-right: 5px;
+    width: 18px;
+    display: flex;
+}
+.hc-mic-text{
+    font-weight: bold;
+    font-size:medium;
+}
+
+.hc-mic-version{
+    background:var(--mda--hc-version-background-color);
+    border: var(--mda--hc-version-border);
+    border-radius: var(--mda--hc-version-border-radius);
+}
+.hc-mic-permission{
+    background:var(--mda--hc-permission-background-color);
+    border: var(--mda--hc-permission-border);
+    border-radius: var(--mda--hc-permission-border-radius);
+}
+
+
+.md-typeset .admonition.hc-command,
+.md-typeset details.hc-command {
+    border-color: rgb(43, 155, 70);
+}
+.md-typeset .hc-command > .admonition-title,
+.md-typeset .hc-command > summary {
+    background-color: rgba(43, 155, 70, 0.1);
+}
+.md-typeset .hc-command > .admonition-title::before,
+.md-typeset .hc-command > summary::before {
+    background-color: rgb(43, 155, 70);
+    -webkit-mask-image: var(--md-admonition-icon--hc-command);
+    mask-image: var(--md-admonition-icon--hc-command);
+}
+
+.devin-badge{
+    margin: 0 5px 0 5px;
+    transition: cubic-bezier(0, 0, 0, 1);
+    transition-duration: 0.25s;
+}
+.devin-badge:hover{
+    scale: 1.025;
+}
+.devin-badge:active{
+    scale: 0.975;
+}
