@@ -51,6 +51,32 @@ Browse all the commands by categories:material-information:{ title="Categories w
         `state`: boolean(true/false). If not specified, invulnerability will be toggled for each target (invulnerable -> vulnerable; vulnerable -> invulnerable)
 
 ### Entities and Players
+#### /dmg
+<div class="hc-mic-holder">
+    <div class="hc-mic-entry hc-mic-version">
+        <div class="hc-mic-logo"><span class="twemoji" title="Mod version"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.5 7A1.5 1.5 0 0 1 4 5.5 1.5 1.5 0 0 1 5.5 4 1.5 1.5 0 0 1 7 5.5 1.5 1.5 0 0 1 5.5 7m15.91 4.58-9-9C12.05 2.22 11.55 2 11 2H4c-1.11 0-2 .89-2 2v7c0 .55.22 1.05.59 1.41l8.99 9c.37.36.87.59 1.42.59.55 0 1.05-.23 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.56-.23-1.06-.59-1.42Z"></path></svg></span></div><p class="hc-mic-text"><a href="https://github.com/Expecticament/HelpfulCommands/releases/tag/3.4.0">3.4.0</a></p>
+    </div>
+    <div class="hc-mic-entry hc-mic-permission">
+        <div class="hc-mic-logo"><span class="twemoji" title="Permission ID"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 4h-8v3h-4V4H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M8 9a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m4 8H4v-1c0-1.33 2.67-2 4-2s4 .67 4 2v1m8 1h-6v-2h6v2m0-4h-6v-2h6v2m0-4h-6V8h6v2m-7-4h-2V2h2v4Z"></path></svg></span></div><p class="hc-mic-text">helpfulcommands.command.entities.dmg</p>
+    </div>
+</div>
+???+ hc-command "Command Info & Usage"
+    > An improved version of Minecraft's /damage command. Supports multiple targets, including entities.
+
+    ``` { .yaml .no-copy }
+    /dmg <target(s)> <amount> <damageType> [at] <vector3>
+    /dmg <target(s)> <amount> <damageType> [by] <entity> [from] <entity>
+    ```
+
+    ??? abstract "Parameters"
+        `target(s)`: entity(-ies)
+
+        `amount`: how much damage will be dealt (in half-hearts)
+
+        `damageType`: same as in base /damage command, damage type
+
+        `vector3`: coordinates (x, y, z)
+
 #### /extinguish
 <div class="hc-mic-holder">
     <div class="hc-mic-entry hc-mic-version">
@@ -299,14 +325,16 @@ Browse all the commands by categories:material-information:{ title="Categories w
     > Teleport to your or the world's spawn point
 
     ``` { .yaml .no-copy }
-    /spawn <type> [action]
+    /spawn <player> [target] [action]
+    /spawn <world> [action]
     ```
 
     ??? abstract "Parameters"
-        `type`:
+        `player`: your own spawn point
 
-        * `player`: your own spawn point
-        * `world`: world spawn
+        `world`: world spawn
+
+        `target`: player
 
         `action`:
         
@@ -381,11 +409,13 @@ Browse all the commands by categories:material-information:{ title="Categories w
     > Kill all the items lying on the ground nearby
 
     ``` { .yaml .no-copy }
-    /killitems [range]
+    /killitems [range] [filter]
     ```
 
     ??? abstract "Parameters"
         `range`: range in blocks within which items will be detected and removed. If not specified, the value defaults to the `killitemsRangeLimit` [config value](http://expecticament.github.io/HelpfulCommands/configuration/#killitemsrangelimit) divided by 2 (but it will never be less than 1)
+
+        `filter`: item
 
 #### /lightning
 <div class="hc-mic-holder">
