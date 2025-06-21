@@ -4,11 +4,12 @@ import com.expecticament.helpfulcommands.HelpfulCommands;
 import com.expecticament.helpfulcommands.util.IEntityDataSaver;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class ModEntityDataSaver implements IEntityDataSaver {
@@ -23,17 +24,15 @@ public abstract class ModEntityDataSaver implements IEntityDataSaver {
         return persistentData;
     }
 
-    @Inject(method="writeNbt", at=@At("HEAD"))
-    protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable info) {
+    @Inject(method="writeData", at=@At("HEAD"))
+    protected void injectWriteMethod(WriteView writeView, CallbackInfo ci) {
         if(persistentData != null){
-            nbt.put(HelpfulCommands.modID + ".data", persistentData);
+            writeView.put(HelpfulCommands.modID + ".data", NbtCompound.CODEC, persistentData);
         }
     }
 
-    @Inject(method = "readNbt", at = @At("HEAD"))
-    protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
-        if(nbt.contains(HelpfulCommands.modID + ".data")){
-            persistentData = (nbt.getCompound(HelpfulCommands.modID + ".data")).orElse(null);
-        }
+    @Inject(method = "readData", at = @At("HEAD"))
+    protected void injectReadMethod(ReadView readView, CallbackInfo ci) {
+        readView.read(HelpfulCommands.modID + ".data", NbtCompound.CODEC).ifPresent(tag -> persistentData = tag);
     }
 }

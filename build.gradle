@@ -42,10 +42,10 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Fabric Permissions
-	include(modImplementation('me.lucko:fabric-permissions-api:0.3.3'))
+	include(modImplementation('me.lucko:fabric-permissions-api:0.4.0'))
 
 	// Server Translations API
-	modImplementation include("xyz.nucleoid:server-translations-api:2.5.0+1.21.5-rc1")
+	modImplementation include("xyz.nucleoid:server-translations-api:2.5.1+1.21.5")
 }
 
 processResources {
