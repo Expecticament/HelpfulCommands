@@ -1,15 +1,15 @@
 # 📝║ Helpful Commands
 <img align="right" width="160" src="assets/logo.jpg"></img>
-Minecraft mod that adds lots of useful commands, as well as shortcuts for existing vanilla ones, making your experience better, more optimized, and flexible. Easy to configure, get used to, and then enjoy in the long run.
+Feature-rich Minecraft mod that adds many useful commands. Optimize your singleplayer experience or streamline server management. Interactive, straightforward, and easily configurable from within the game. Try it now and enjoy it in the long run.
 ***
-<a href="https://expecticament.github.io/HelpfulCommands/"><img alt="ghpages" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg"></a>
+<a href="https://helpfulcommands.expecticament.com/"><img alt="ghpages" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg"></a>
 <a href="https://modrinth.com/mod/helpfulcommands/"><img href="" alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
 <a href="https://fabricmc.net/"><img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg"></a>
 
 <br></br>
 
 ## «📖» Documentation
-Check out the mod's Documentation [here](https://expecticament.github.io/HelpfulCommands/). There you'll find more information about the mod, all its features and commands.
+Check out the mod's Documentation [here](https://helpfulcommands.expecticament.com/). There you'll find more information about the mod, all its features and commands.
 
 ## «💻» Source Code & Contribution
 In Branches, select a version of the game for which you want to see the source code.
