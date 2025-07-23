@@ -8,7 +8,7 @@
 		"Expecticament"
 	],
 	"contact": {
-		"homepage": "https://expecticament.github.io/HelpfulCommands/",
+		"homepage": "https://helpfulcommands.expecticament.com/",
 		"sources": "https://github.com/Expecticament/HelpfulCommands/tree/1.21",
 		"issues": "https://github.com/Expecticament/HelpfulCommands/issues"
 	},
@@ -26,7 +26,9 @@
 	"custom": {
 		"modmenu": {
 			"links": {
-				"modmenu.discord": "https://discord.gg/RHd8P5hps4"
+				"modmenu.modrinth": "https://modrinth.com/mod/helpfulcommands",
+				"modmenu.wiki": "https://helpfulcommands.expecticament.com/",
+				"modmenu.github_releases": "https://github.com/Expecticament/HelpfulCommands/releases"
 			}
 		}
 	},
@@ -34,7 +36,7 @@
 		"helpfulcommands.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.0",
+		"fabricloader": ">=0.16.10",
 		"java": ">=21",
 		"fabric-api": "*",
 		"fabric-permissions-api-v0": "*"

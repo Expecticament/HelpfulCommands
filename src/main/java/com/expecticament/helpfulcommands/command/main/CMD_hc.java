@@ -134,7 +134,7 @@ public class CMD_hc implements IHelpfulCommandsCommand {
                         .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.config.tooltip")))
                 );
         MutableText buttonDocumentation=Text.translatable("about.documentation").setStyle(buttonStyle
-                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://expecticament.github.io/HelpfulCommands/")))
+                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://helpfulcommands.expecticament.com/")))
                 .withHoverEvent(new HoverEvent.ShowText(Text.translatable("about.documentation.tooltip")))
         );
         MutableText buttonGitHub=Text.literal("GitHub").setStyle(buttonStyle

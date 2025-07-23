@@ -13,7 +13,12 @@ public class TimeCommands{
 
     static int execute(CommandContext<ServerCommandSource> ctx, ModCommandManager.ModCommand cmd, int time) throws CommandSyntaxException {
         for(ServerWorld serverWorld : ctx.getSource().getServer().getWorlds()) serverWorld.setTimeOfDay(time);
-        ctx.getSource().sendFeedback(() -> Text.translatable("commands.time.set", Text.literal(String.valueOf(time)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+
+        ServerCommandSource src = ctx.getSource();
+
+        src.sendFeedback(() -> Text.translatable("commands.time.set", Text.literal(String.valueOf(time)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+
+        src.getServer().sendTimeUpdatePackets();
 
         return Command.SINGLE_SUCCESS;
     }

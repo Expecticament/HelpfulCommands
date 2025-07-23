@@ -55,7 +55,7 @@ public class CMD_heal implements IHelpfulCommandsCommand {
 
         if(targets == null || (targets.size() == 1 && targets.contains(player))) {
             if(heal(player, amount)) {
-                src.sendFeedback(() -> Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+                src.sendFeedback(() -> Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount / 2)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
                 return Command.SINGLE_SUCCESS;
             } else {
                 src.sendError(Text.translatable("error.nothingChanged"));
@@ -73,7 +73,7 @@ public class CMD_heal implements IHelpfulCommandsCommand {
             if(heal(livingEntity, amount)) {
                 list.add(i);
                 if(commandFeedback && i.isPlayer() && i != player) {
-                    ((ServerPlayerEntity) i).sendMessage(Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success));
+                    ((ServerPlayerEntity) i).sendMessage(Text.translatable((amount < 0.5f) ? "commands.heal.success.self" : "commands.heal.success.hearts.self", Text.literal(String.valueOf(amount / 2)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success));
                 }
             }
         }
@@ -89,7 +89,7 @@ public class CMD_heal implements IHelpfulCommandsCommand {
             MutableText finalCount = Text.literal(String.valueOf(affectedCount)).setStyle(HelpfulCommands.style.primary
                     .withHoverEvent(ModCommandManager.targetListToHoverEvent(list))
             );
-            src.sendFeedback(() -> Text.translatable((amount < 0.5f) ? "commands.heal.success.other" : "commands.heal.success.hearts.other", finalCount, Text.literal(String.valueOf(amount)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
+            src.sendFeedback(() -> Text.translatable((amount < 0.5f) ? "commands.heal.success.other" : "commands.heal.success.hearts.other", finalCount, Text.literal(String.valueOf(amount / 2)).setStyle(HelpfulCommands.style.primary)).setStyle(HelpfulCommands.style.success), true);
         }
 
         return affectedCount;
